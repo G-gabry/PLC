@@ -1,0 +1,1 @@
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint C:\Users\g\PLC\PLC_NN\2024-music-plc-challenge\parcnet-is2\pretrained_models\parcnet-is2_baseline_checkpoint.ckpt`

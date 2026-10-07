@@ -1,0 +1,14 @@
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint C:\Users\g\PLC\PLC_NN\2024-music-plc-challenge\parcnet-is2\pretrained_models\parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint C:\Users\g\PLC\PLC_NN\2024-music-plc-challenge\parcnet-is2\pretrained_models\parcnet-is2_baseline_checkpoint.ckpt`
+Sampled 100 files
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+  burst_length_packets = 1: done (100 files x 2 methods)
+  burst_length_packets = 2: done (100 files x 2 methods)
+  burst_length_packets = 4: done (100 files x 2 methods)
+  burst_length_packets = 8: done (100 files x 2 methods)
+  burst_length_packets = 16: done (100 files x 2 methods)
+  burst_length_packets = 32: done (100 files x 2 methods)
+  burst_length_packets = 64: done (100 files x 2 methods)
+  burst_length_packets = 96: done (100 files x 2 methods)
+saved sweep_burst_length_packets_locked.csv and sweep_burst_length_packets.png

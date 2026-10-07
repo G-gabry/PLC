@@ -1,0 +1,96 @@
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint C:\Users\g\PLC\PLC_NN\2024-music-plc-challenge\parcnet-is2\pretrained_models\parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint C:\Users\g\PLC\PLC_NN\2024-music-plc-challenge\parcnet-is2\pretrained_models\parcnet-is2_baseline_checkpoint.ckpt`
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\g\PLC\PLC_NN\2024-music-plc-challenge\research\run_metrics_comparison.py", line 181, in <module>
+    main()
+  File "C:\Users\g\PLC\PLC_NN\2024-music-plc-challenge\research\run_metrics_comparison.py", line 172, in main
+    win_rates = plot_win_rates(df, args.out_dir / "win_rate_summary.png")
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\g\PLC\PLC_NN\2024-music-plc-challenge\research\run_metrics_comparison.py", line 101, in plot_win_rates
+    plotting.save_fig(fig, out_path, dpi=150, bbox_inches="tight")
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\g\PLC\PLC_NN\2024-music-plc-challenge\.venv\Lib\site-packages\matplotlib\figure.py", line 3515, in savefig
+    self.canvas.print_figure(fname, **kwargs)
+  File "C:\Users\g\PLC\PLC_NN\2024-music-plc-challenge\.venv\Lib\site-packages\matplotlib\backend_bases.py", line 2289, in print_figure
+    result = print_method(
+             ^^^^^^^^^^^^^
+  File "C:\Users\g\PLC\PLC_NN\2024-music-plc-challenge\.venv\Lib\site-packages\matplotlib\backend_bases.py", line 2146, in <lambda>
+    print_method = functools.wraps(meth)(lambda *args, **kwargs: meth(
+                                                                 ^^^^^
+  File "C:\Users\g\PLC\PLC_NN\2024-music-plc-challenge\.venv\Lib\site-packages\matplotlib\backends\backend_agg.py", line 537, in print_png
+    self._print_pil(filename_or_obj, "png", pil_kwargs, metadata)
+  File "C:\Users\g\PLC\PLC_NN\2024-music-plc-challenge\.venv\Lib\site-packages\matplotlib\backends\backend_agg.py", line 486, in _print_pil
+    mpl.image.imsave(
+  File "C:\Users\g\PLC\PLC_NN\2024-music-plc-challenge\.venv\Lib\site-packages\matplotlib\image.py", line 1722, in imsave
+    image.save(fname, **pil_kwargs)
+  File "C:\Users\g\PLC\PLC_NN\2024-music-plc-challenge\.venv\Lib\site-packages\PIL\Image.py", line 2706, in save
+    fp = builtins.open(filename, "w+b")
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OSError: [Errno 22] Invalid argument: 'C:\\Users\\g\\PLC\\PLC_NN\\2024-music-plc-challenge\\research\\output\\metrics_comparison\\win_rate_summary.png'
+Sampled 40 files from example_test_set (seed=0), stratified by spectral flatness for genuine content diversity.
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+[1/40] xX6Wce-607-140209-262731-151331-7708-427818-497426 (1390 pkts, 3.7% lost): SNR lpc=19.30 nn=19.12 dB | PLCMOS lpc=2.96 nn=3.01
+[2/40] l3Lvae-611-211084-218396-212842-198509-334833-311379 (1390 pkts, 4.2% lost): SNR lpc=20.58 nn=21.33 dB | PLCMOS lpc=3.29 nn=3.35
+[3/40] FPRIpe-578-474864-126584-425422-304828-148409-10737 (1550 pkts, 9.1% lost): SNR lpc=11.28 nn=12.78 dB | PLCMOS lpc=2.81 nn=2.99
+[4/40] f5sCDf-435-355130-41798-395609-377902-35325-116061 (1378 pkts, 11.9% lost): SNR lpc=13.93 nn=12.40 dB | PLCMOS lpc=1.79 nn=1.79
+[5/40] wH6bMa-009-144175-39168-315211-114587-333757-10048 (1033 pkts, 7.6% lost): SNR lpc=13.70 nn=14.04 dB | PLCMOS lpc=1.55 nn=1.51
+[6/40] 3hvoVa-051-2307-202921-218396-175927-14787-464643 (1033 pkts, 5.3% lost): SNR lpc=16.28 nn=16.73 dB | PLCMOS lpc=1.60 nn=1.66
+[7/40] P4ZKje-597-228203-427818-407728-174918-211212-250174 (1550 pkts, 23.0% lost): SNR lpc=7.60 nn=7.92 dB | PLCMOS lpc=1.38 nn=1.53
+[8/40] 9a98Kf-464-298969-472051-292323-179462-78575-496080 (1181 pkts, 7.3% lost): SNR lpc=13.94 nn=14.52 dB | PLCMOS lpc=2.98 nn=2.94
+[9/40] wkCjvp-408-175927-2985-407790-280816-275802-343332 (1046 pkts, 16.0% lost): SNR lpc=15.41 nn=14.61 dB | PLCMOS lpc=2.54 nn=2.73
+[10/40] 0Rve0i-524-469450-332402-376902-283921-64116-240504 (1140 pkts, 5.1% lost): SNR lpc=14.01 nn=12.99 dB | PLCMOS lpc=2.25 nn=2.27
+[11/40] cUyODs-564-324456-286869-479691-123056-485468-274323 (1636 pkts, 14.6% lost): SNR lpc=9.64 nn=9.12 dB | PLCMOS lpc=1.50 nn=1.44
+[12/40] ofs2Us-561-469223-161307-229618-187519-295308-129107 (1636 pkts, 15.8% lost): SNR lpc=10.91 nn=10.88 dB | PLCMOS lpc=2.45 nn=2.78
+[13/40] yc5Hmf-494-469130-474206-203381-91840-123056-149498 (1722 pkts, 13.5% lost): SNR lpc=8.84 nn=8.88 dB | PLCMOS lpc=2.78 nn=2.57
+[14/40] KIklei-503-156368-5054-151331-161307-380077-177809 (898 pkts, 12.1% lost): SNR lpc=9.00 nn=7.02 dB | PLCMOS lpc=1.60 nn=1.62
+[15/40] lDN6of-450-91840-427818-353502-327883-210172-489807 (1722 pkts, 25.0% lost): SNR lpc=5.99 nn=3.91 dB | PLCMOS lpc=1.30 nn=1.54
+[16/40] 5Lu6ui-514-135410-151381-124082-173176-644-324310 (744 pkts, 9.9% lost): SNR lpc=11.68 nn=9.32 dB | PLCMOS lpc=1.44 nn=1.47
+[17/40] PiKSIp-112-109021-465867-125189-123174-211212-334242 (1021 pkts, 9.1% lost): SNR lpc=11.04 nn=9.05 dB | PLCMOS lpc=1.95 nn=2.05
+[18/40] 9f3Qjw-657-129013-78427-348770-228203-60643-7188 (839 pkts, 7.9% lost): SNR lpc=15.37 nn=15.05 dB | PLCMOS lpc=2.29 nn=2.37
+[19/40] 0mk6rp-310-146145-90733-51581-27791-50416-437215 (1608 pkts, 1.7% lost): SNR lpc=24.85 nn=25.07 dB | PLCMOS lpc=2.27 nn=2.34
+[20/40] U5aQJe-592-437270-129013-295308-406364-103913-497087 (1550 pkts, 4.5% lost): SNR lpc=15.73 nn=16.18 dB | PLCMOS lpc=2.37 nn=2.39
+[21/40] tztd5w-640-23535-348077-410307-64116-151381-134118 (1176 pkts, 12.0% lost): SNR lpc=14.49 nn=14.29 dB | PLCMOS lpc=3.83 nn=3.67
+[22/40] IZG94w-666-98443-418034-470600-161118-288253-129889 (1707 pkts, 7.1% lost): SNR lpc=16.54 nn=15.69 dB | PLCMOS lpc=4.06 nn=3.57
+[23/40] 69ZMRp-276-162832-2757-113105-349816-17243-289593 (1207 pkts, 16.2% lost): SNR lpc=12.84 nn=12.75 dB | PLCMOS lpc=1.41 nn=1.35
+[24/40] lzFhsp-134-377273-280816-60681-369034-268009-11995 (1625 pkts, 3.1% lost): SNR lpc=21.39 nn=21.34 dB | PLCMOS lpc=4.65 nn=4.75
+[25/40] d4LtRw-656-379354-74769-192385-202921-93885-62534 (1673 pkts, 9.1% lost): SNR lpc=13.32 nn=13.07 dB | PLCMOS lpc=3.42 nn=3.29
+[26/40] JCRPTw-618-129107-479691-343332-355104-157595-129013 (1894 pkts, 30.5% lost): SNR lpc=6.42 nn=5.52 dB | PLCMOS lpc=2.16 nn=1.98
+[27/40] vTx6Wp-073-38459-458554-472051-230200-332402-365346 (1099 pkts, 10.0% lost): SNR lpc=14.48 nn=14.47 dB | PLCMOS lpc=1.77 nn=1.88
+[28/40] 5OQdwp-063-348077-460359-16661-112031-224170-197606 (1404 pkts, 2.8% lost): SNR lpc=18.17 nn=18.24 dB | PLCMOS lpc=3.47 nn=3.49
+[29/40] ui9aDp-122-292323-379538-386883-287427-306759-88721 (1070 pkts, 4.6% lost): SNR lpc=18.56 nn=18.50 dB | PLCMOS lpc=2.86 nn=3.02
+[30/40] O7tsRw-671-38597-125620-126584-128202-343308-240298 (1734 pkts, 7.0% lost): SNR lpc=14.85 nn=14.81 dB | PLCMOS lpc=3.20 nn=3.14
+[31/40] uIq5Cp-346-271293-199372-348733-164849-450557-397909 (1966 pkts, 2.9% lost): SNR lpc=17.10 nn=16.98 dB | PLCMOS lpc=2.67 nn=2.75
+[32/40] 1Q0zzp-067-496080-227228-300626-311379-247007-1214 (1044 pkts, 3.4% lost): SNR lpc=32.91 nn=31.81 dB | PLCMOS lpc=4.25 nn=4.24
+[33/40] tTMeWp-326-264357-280816-2985-25721-189658-311379 (2359 pkts, 8.9% lost): SNR lpc=24.40 nn=25.51 dB | PLCMOS lpc=3.38 nn=3.45
+[34/40] 8b8sWp-275-88756-348733-183720-134118-226233-129107 (1202 pkts, 3.6% lost): SNR lpc=21.06 nn=21.19 dB | PLCMOS lpc=3.57 nn=3.57
+[35/40] 6TUCvp-352-108130-78807-55646-250174-386302-414547 (1874 pkts, 14.3% lost): SNR lpc=14.19 nn=14.64 dB | PLCMOS lpc=2.32 nn=2.77
+[36/40] 7gnoMp-243-13140-469001-90733-352371-418901-62534 (1349 pkts, 14.4% lost): SNR lpc=12.15 nn=11.80 dB | PLCMOS lpc=1.95 nn=2.41
+[37/40] rkSMcp-349-162269-339484-74769-12865-363552-41411 (1411 pkts, 14.4% lost): SNR lpc=17.18 nn=17.30 dB | PLCMOS lpc=1.71 nn=1.66
+[38/40] IIhdup-184-282845-322947-195637-315211-10737-386302 (986 pkts, 6.9% lost): SNR lpc=21.71 nn=21.72 dB | PLCMOS lpc=1.39 nn=1.47
+[39/40] mCLt3p-410-320846-476924-422977-274323-99711-177809 (1085 pkts, 1.5% lost): SNR lpc=26.66 nn=26.74 dB | PLCMOS lpc=2.28 nn=2.34
+[40/40] fZg66p-070-68221-216978-377273-239730-53784-3467 (994 pkts, 29.6% lost): SNR lpc=18.27 nn=19.70 dB | PLCMOS lpc=3.54 nn=4.15
+
+===== Aggregate results over 40 files =====
+
+SNR (dB) (higher=better):
+  NN better on 17/40 files (42.5%)
+  Mean  -- LPC: 15.6444   NN: 15.4258
+  Median-- LPC: 14.6724   NN: 14.6242
+
+MR-STFT dist. (lower=better):
+  NN better on 36/40 files (90.0%)
+  Mean  -- LPC: 0.4504   NN: 0.3464
+  Median-- LPC: 0.3790   NN: 0.3109
+
+PLCMOS (higher=better):
+  NN better on 26/40 files (65.0%)
+  Mean  -- LPC: 2.5245   NN: 2.5818
+  Median-- LPC: 2.3474   NN: 2.4906
+
+ViSQOL MOS-LQO (higher=better):
+  NN better on 23/40 files (57.5%)
+  Mean  -- LPC: 4.4788   NN: 4.4901
+  Median-- LPC: 4.5635   NN: 4.5304

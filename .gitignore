@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+
+# Not used by the research scripts; contains a zip over GitHub's 100 MB file limit
+validation_set/
+
+# Regenerable concealment outputs (881 MB each)
+parcnet-is2/example_test_set/enhanced/
+parcnet-is2/example_test_set/enhanced_ar_only/

@@ -1,0 +1,23 @@
+INFO:     Started server process [23080]
+INFO:     Waiting for application startup.
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint C:\Users\g\PLC\PLC_NN\2024-music-plc-challenge\parcnet-is2\pretrained_models\parcnet-is2_baseline_checkpoint.ckpt`
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:54069 - "WebSocket /ws" [accepted]
+INFO:     connection open
+Loading PARCnet NN checkpoint...
+NN model ready.
+INFO:     127.0.0.1:54064 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54064 - "GET /style.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:49576 - "GET /app.js HTTP/1.1" 200 OK
+INFO:     127.0.0.1:53708 - "WebSocket /ws" [accepted]
+INFO:     connection open
+INFO:     127.0.0.1:49576 - "GET /api/files HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49757 - "WebSocket /ws" [accepted]
+INFO:     connection open
+INFO:     127.0.0.1:53916 - "GET / HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:53916 - "GET /style.css HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:53722 - "GET /app.js HTTP/1.1" 304 Not Modified
+INFO:     127.0.0.1:62335 - "WebSocket /ws" [accepted]
+INFO:     connection open
+INFO:     127.0.0.1:53722 - "GET /api/files HTTP/1.1" 200 OK

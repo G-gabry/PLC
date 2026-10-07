@@ -18,12 +18,17 @@ class PARCnet:
                  nn_fade_dim: int,
                  device: str,
                  lite: bool,
+                 disable_nn: bool = False,
                  ):
 
         # Store arguments
         self.packet_dim = packet_dim
         self.extra_dim = extra_pred_dim
         self.device = device
+        # Explicit, parameterized AR-only ablation switch -- when True, skips the
+        # neural network's forward pass entirely (not just zeroing its output
+        # afterward) for a clean, on-demand comparison against any file.
+        self.disable_nn = disable_nn
 
         # Define the prediction length, including the extra length
         self.pred_dim = packet_dim + extra_pred_dim
@@ -75,19 +80,22 @@ class PARCnet:
                 ar_context = np.pad(ar_context, (self.ar_context_dim - len(ar_context), 0))
                 ar_pred = self.ar_model.predict(valid=ar_context, steps=self.pred_dim)
 
-                # NN model context
-                nn_context = output_signal[max(0, idx - self.nn_context_dim): idx]
-                nn_context = np.pad(nn_context, (self.nn_context_dim - len(nn_context), self.pred_dim))
-                nn_context = torch.Tensor(nn_context[None, None, ...]).to(self.device)
+                if self.disable_nn:
+                    nn_pred = np.zeros(self.pred_dim)
+                else:
+                    # NN model context
+                    nn_context = output_signal[max(0, idx - self.nn_context_dim): idx]
+                    nn_context = np.pad(nn_context, (self.nn_context_dim - len(nn_context), self.pred_dim))
+                    nn_context = torch.Tensor(nn_context[None, None, ...]).to(self.device)
 
-                # NN model inference
-                with torch.no_grad():
-                    nn_pred = self.neural_net(nn_context)
-                    nn_pred = nn_pred[..., -self.pred_dim:]
-                    nn_pred = nn_pred.squeeze().cpu().numpy()
+                    # NN model inference
+                    with torch.no_grad():
+                        nn_pred = self.neural_net(nn_context)
+                        nn_pred = nn_pred[..., -self.pred_dim:]
+                        nn_pred = nn_pred.squeeze().cpu().numpy()
 
-                # Apply fade-in to the neural network contribution (inbound fade-in)
-                nn_pred[:self.nn_fade_dim] *= self.nn_fade
+                    # Apply fade-in to the neural network contribution (inbound fade-in)
+                    nn_pred[:self.nn_fade_dim] *= self.nn_fade
 
                 # Combine the two predictions
                 prediction = ar_pred + nn_pred

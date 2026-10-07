@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>PLC Live Network Simulator</title>
+<link rel="stylesheet" href="style.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/3.1.0/chartjs-plugin-annotation.min.js"></script>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-mark">PLC</div>
+    <div>
+      <h1>Live Network Simulator</h1>
+      <div class="subtitle">Transmitted vs. AR-only vs. AR+NN concealment, on a simulated lossy link</div>
+    </div>
+  </div>
+  <div class="header-controls">
+    <label class="speed-control">Slowdown
+      <input type="range" id="speedSlider" min="1" max="150" value="50" />
+      <span id="speedLabel">50&times;</span>
+    </label>
+    <button id="initBtn" class="btn-primary">Load</button>
+    <button id="startBtn" class="btn-good" disabled>Start</button>
+    <button id="pauseBtn" class="btn-warn" disabled>Pause</button>
+    <button id="stopBtn" class="btn-bad" disabled>Stop</button>
+    <button id="fastForwardBtn" class="btn-primary" disabled title="Skip pacing and live plots -- run straight to the end for the final SNR">Fast Forward to End</button>
+
+    <div class="drop-toolbar">
+      <span class="drop-toolbar-label">Drop:</span>
+      <button class="drop-btn" data-count="1">1</button>
+      <button class="drop-btn" data-count="4">4</button>
+      <button class="drop-btn" data-count="6">6</button>
+      <button class="drop-btn" data-count="8">8</button>
+      <input type="number" id="dropCustomCount" value="10" min="1" />
+      <button id="dropCustomBtn">Drop N</button>
+    </div>
+
+    <div id="statusPill" class="pill pill-idle">IDLE</div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ===================== Controls ===================== -->
+  <aside class="panel controls">
+
+    <section>
+      <h2>Source</h2>
+      <label>File
+        <select id="fileSelect"></select>
+      </label>
+      <label>Clean reference (optional, for SNR)
+        <select id="cleanSelect"><option value="">None</option></select>
+      </label>
+      <div class="upload-row">
+        <input type="file" id="uploadInput" accept="audio/wav" class="visually-hidden" />
+        <label for="uploadInput" class="btn-file-choose">Choose File</label>
+        <span id="uploadFileName" class="upload-filename">No file chosen</span>
+        <button id="uploadBtn">Upload</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>AR / Concealment</h2>
+      <label>Order <input type="number" id="cfgOrder" value="256" min="4" step="4" /></label>
+      <label>Diagonal load <input type="number" id="cfgDiag" value="0.001" step="0.0001" /></label>
+      <label>Context samples <input type="number" id="cfgContext" value="4096" step="512" /></label>
+      <label>Extra / crossfade samples <input type="number" id="cfgExtra" value="256" step="32" /></label>
+      <label class="checkbox-row"><input type="checkbox" id="cfgEqualPower" /> Equal-power crossfade</label>
+    </section>
+
+    <section>
+      <h2>Neural Network</h2>
+      <label>NN context samples <input type="number" id="cfgNnContext" value="4096" step="512" /></label>
+      <label>NN fade-in samples <input type="number" id="cfgNnFade" value="64" step="8" /></label>
+      <div id="nnWarning" class="warning-box" hidden>
+        &#9888; NN compute time exceeds the current deadline -- it can't keep up in true
+        real-time with this buffer depth. Increase "Buffer depth" below.
+      </div>
+    </section>
+
+    <section>
+      <h2>Timing / Deadline</h2>
+      <label>Buffer depth (packets) <input type="number" id="cfgBufferDepth" value="1" min="1" step="1" /></label>
+      <label>Safety margin (ms) <input type="number" id="cfgSafetyMargin" value="1.0" step="0.1" /></label>
+      <div class="readout">
+        Packet duration: <span id="roPacketDur">-</span> ms<br/>
+        Deadline: <span id="roDeadline">-</span> ms<br/>
+        AR calibrated / wait budget: <span id="roComputeAr">-</span> / <span id="roWaitAr">-</span> ms<br/>
+        NN calibrated / wait budget: <span id="roComputeNn">-</span> / <span id="roWaitNn">-</span> ms<br/>
+        <em>Live, this packet</em> -- AR: <span id="roGenAr">-</span> ms, NN: <span id="roGenNn">-</span> ms
+      </div>
+    </section>
+
+    <section>
+      <h2>Manual Drop</h2>
+      <p class="hint">Moved to the top toolbar so it's visible while you watch the plots -- packet loss is 100% under your control, nothing drops on its own.</p>
+    </section>
+
+  </aside>
+
+  <!-- ===================== Main ===================== -->
+  <main class="main-col">
+
+    <!-- Dashboard cards -->
+    <div class="dashboard">
+      <div class="card">
+        <div class="card-label">Packet</div>
+        <div class="card-value"><span id="roPacketIdx">0</span> / <span id="roPacketTotal">0</span></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Loss rate</div>
+        <div class="card-value"><span id="roLostRate">0</span>% <span class="card-sub">(<span id="roLostCount">0</span> lost)</span></div>
+      </div>
+      <div class="card">
+        <div class="card-label">Status</div>
+        <div class="card-value"><span id="networkStatePill" class="pill pill-good">OK</span></div>
+      </div>
+      <div class="card">
+        <div class="card-label">SNR &mdash; This LPC</div>
+        <div class="card-value" id="snrArValue">N/A</div>
+      </div>
+      <div class="card">
+        <div class="card-label">SNR &mdash; This NN</div>
+        <div class="card-value" id="snrNnValue">N/A</div>
+      </div>
+    </div>
+
+    <!-- Waveform row -->
+    <div class="triple-grid">
+      <div class="chart-box">
+        <h3>Transmitted (as arrived, silence = lost)</h3>
+        <canvas id="waveTx" height="110"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>This LPC (AR-only, recursive)</h3>
+        <canvas id="waveAr" height="110"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>This NN (AR + PARCnet)</h3>
+        <canvas id="waveNn" height="110"></canvas>
+      </div>
+    </div>
+
+    <!-- Spectrogram row -->
+    <div class="triple-grid">
+      <div class="chart-box">
+        <h3>Spectrogram &mdash; Transmitted</h3>
+        <canvas id="specTx" width="960" height="220" class="spectrogram"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>Spectrogram &mdash; This LPC</h3>
+        <canvas id="specAr" width="960" height="220" class="spectrogram"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>Spectrogram &mdash; This NN</h3>
+        <canvas id="specNn" width="960" height="220" class="spectrogram"></canvas>
+      </div>
+    </div>
+
+    <!-- Crossfade boundary, zoomed -->
+    <div class="triple-grid">
+      <div class="chart-box">
+        <h3>Crossfade boundary, zoomed &mdash; This LPC</h3>
+        <canvas id="boundaryAr" height="110"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>Crossfade boundary, zoomed &mdash; This NN</h3>
+        <canvas id="boundaryNn" height="110"></canvas>
+      </div>
+      <div class="chart-box">
+        <div class="readout" id="boundaryInfo">
+          Shows the most recent hand-back from concealment to real audio, zoomed
+          tight on the splice point (dashed line at 0ms). Updates automatically
+          whenever a lost burst ends.
+        </div>
+      </div>
+    </div>
+
+    <!-- Diff + SNR history + log -->
+    <div class="triple-grid">
+      <div class="chart-box">
+        <h3>Difference (This LPC &minus; This NN)</h3>
+        <canvas id="diffChart" height="110"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>Running SNR (dB)</h3>
+        <canvas id="snrChart" height="110"></canvas>
+      </div>
+      <div class="chart-box">
+        <h3>Event log</h3>
+        <div id="log" class="log"></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "platform": "Windows-10-10.0.26200-SP0",
+  "processor": "AMD64 Family 23 Model 24 Stepping 1, AuthenticAMD",
+  "cpu_count": 8,
+  "torch_threads": 4,
+  "hparams": {
+    "ar_order": 256,
+    "diagonal_load": 0.001,
+    "context_dim_packets": 8,
+    "extra_dim": 256
+  },
+  "n_files": 5,
+  "seed": 0
+}

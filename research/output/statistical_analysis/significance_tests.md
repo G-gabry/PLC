@@ -1,6 +1,6 @@
 | metric | n_files | mean_lpc | mean_nn | mean_nn_advantage | ci95_low | ci95_high | nn_win_rate_pct | p_holm | rank_biserial_r | effect_size | verdict |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| SNR (dB) | 40 | 15.64 | 15.43 | -0.2187 | -0.4938 | 0.04322 | 42.5 | 0.7946 | -0.2049 | small | no significant difference |
-| MR-STFT dist. | 40 | 0.4504 | 0.3464 | 0.104 | 0.07405 | 0.1363 | 90 | 9.175e-09 | 0.9341 | large | NN better |
-| PLCMOS | 40 | 2.54 | 2.576 | 0.03608 | -0.01881 | 0.09372 | 55 | 0.7946 | 0.1927 | small | no significant difference |
-| ViSQOL MOS-LQO | 40 | 4.479 | 4.49 | 0.01134 | -0.01678 | 0.04221 | 57.5 | 0.7946 | 0.1927 | small | no significant difference |
+| SNR (dB) | 200 | 15.45 | 15.21 | -0.2347 | -0.3687 | -0.1036 | 40.5 | 0.003708 | -0.2538 | small | LPC better |
+| MR-STFT dist. | 200 | 0.4652 | 0.36 | 0.1052 | 0.0867 | 0.1257 | 90.5 | 2.736e-27 | 0.8927 | large | NN better |
+| PLCMOS | 200 | 2.406 | 2.457 | 0.0508 | 0.02994 | 0.07182 | 68 | 4.801e-07 | 0.4274 | medium | NN better |
+| ViSQOL MOS-LQO | 200 | 4.507 | 4.497 | -0.00997 | -0.02501 | 0.005084 | 46 | 0.07665 | -0.1444 | small | no significant difference |

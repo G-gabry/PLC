@@ -1,34 +1,34 @@
 | hyperparameter | method | metric | n_files | default_value | metric_at_default | best_value | metric_at_best | gain_over_default | median_time_ms_at_default | median_time_ms_at_best |
 |---|---|---|---|---|---|---|---|---|---|---|
-| ar_order | LPC | SNR (dB) | 4 | 256 | 14.77 | 1024 | 17.21 | 2.438 | 925.1 | 692.9 |
-| ar_order | LPC | MR-STFT dist. | 4 | 256 | 0.3959 | 1536 | 0.3272 | 0.0687 | 925.1 | 933.4 |
-| ar_order | LPC | PLCMOS | 4 | 256 | 2.7 | 1536 | 2.88 | 0.1803 | 925.1 | 933.4 |
-| ar_order | LPC | ViSQOL MOS-LQO | 4 | 256 | 4.525 | 1024 | 4.563 | 0.03816 | 925.1 | 692.9 |
-| ar_order | NN | SNR (dB) | 4 | 256 | 13.96 | 1536 | 15.07 | 1.11 | 6252 | 3989 |
-| ar_order | NN | MR-STFT dist. | 4 | 256 | 0.3199 | 1024 | 0.3019 | 0.01797 | 6252 | 3925 |
-| ar_order | NN | PLCMOS | 4 | 256 | 2.788 | 768 | 2.839 | 0.05149 | 6252 | 4042 |
-| ar_order | NN | ViSQOL MOS-LQO | 4 | 256 | 4.549 | 512 | 4.577 | 0.02812 | 6252 | 3829 |
-| context_length_packets | LPC | SNR (dB) | 4 | 8 | 14.77 | 8 | 14.77 | 0 | 963.5 | 963.5 |
-| context_length_packets | LPC | MR-STFT dist. | 4 | 8 | 0.3959 | 16 | 0.3933 | 0.002602 | 963.5 | 129.9 |
-| context_length_packets | LPC | PLCMOS | 4 | 8 | 2.7 | 16 | 2.706 | 0.005755 | 963.5 | 129.9 |
-| context_length_packets | LPC | ViSQOL MOS-LQO | 4 | 8 | 4.525 | 128 | 4.533 | 0.008239 | 963.5 | 666.6 |
-| context_length_packets | NN | SNR (dB) | 4 | 8 | 13.96 | 8 | 13.96 | 0 | 6483 | 6483 |
-| context_length_packets | NN | MR-STFT dist. | 4 | 8 | 0.3199 | 8 | 0.3199 | 0 | 6483 | 6483 |
-| context_length_packets | NN | PLCMOS | 4 | 8 | 2.788 | 8 | 2.788 | 0 | 6483 | 6483 |
-| context_length_packets | NN | ViSQOL MOS-LQO | 4 | 8 | 4.549 | 8 | 4.549 | 0 | 6483 | 6483 |
-| diagonal_load | LPC | SNR (dB) | 4 | 0.001 | 14.77 | 1e-05 | 14.78 | 0.006644 | 1114 | 1126 |
-| diagonal_load | LPC | MR-STFT dist. | 4 | 0.001 | 0.3959 | 1e-05 | 0.3858 | 0.01009 | 1114 | 1126 |
-| diagonal_load | LPC | PLCMOS | 4 | 0.001 | 2.7 | 1e-05 | 2.707 | 0.00716 | 1114 | 1126 |
-| diagonal_load | LPC | ViSQOL MOS-LQO | 4 | 0.001 | 4.525 | 1e-05 | 4.526 | 0.001525 | 1114 | 1126 |
-| diagonal_load | NN | SNR (dB) | 4 | 0.001 | 13.96 | 1e-06 | 13.97 | 0.002445 | 5781 | 6013 |
-| diagonal_load | NN | MR-STFT dist. | 4 | 0.001 | 0.3199 | 1e-06 | 0.3183 | 0.001538 | 5781 | 6013 |
-| diagonal_load | NN | PLCMOS | 4 | 0.001 | 2.788 | 1e-06 | 2.794 | 0.005935 | 5781 | 6013 |
-| diagonal_load | NN | ViSQOL MOS-LQO | 4 | 0.001 | 4.549 | 1e-06 | 4.55 | 0.001338 | 5781 | 6013 |
-| extra_dim | LPC | SNR (dB) | 4 | 256 | 14.77 | 16 | 15.41 | 0.6458 | 119.6 | 1087 |
-| extra_dim | LPC | MR-STFT dist. | 4 | 256 | 0.3959 | 32 | 0.3482 | 0.04767 | 119.6 | 1073 |
-| extra_dim | LPC | PLCMOS | 4 | 256 | 2.717 | 192 | 2.724 | 0.007514 | 119.6 | 108.6 |
-| extra_dim | LPC | ViSQOL MOS-LQO | 4 | 256 | 4.525 | 32 | 4.561 | 0.03597 | 119.6 | 1073 |
-| extra_dim | NN | SNR (dB) | 4 | 256 | 13.96 | 16 | 14.51 | 0.5482 | 3747 | 5966 |
-| extra_dim | NN | MR-STFT dist. | 4 | 256 | 0.3199 | 64 | 0.3005 | 0.01933 | 3747 | 5839 |
-| extra_dim | NN | PLCMOS | 4 | 256 | 2.783 | 192 | 2.816 | 0.03257 | 3747 | 3481 |
-| extra_dim | NN | ViSQOL MOS-LQO | 4 | 256 | 4.549 | 64 | 4.57 | 0.02133 | 3747 | 5839 |
+| ar_order | LPC | SNR (dB) | 200 | 256 | 15.45 | 1024 | 16.57 | 1.117 | 131.9 | 456.8 |
+| ar_order | LPC | MR-STFT dist. | 200 | 256 | 0.4652 | 2048 | 0.3907 | 0.07458 | 131.9 | 1313 |
+| ar_order | LPC | PLCMOS | 200 | 256 | 2.394 | 1536 | 2.506 | 0.1122 | 131.9 | 881.8 |
+| ar_order | LPC | ViSQOL MOS-LQO | 200 | 256 | 4.507 | 1024 | 4.529 | 0.02212 | 131.9 | 456.8 |
+| ar_order | NN | SNR (dB) | 200 | 256 | 15.21 | 768 | 15.41 | 0.1971 | 2964 | 3513 |
+| ar_order | NN | MR-STFT dist. | 200 | 256 | 0.36 | 768 | 0.3578 | 0.002156 | 2964 | 3513 |
+| ar_order | NN | PLCMOS | 200 | 256 | 2.463 | 768 | 2.52 | 0.05646 | 2964 | 3513 |
+| ar_order | NN | ViSQOL MOS-LQO | 200 | 256 | 4.497 | 384 | 4.507 | 0.01007 | 2964 | 2998 |
+| context_length_packets | LPC | SNR (dB) | 200 | 8 | 15.45 | 8 | 15.45 | 0 | 136.8 | 136.8 |
+| context_length_packets | LPC | MR-STFT dist. | 200 | 8 | 0.4652 | 16 | 0.4609 | 0.004307 | 136.8 | 145.8 |
+| context_length_packets | LPC | PLCMOS | 200 | 8 | 2.394 | 16 | 2.429 | 0.03536 | 136.8 | 145.8 |
+| context_length_packets | LPC | ViSQOL MOS-LQO | 200 | 8 | 4.507 | 32 | 4.511 | 0.004223 | 136.8 | 175.1 |
+| context_length_packets | NN | SNR (dB) | 200 | 8 | 15.21 | 8 | 15.21 | 0 | 2943 | 2943 |
+| context_length_packets | NN | MR-STFT dist. | 200 | 8 | 0.36 | 8 | 0.36 | 0 | 2943 | 2943 |
+| context_length_packets | NN | PLCMOS | 200 | 8 | 2.464 | 8 | 2.464 | 0 | 2943 | 2943 |
+| context_length_packets | NN | ViSQOL MOS-LQO | 200 | 8 | 4.497 | 8 | 4.497 | 0 | 2943 | 2943 |
+| diagonal_load | LPC | SNR (dB) | 200 | 0.001 | 15.45 | 0.001 | 15.45 | 0 | 127.4 | 127.4 |
+| diagonal_load | LPC | MR-STFT dist. | 200 | 0.001 | 0.4652 | 1e-06 | 0.4525 | 0.01277 | 127.4 | 145.5 |
+| diagonal_load | LPC | PLCMOS | 200 | 0.001 | 2.395 | 1e-05 | 2.409 | 0.01399 | 127.4 | 132.5 |
+| diagonal_load | LPC | ViSQOL MOS-LQO | 200 | 0.001 | 4.507 | 0.0001 | 4.508 | 0.001247 | 127.4 | 128.7 |
+| diagonal_load | NN | SNR (dB) | 200 | 0.001 | 15.21 | 0.0001 | 15.22 | 0.001466 | 3454 | 3257 |
+| diagonal_load | NN | MR-STFT dist. | 200 | 0.001 | 0.36 | 1e-05 | 0.3594 | 0.0006027 | 3454 | 3334 |
+| diagonal_load | NN | PLCMOS | 200 | 0.001 | 2.462 | 0.0001 | 2.467 | 0.005013 | 3454 | 3257 |
+| diagonal_load | NN | ViSQOL MOS-LQO | 200 | 0.001 | 4.497 | 1e-05 | 4.498 | 0.001254 | 3454 | 3334 |
+| extra_dim | LPC | SNR (dB) | 200 | 256 | 15.45 | 16 | 16.3 | 0.8539 | 130.2 | 143.5 |
+| extra_dim | LPC | MR-STFT dist. | 200 | 256 | 0.4652 | 32 | 0.4152 | 0.05001 | 130.2 | 116.7 |
+| extra_dim | LPC | PLCMOS | 200 | 256 | 2.408 | 384 | 2.414 | 0.006023 | 130.2 | 140.4 |
+| extra_dim | LPC | ViSQOL MOS-LQO | 200 | 256 | 4.507 | 32 | 4.545 | 0.03782 | 130.2 | 116.7 |
+| extra_dim | NN | SNR (dB) | 200 | 256 | 15.21 | 16 | 16.03 | 0.8185 | 3579 | 3777 |
+| extra_dim | NN | MR-STFT dist. | 200 | 256 | 0.36 | 64 | 0.3393 | 0.02067 | 3579 | 3528 |
+| extra_dim | NN | PLCMOS | 200 | 256 | 2.468 | 384 | 2.472 | 0.003994 | 3579 | 3468 |
+| extra_dim | NN | ViSQOL MOS-LQO | 200 | 256 | 4.497 | 128 | 4.508 | 0.01103 | 3579 | 3632 |

@@ -40,6 +40,17 @@ and the fixed defaults for the other hyperparameters are all arguments.
 Usage:
     python -m research.run_hparam_sweeps --n-files 20
 """
+import os
+
+# Must happen before numpy/scipy/numba are imported by anything (including
+# research.dataset_utils below) -- see run_metrics_comparison.py's identical
+# block for why: without this, --workers > 1 oversubscribes the machine by
+# a factor of workers, since each worker's own BLAS/OpenMP pool otherwise
+# tries to use every core on the machine.
+for _env_var in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
+                 "NUMEXPR_NUM_THREADS", "VECLIB_MAXIMUM_THREADS", "NUMBA_NUM_THREADS"):
+    os.environ.setdefault(_env_var, "1")
+
 import argparse
 import time
 from pathlib import Path

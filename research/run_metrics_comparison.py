@@ -33,9 +33,24 @@ Produces:
 Usage:
     python -m research.run_metrics_comparison --n-files 40 --seed 0
 """
+import os
+
+# Must happen before numpy/scipy/numba are imported by anything (including
+# research.dataset_utils below): each one spawns its own BLAS/OpenMP thread
+# pool sized to the machine's full core count unless told otherwise. With
+# --workers > 1, that means every one of N worker processes independently
+# tries to use all cores for its linear algebra (the AR model's
+# autocorrelation fit), so N processes oversubscribe the machine by a factor
+# of N -- observed on a 32-vCPU VM as a load average above 400 and each
+# worker taking 20+ minutes of CPU time to finish one file. Each worker is
+# already a unit of parallelism (one file at a time); the math inside it
+# should run single-threaded.
+for _env_var in ("OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
+                 "NUMEXPR_NUM_THREADS", "VECLIB_MAXIMUM_THREADS", "NUMBA_NUM_THREADS"):
+    os.environ.setdefault(_env_var, "1")
+
 import argparse
 import json
-import os
 import platform
 import time
 from pathlib import Path

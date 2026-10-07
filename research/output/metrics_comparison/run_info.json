@@ -1,14 +1,15 @@
 {
-  "platform": "Windows-10-10.0.26200-SP0",
-  "processor": "AMD64 Family 23 Model 24 Stepping 1, AuthenticAMD",
-  "cpu_count": 8,
-  "torch_threads": 4,
+  "platform": "Linux-6.12.111+deb13-cloud-amd64-x86_64-with-glibc2.41",
+  "processor": "",
+  "cpu_count": 32,
+  "workers": 16,
+  "torch_threads": 1,
   "hparams": {
     "ar_order": 256,
     "diagonal_load": 0.001,
     "context_dim_packets": 8,
     "extra_dim": 256
   },
-  "n_files": 5,
+  "n_files": 200,
   "seed": 0
 }

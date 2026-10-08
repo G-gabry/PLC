@@ -121,24 +121,36 @@ def _evaluate_task(task) -> dict:
     return row
 
 
-def sweep_hparam(stems: list[str], param_name: str, values: list, apply_value, workers: int = 1) -> pd.DataFrame:
+def sweep_hparam(stems: list[str], param_name: str, values: list, apply_value, workers: int = 1,
+                 checkpoint: safe_io.Checkpoint | None = None) -> pd.DataFrame:
     """Whole-file, real-trace sweep: `apply_value(value)` maps one swept
     value to the full hparams dict to evaluate every file with. Every
     (value, file) pair is an independent task, spread over `workers`
-    processes.
+    processes. With a checkpoint, each finished pair is saved at once and
+    pairs already in it are not recomputed.
     """
-    tasks = [(stem, apply_value(value), param_name, value) for value in values for stem in stems]
-    rows = []
-    results = dataset_utils.parallel_map(_evaluate_task, tasks, workers,
-                                         initializer=_init_worker, initargs=(workers > 1,))
-    for i, row in enumerate(results, start=1):
-        rows.append(row)
-        if i % len(stems) == 0:
-            print(f"  {param_name} = {row['value']}: done ({len(stems)} files)", flush=True)
-    return pd.DataFrame(rows)
+    if checkpoint is None:
+        checkpoint = safe_io.Checkpoint(None)
+    key = lambda value, stem: f"{param_name}|{value!r}|{stem}"
+    todo = [(stem, apply_value(value), param_name, value) for value in values for stem in stems
+            if key(value, stem) not in checkpoint]
+    left = {value: sum(key(value, stem) not in checkpoint for stem in stems) for value in values}
+    if len(todo) < len(values) * len(stems):
+        print(f"  {param_name}: resuming, {len(values) * len(stems) - len(todo)} evaluations already saved, "
+              f"{len(todo)} to go", flush=True)
+
+    results = dataset_utils.resilient_map(_evaluate_task, todo, workers,
+                                          initializer=_init_worker, initargs=(workers > 1,))
+    for task_index, row in results:
+        stem, _, _, value = todo[task_index]
+        checkpoint.add(key(value, stem), row)
+        left[value] -= 1
+        if left[value] == 0:
+            print(f"  {param_name} = {value}: done ({len(stems)} files)", flush=True)
+    return pd.DataFrame([checkpoint.records[key(value, stem)] for value in values for stem in stems])
 
 
-def sweep_ar_order(files, values=(32, 64, 128, 256, 384, 512, 768, 1024, 1536, 2048, 3072, 3840), workers=1):
+def sweep_ar_order(files, values=(32, 64, 128, 256, 384, 512, 768, 1024, 1536, 2048, 3072, 3840), workers=1, checkpoint=None):
     """Pushed to 3840 -- right up against the hard structural limit (order
     must stay below the AR context length in samples, 4096 here with the
     default context_dim_packets=8). Verified empirically (in the earlier
@@ -146,24 +158,24 @@ def sweep_ar_order(files, values=(32, 64, 128, 256, 384, 512, 768, 1024, 1536, 2
     close to the limit, and that SNR plateaus near 0 dB by ~768-1024.
     """
     return sweep_hparam(files, "ar_order", list(values),
-                         lambda v: {**DEFAULT_HPARAMS, "ar_order": v}, workers)
+                         lambda v: {**DEFAULT_HPARAMS, "ar_order": v}, workers, checkpoint)
 
 
-def sweep_context_length(files, values=(1, 2, 4, 8, 16, 32, 64, 96, 128, 192, 256), workers=1):
+def sweep_context_length(files, values=(1, 2, 4, 8, 16, 32, 64, 96, 128, 192, 256), workers=1, checkpoint=None):
     """Pushed to 256 packets (~3s of context for predicting one packet) to
     see whether the plateau past the trained default (8) is a hard ceiling
     or keeps slowly drifting.
     """
     return sweep_hparam(files, "context_length_packets", list(values),
-                         lambda v: {**DEFAULT_HPARAMS, "context_dim_packets": v}, workers)
+                         lambda v: {**DEFAULT_HPARAMS, "context_dim_packets": v}, workers, checkpoint)
 
 
-def sweep_diagonal_load(files, values=(1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1.0), workers=1):
+def sweep_diagonal_load(files, values=(1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 1e-1, 1.0), workers=1, checkpoint=None):
     return sweep_hparam(files, "diagonal_load", list(values),
-                         lambda v: {**DEFAULT_HPARAMS, "diagonal_load": v}, workers)
+                         lambda v: {**DEFAULT_HPARAMS, "diagonal_load": v}, workers, checkpoint)
 
 
-def sweep_extra_dim(files, values=(16, 32, 64, 128, 192, 256, 384, 512, 768, 1024), workers=1):
+def sweep_extra_dim(files, values=(16, 32, 64, 128, 192, 256, 384, 512, 768, 1024), workers=1, checkpoint=None):
     """0 is deliberately excluded: the production PARCnet class (parcnet.py)
     has a latent edge-case bug there -- `prediction[-self.extra_dim:]` with
     extra_dim=0 slices as `[-0:]`, which Python/NumPy treats as the *whole*
@@ -177,7 +189,7 @@ def sweep_extra_dim(files, values=(16, 32, 64, 128, 192, 256, 384, 512, 768, 102
     extrapolating well past the lost packet's own length (512 samples).
     """
     return sweep_hparam(files, "extra_dim", list(values),
-                         lambda v: {**DEFAULT_HPARAMS, "extra_dim": v}, workers)
+                         lambda v: {**DEFAULT_HPARAMS, "extra_dim": v}, workers, checkpoint)
 
 
 def plot_sweep(df: pd.DataFrame, title: str, xlabel: str, out_path: Path, x_log: bool = False) -> Path:
@@ -243,9 +255,12 @@ def main():
     parser.add_argument("--workers", type=int, default=1,
                         help="Parallel processes. Use about the number of physical cores. Compute-time "
                              "results are then single-threaded and measured under load.")
+    parser.add_argument("--fresh", action="store_true",
+                        help="Ignore results saved by an earlier (possibly crashed) run and start over.")
     args = parser.parse_args()
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
+    checkpoint = safe_io.Checkpoint(args.out_dir / "checkpoint.jsonl", fresh=args.fresh)
 
     stems = dataset_utils.select_diverse_stems(args.n_files, seed=args.seed, workers=args.workers)
     print(f"Sampled {len(stems)} files from example_test_set (seed={args.seed}), "
@@ -259,7 +274,7 @@ def main():
     ]
 
     for title, param_name, sweep_fn, x_log in sweep_fns:
-        df = sweep_fn(stems, workers=args.workers)
+        df = sweep_fn(stems, workers=args.workers, checkpoint=checkpoint)
         csv_path = args.out_dir / f"sweep_{param_name}.csv"
         png_path = args.out_dir / f"sweep_{param_name}.png"
         actual_csv_path = safe_io.save_csv_safe(df, csv_path, index=False)

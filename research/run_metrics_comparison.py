@@ -252,6 +252,8 @@ def main():
     parser.add_argument("--workers", type=int, default=1,
                         help="Parallel processes (one file each). Use about the number of physical cores. "
                              "Per-file timings are then single-threaded and measured under load.")
+    parser.add_argument("--fresh", action="store_true",
+                        help="Ignore results saved by an earlier (possibly crashed) run and start over.")
     args = parser.parse_args()
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
@@ -264,15 +266,30 @@ def main():
 
     save_run_info(args.out_dir, hparams, args)
 
-    rows, all_burst_rows = [], []
-    results = dataset_utils.parallel_map(evaluate_stem, [(stem, hparams) for stem in stems], args.workers,
-                                         initializer=init_worker, initargs=(hparams, args.workers > 1))
-    for i, (row, file_burst_rows) in enumerate(results, start=1):
-        rows.append(row)
-        all_burst_rows.extend(file_burst_rows)
-        print(f"[{i}/{len(stems)}] {row['file']} ({row['n_packets']} pkts, {row['loss_rate_pct']:.1f}% lost): "
+    # Every finished file goes straight to the checkpoint, so a crash loses
+    # only the files in flight and re-running the same command resumes.
+    checkpoint = safe_io.Checkpoint(args.out_dir / "checkpoint.jsonl", fresh=args.fresh)
+    key_of = {stem: f"{stem}|{json.dumps(hparams, sort_keys=True)}" for stem in stems}
+    todo = [stem for stem in stems if key_of[stem] not in checkpoint]
+    n_done = len(stems) - len(todo)
+    if n_done:
+        print(f"Resuming: {n_done} files already in {checkpoint.path.name}, {len(todo)} to go "
+              f"(use --fresh to start over).", flush=True)
+
+    results = dataset_utils.resilient_map(evaluate_stem, [(stem, hparams) for stem in todo], args.workers,
+                                          initializer=init_worker, initargs=(hparams, args.workers > 1))
+    for task_index, (row, file_burst_rows) in results:
+        checkpoint.add(key_of[todo[task_index]], {"row": row, "bursts": file_burst_rows})
+        n_done += 1
+        print(f"[{n_done}/{len(stems)}] {row['file']} ({row['n_packets']} pkts, {row['loss_rate_pct']:.1f}% lost): "
               f"SNR lpc={row['snr_lpc']:.2f} nn={row['snr_nn']:.2f} dB | "
               f"PLCMOS lpc={row['plcmos_lpc']:.2f} nn={row['plcmos_nn']:.2f}", flush=True)
+
+    rows, all_burst_rows = [], []
+    for stem in stems:
+        record = checkpoint.records[key_of[stem]]
+        rows.append(record["row"])
+        all_burst_rows.extend(record["bursts"])
 
     df = pd.DataFrame(rows)
     safe_io.save_csv(df, args.out_dir / "per_file_results.csv", index=False)

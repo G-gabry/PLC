@@ -2,7 +2,7 @@
   "platform": "Linux-6.12.111+deb13-cloud-amd64-x86_64-with-glibc2.41",
   "processor": "",
   "cpu_count": 32,
-  "workers": 24,
+  "workers": 16,
   "torch_threads": 1,
   "hparams": {
     "ar_order": 256,

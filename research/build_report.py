@@ -37,18 +37,23 @@ from docx.oxml.ns import qn
 from docx.shared import Pt, Cm, RGBColor
 
 from research import dataset_utils, concealment, safe_io
-from research.run_metrics_comparison import ALL_METRICS
+from research.run_metrics_comparison import ALL_METRICS, METHODS, BASELINE_KEY
 
 OUTPUT_DIR = Path(__file__).resolve().parent / "output"
 DEFAULT_OUT = OUTPUT_DIR / "report" / "PLC_LPC_vs_PARCnet_Report.docx"
 
 AUTHOR = "Omar Ali Elgabry"
-TITLE = ("Hybrid Neural versus Purely Autoregressive Packet Loss Concealment "
+TITLE = ("Autoregressive, Hybrid Neural and Sparse-AR Packet Loss Concealment "
          "for Networked Music: An Evaluation on Real Loss Traces")
 
 MIN_FILES_FOR_CONCLUSIONS = 30
 MIN_SWEEP_FILES = 10
 CONTENT_WIDTH_CM = 16.0
+
+METHOD_KEYS = [m[0] for m in METHODS]
+METHOD_LABEL = {m[0]: m[1] for m in METHODS}
+NON_BASELINE_KEYS = [m for m in METHOD_KEYS if m != BASELINE_KEY]
+METHOD_PAIRS = [(METHODS[i][0], METHODS[j][0]) for i in range(len(METHODS)) for j in range(i + 1, len(METHODS))]
 
 METRIC_DESC = {
     "snr": "time-domain signal-to-noise ratio",
@@ -61,6 +66,15 @@ SWEEP_LABELS = {
     "context_length_packets": ("Context length (packets)", "context_dim_packets"),
     "diagonal_load": ("Diagonal loading λ", "diagonal_load"),
     "extra_dim": ("Crossfade length E (samples)", "extra_dim"),
+    "max_k_lags": ("Sparse AR: max. long-term lags k", "max_k_lags"),
+    "max_lag_l": ("Sparse AR: max. lag L", "max_lag_l"),
+    "burg_order_pb": ("Sparse AR: Burg (short-term) order p_b", "burg_order_pb"),
+    "lambda_reg": ("Sparse AR: regularization λ", "lambda_reg"),
+}
+SWEEP_ONLY_METHODS = {  # hyperparameter -> methods it was swept for, when not all three
+    "ar_order": ["lpc", "nn"], "diagonal_load": ["lpc", "nn"],
+    "max_k_lags": ["sparse_ar"], "max_lag_l": ["sparse_ar"],
+    "burg_order_pb": ["sparse_ar"], "lambda_reg": ["sparse_ar"],
 }
 
 REFERENCES = [
@@ -97,6 +111,12 @@ REFERENCES = [
     ("efron1993", 'B. Efron and R. J. Tibshirani, An Introduction to the Bootstrap. Chapman & Hall/CRC, 1993.'),
     ("itu1534", 'ITU-R Recommendation BS.1534-3, "Method for the subjective assessment of intermediate quality '
                 'level of audio systems (MUSHRA)," 2015.'),
+    ("severi2025", 'L. Severi, "Orthogonal Matching Pursuit based Linear prediction for Real-time Packet Loss '
+                   'Concealment," technical report, Politecnico di Torino, 2025.'),
+    ("vos2013", 'K. Vos, "A fast implementation of Burg\'s method," OPUS codec technical report, 2013.'),
+    ("pati1993", 'Y. Pati, R. Rezaiifar, and P. Krishnaprasad, "Orthogonal matching pursuit: recursive function '
+                 'approximation with applications to wavelet decomposition," in Proc. 27th Asilomar Conference '
+                 'on Signals, Systems and Computers, 1993, pp. 40-44.'),
 ]
 REF_NUM = {key: i + 1 for i, (key, _) in enumerate(REFERENCES)}
 
@@ -381,8 +401,8 @@ def software_versions() -> list[list[str]]:
     return rows
 
 
-def oriented(df: pd.DataFrame, key: str, lower_is_better: bool) -> pd.Series:
-    d = df[f"{key}_nn"] - df[f"{key}_lpc"]
+def oriented(df: pd.DataFrame, key: str, lower_is_better: bool, method_a: str, method_b: str) -> pd.Series:
+    d = df[f"{key}_{method_a}"] - df[f"{key}_{method_b}"]
     return -d if lower_is_better else d
 
 
@@ -414,11 +434,19 @@ class Context:
         info_path = metrics_dir / "run_info.json"
         self.run_info = json.loads(info_path.read_text()) if info_path.exists() else {}
         self.hparams = self.run_info.get("hparams", dict(ar_order=256, diagonal_load=0.001,
-                                                         context_dim_packets=8, extra_dim=256))
+                                                         context_dim_packets=8, extra_dim=256,
+                                                         max_k_lags=3, max_lag_l=1024,
+                                                         burg_order_pb=8, lambda_reg=0.01))
         self.tests = read_csv(stats_dir / "significance_tests.csv")
         self.burst_q = read_csv(stats_dir / "burst_length_quality.csv")
         self.sweep_summary = read_csv(stats_dir / "sweep_summary.csv")
-        self.failures = read_csv(stats_dir / "failure_cases" / "failure_cases.csv")
+        self.failures = {}
+        failures_root = stats_dir / "failure_cases"
+        if failures_root.exists():
+            for method in NON_BASELINE_KEYS:
+                df = read_csv(failures_root / method / "failure_cases.csv")
+                if df is not None and not df.empty:
+                    self.failures[method] = df
         self.gap_mse = read_csv(output_dir / "burst_comparisons" / "gap_mse_summary.csv")
         self.sweeps = {}
         for path in sorted((output_dir / "hparam_sweeps").glob("sweep_*.csv")):
@@ -430,64 +458,119 @@ class Context:
         self.sr = int(self.per_file["sample_rate"].iloc[0]) if (
             self.per_file is not None and "sample_rate" in self.per_file) else 44100
         self.packet_ms = concealment.PACKET_SIZE / self.sr * 1000
-        self.has_timing = self.per_file is not None and "ms_per_lost_packet_nn" in self.per_file
+        self.methods_present = ([m for m in METHOD_KEYS if f"snr_{m}" in self.per_file.columns]
+                                if self.per_file is not None else [])
+        self.non_baseline_present = [m for m in self.methods_present if m != BASELINE_KEY]
+        self.has_timing = (self.per_file is not None and
+                           all(f"ms_per_lost_packet_{m}" in self.per_file.columns for m in self.methods_present))
         self.sweep_files = {p: df["file"].nunique() for p, (df, _) in self.sweeps.items()}
         self.preliminary = (self.n_files < MIN_FILES_FOR_CONCLUSIONS or
                             any(n < MIN_SWEEP_FILES for n in self.sweep_files.values()))
 
-    def test_row(self, key: str):
+    def test_row(self, key: str, method_a: str, method_b: str):
         label = next(l for k, l, _ in ALL_METRICS if k == key)
-        return self.tests[self.tests["metric"] == label].iloc[0]
+        t = self.tests
+        row = t[(t["metric"] == label) & (t["method_a"] == METHOD_LABEL[method_a]) &
+                (t["method_b"] == METHOD_LABEL[method_b])]
+        return row.iloc[0] if len(row) else None
+
+    def advantage(self, key: str, method: str, baseline: str = BASELINE_KEY):
+        """Mean advantage (and verdict/p/CI/effect size) of `method` over
+        `baseline` for metric `key`, regardless of which order
+        significance_tests.csv happened to store that pair in -- METHOD_PAIRS
+        always lists whichever method comes first in METHODS, which for any
+        non-baseline method is the baseline itself (index 0), i.e. the
+        opposite of "method vs baseline". Returns None if the pair isn't in
+        ctx.tests at all.
+        """
+        row = self.test_row(key, method, baseline)
+        if row is not None:
+            return row
+        row = self.test_row(key, baseline, method)
+        if row is None:
+            return None
+        flipped = row.copy()
+        flipped["mean_a_advantage"] = -row["mean_a_advantage"]
+        flipped["median_a_advantage"] = -row["median_a_advantage"]
+        flipped["ci95_low"], flipped["ci95_high"] = -row["ci95_high"], -row["ci95_low"]
+        flipped["a_win_rate_pct"] = 100 - row["a_win_rate_pct"]
+        flipped["rank_biserial_r"] = -row["rank_biserial_r"]
+        return flipped  # "verdict" already names the better method by label text, no flip needed
 
     def rtf(self, method: str) -> np.ndarray:
         return (self.per_file[f"ms_per_lost_packet_{method}"] / self.packet_ms).dropna().to_numpy()
 
 
-def significance_sentence(ctx: Context) -> str:
+def significance_sentence(ctx: Context, method: str) -> str:
+    """One sentence summarizing `method` vs. the baseline (LPC) across all four metrics."""
     if ctx.tests is None:
         return ""
-    groups = {"NN better": [], "LPC better": [], "no significant difference": []}
-    for _, row in ctx.tests.iterrows():
-        groups[row["verdict"]].append(row["metric"])
+    groups = {"better": [], "worse": [], "no significant difference": []}
+    any_found = False
+    for key, label, _ in ALL_METRICS:
+        row = ctx.advantage(key, method, BASELINE_KEY)
+        if row is None:
+            continue
+        any_found = True
+        if row["verdict"] == "no significant difference":
+            groups["no significant difference"].append(label)
+        elif row["verdict"] == METHOD_LABEL[method]:
+            groups["better"].append(label)
+        else:
+            groups["worse"].append(label)
+    if not any_found:
+        return ""
     parts = []
-    if groups["NN better"]:
-        parts.append(f"significantly better with the neural residual on {join_words(groups['NN better'])}")
-    if groups["LPC better"]:
-        parts.append(f"significantly better with AR alone on {join_words(groups['LPC better'])}")
+    if groups["better"]:
+        parts.append(f"significantly better than {METHOD_LABEL[BASELINE_KEY]} on {join_words(groups['better'])}")
+    if groups["worse"]:
+        parts.append(f"significantly worse than {METHOD_LABEL[BASELINE_KEY]} on {join_words(groups['worse'])}")
     if groups["no significant difference"]:
         parts.append(f"not significantly different on {join_words(groups['no significant difference'])}")
-    return f"After Holm correction (α = 0.05, n = {ctx.n_files} files), quality was " + "; ".join(parts) + "."
+    return (f"After Holm correction (α = 0.05, n = {ctx.n_files} files), {METHOD_LABEL[method]} was " +
+            "; ".join(parts) + ".")
 
 
 def realtime_sentence(ctx: Context) -> str:
     if not ctx.has_timing:
         return ""
-    lpc, nn = np.median(ctx.rtf("lpc")), np.median(ctx.rtf("nn"))
+    medians = {m: np.median(ctx.rtf(m)) for m in ctx.methods_present}
+    bits = [f"{METHOD_LABEL[m]} {np.median(ctx.per_file[f'ms_per_lost_packet_{m}'].dropna()):.2f} ms "
+            f"(RTF {medians[m]:.2f})" for m in ctx.methods_present]
+    cannot = [METHOD_LABEL[m] for m, v in medians.items() if v > 1]
     return (f"On the evaluation CPU, concealing one {ctx.packet_ms:.1f} ms packet took a median of "
-            f"{np.median(ctx.per_file['ms_per_lost_packet_lpc'].dropna()):.2f} ms with AR alone "
-            f"(real-time factor {lpc:.2f}) and {np.median(ctx.per_file['ms_per_lost_packet_nn'].dropna()):.1f} ms "
-            f"with the hybrid model (real-time factor {nn:.2f}), i.e. the hybrid model "
-            f"{'cannot' if nn > 1 else 'can'} run in real time on this hardware.")
+            f"{join_words(bits)}, i.e. " +
+            (f"{join_words(cannot)} cannot run in real time on this hardware"
+             if cannot else "every method can run in real time on this hardware") + ".")
 
 
 def burst_sentence(ctx: Context) -> str:
     if ctx.burst_q is None or ctx.burst_q.empty:
         return ""
     first, last = ctx.burst_q.iloc[0], ctx.burst_q.iloc[-1]
-    sig_pos = [r["burst_length_bin"] for _, r in ctx.burst_q.iterrows() if r["nn_advantage_ci_low"] > 0]
-    sig_neg = [r["burst_length_bin"] for _, r in ctx.burst_q.iterrows() if r["nn_advantage_ci_high"] < 0]
-    s = (f"Gap SNR decreased from {f(first['gap_snr_lpc_mean'])} dB (AR) / {f(first['gap_snr_nn_mean'])} dB "
-         f"(hybrid) for single-packet losses to {f(last['gap_snr_lpc_mean'])} / {f(last['gap_snr_nn_mean'])} dB "
+    means_first = ", ".join(f"{METHOD_LABEL[m]} {f(first.get(f'gap_snr_{m}_mean', np.nan))}"
+                            for m in ctx.methods_present if f"gap_snr_{m}_mean" in first)
+    means_last = ", ".join(f"{METHOD_LABEL[m]} {f(last.get(f'gap_snr_{m}_mean', np.nan))}"
+                           for m in ctx.methods_present if f"gap_snr_{m}_mean" in last)
+    s = (f"Gap SNR for single-packet losses was {means_first} dB, falling to {means_last} dB "
          f"for bursts of {last['burst_length_bin']} packets")
-    if not sig_pos and not sig_neg:
-        s += ", and the hybrid model's gap-SNR advantage was not distinguishable from zero at any burst length."
-    else:
-        bits = []
+    bits = []
+    for m in ctx.non_baseline_present:
+        lo_col, hi_col = f"{m}_advantage_ci_low", f"{m}_advantage_ci_high"
+        if lo_col not in ctx.burst_q.columns:
+            continue
+        sig_pos = [r["burst_length_bin"] for _, r in ctx.burst_q.iterrows() if r[lo_col] > 0]
+        sig_neg = [r["burst_length_bin"] for _, r in ctx.burst_q.iterrows() if r[hi_col] < 0]
         if sig_pos:
-            bits.append(f"positive for bursts of {join_words(sig_pos)} packets")
+            bits.append(f"{METHOD_LABEL[m]}'s advantage over {METHOD_LABEL[BASELINE_KEY]} was positive for "
+                       f"bursts of {join_words(sig_pos)} packets")
         if sig_neg:
-            bits.append(f"negative for bursts of {join_words(sig_neg)} packets")
-        s += f"; the hybrid model's gap-SNR advantage was {join_words(bits)} (95% CI excluding zero)."
+            bits.append(f"{METHOD_LABEL[m]}'s advantage over {METHOD_LABEL[BASELINE_KEY]} was negative for "
+                       f"bursts of {join_words(sig_neg)} packets")
+    if bits:
+        s += f" (95% CI excluding zero: {join_words(bits)})."
+    else:
+        s += ", with no method's advantage over the baseline distinguishable from zero at any burst length."
     return s
 
 
@@ -510,18 +593,24 @@ def section_front(r: Report, ctx: Context):
     abstract = (
         f"Packet loss concealment (PLC) is indispensable in networked music performance, where retransmission "
         f"is impossible within the latency budget and a lost {concealment.PACKET_SIZE}-sample packet must be "
-        f"replaced causally, from past audio only. This report compares two causal concealers that share the "
-        f"same autoregressive (AR) linear predictor: AR prediction alone, and PARCnet, a hybrid model that adds "
-        f"a convolutional neural network's estimate of the AR residual {cite('mezza2024')}. Both were evaluated on "
-        f"{ctx.n_files} music recordings from the IEEE-IS² 2024 Music PLC Challenge test set with their real "
-        f"packet-loss traces ({ctx.net['plr']:.1f}% of packets lost overall), using two physical metrics "
-        f"(SNR and multi-resolution STFT distance) and two perceptual metrics (PLCMOS and ViSQOL), paired "
-        f"non-parametric statistics, a per-burst analysis over every real loss event, one-at-a-time "
+        f"replaced causally, from past audio only. This report compares three causal concealers: AR prediction "
+        f"alone (a dense autoregressive linear predictor); a hybrid model, PARCnet, that adds a convolutional "
+        f"neural network's estimate of the AR residual {cite('mezza2024')}; and Sparse AR, a from-scratch "
+        f"implementation of Severi (2025)'s orthogonal-matching-pursuit concealer {cite('severi2025')}, which "
+        f"replaces the dense AR fit with a short Burg model plus a handful of non-contiguous, periodicity-"
+        f"seeking lags. All three were evaluated on {ctx.n_files} music recordings from the IEEE-IS² 2024 Music "
+        f"PLC Challenge test set with their real packet-loss traces ({ctx.net['plr']:.1f}% of packets lost "
+        f"overall), using two physical metrics (SNR and multi-resolution STFT distance) and two perceptual "
+        f"metrics (PLCMOS and ViSQOL), paired non-parametric statistics corrected for testing every metric "
+        f"across every method pair at once, a per-burst analysis over every real loss event, one-at-a-time "
         f"hyperparameter sweeps and a real-time cost analysis. ")
-    abstract += " ".join(s for s in [significance_sentence(ctx), burst_sentence(ctx), realtime_sentence(ctx)] if s)
+    sentences = [significance_sentence(ctx, m) for m in ctx.non_baseline_present]
+    sentences += [burst_sentence(ctx), realtime_sentence(ctx)]
+    abstract += " ".join(s for s in sentences if s)
     r.body(abstract)
     r.para(("Keywords: ", "b"), ("packet loss concealment; networked music performance; linear prediction; "
-                                 "hybrid neural networks; PARCnet; objective audio quality", "i"), size=10)
+                                 "hybrid neural networks; sparse autoregressive modeling; orthogonal matching "
+                                 "pursuit; PARCnet; objective audio quality", "i"), size=10)
     r.page_break()
     r.para(("Contents", "b"), size=13)
     r.toc()
@@ -540,28 +629,35 @@ def section_introduction(r: Report, ctx: Context):
     r.body(f"A classic and computationally cheap approach is to fit an autoregressive (AR) model, i.e. a "
            f"linear predictor, to the most recent audio and extrapolate it across the gap {cite('makhoul1975')}. "
            f"Linear prediction captures the stationary, resonant part of a musical signal well, but it cannot "
-           f"anticipate changes such as note onsets, and its extrapolation decays during long gaps. PARCnet "
-           f"{cite('mezza2024')} keeps the linear predictor and adds a lightweight convolutional network that "
-           f"is trained to estimate what the predictor gets wrong, its residual. A modified PARCnet is the "
-           f"official baseline of the IEEE-IS² 2024 Music PLC Challenge {cite('challenge2024')}, whose "
-           f"settings ({concealment.PACKET_SIZE}-sample packets at 44.1 kHz, i.e. {ctx.packet_ms:.1f} ms, and "
-           f"strictly causal processing) are adopted here.")
-    r.body("Because the hybrid model contains the AR predictor as a component, comparing the two isolates "
-           "exactly one question: what does the neural residual add? This report answers it through four "
-           "research questions:")
-    r.numbered(("RQ1 (quality). ", "b"), "Does the neural residual improve concealment quality over AR "
+           f"anticipate changes such as note onsets, and its extrapolation decays during long gaps. Two different "
+           f"ways of improving on it are compared here. PARCnet {cite('mezza2024')} keeps the dense linear "
+           f"predictor and adds a lightweight convolutional network that is trained to estimate what the "
+           f"predictor gets wrong, its residual; a modified PARCnet is the official baseline of the IEEE-IS² "
+           f"2024 Music PLC Challenge {cite('challenge2024')}, whose settings ({concealment.PACKET_SIZE}-sample "
+           f"packets at 44.1 kHz, i.e. {ctx.packet_ms:.1f} ms, and strictly causal processing) are adopted here. "
+           f"Sparse AR {cite('severi2025')} instead replaces the dense AR fit itself with a short Burg model for "
+           f"local continuity plus a handful of non-contiguous lags, chosen by orthogonal matching pursuit "
+           f"{cite('pati1993')}, that specifically target musical periodicity rather than fitting every sample "
+           f"of the context equally.")
+    r.body("This gives three methods with a common baseline (AR alone) and two different strategies for "
+           "improving on it -- adding a learned correction, or replacing the model with a sparser, "
+           "periodicity-aware one. This report answers four research questions:")
+    r.numbered(("RQ1 (quality). ", "b"), "Does either alternative improve concealment quality over AR "
                "prediction alone, as measured by physical and by perceptual metrics, on real loss traces?")
     r.numbered(("RQ2 (conditions). ", "b"), "How does any advantage depend on the length of the loss burst "
                "and on the complexity of the music signal?")
-    r.numbered(("RQ3 (sensitivity). ", "b"), "How sensitive are both methods to their main hyperparameters "
-               "(AR order, context length, diagonal loading, crossfade length)?")
+    r.numbered(("RQ3 (sensitivity). ", "b"), "How sensitive is each method to its own main hyperparameters?")
     r.numbered(("RQ4 (cost). ", "b"), "Can each method run in real time on a general-purpose CPU?")
-    r.body("The main contributions are: (i) two independently implemented concealers that are verified to be "
-           "bit-identical at the AR level, so that every measured difference is attributable to the neural "
-           "network; (ii) an evaluation on whole files with their real packet traces rather than synthetic "
-           "losses; (iii) paired statistical testing with multiple-comparison correction and effect sizes; "
-           "(iv) a per-burst analysis over every real loss event in the evaluated files; and (v) hyperparameter "
-           "sensitivity and real-time cost analyses.")
+    r.body("The main contributions are: (i) three independently implemented concealers, with the AR and hybrid "
+           "ones verified to be bit-identical at the AR level, so that every measured difference between them is "
+           "attributable to the neural network; (ii) a from-scratch implementation of the Sparse AR method from "
+           "its published equations, since no reference code was available -- Section 2.4 documents, with "
+           "measured evidence, two points where the paper's literal description had to be departed from to "
+           "behave sensibly on real audio; (iii) an evaluation on whole files with their real packet traces "
+           "rather than synthetic losses; (iv) paired statistical testing across every metric and every method "
+           "pair at once, with multiple-comparison correction and effect sizes; (v) a per-burst analysis over "
+           "every real loss event in the evaluated files; and (vi) hyperparameter sensitivity and real-time cost "
+           "analyses for all three methods.")
 
 
 def section_methods(r: Report, ctx: Context):
@@ -575,7 +671,7 @@ def section_methods(r: Report, ctx: Context):
            f"packets of P = {P} samples ({ctx.packet_ms:.1f} ms). A binary packet trace l", ("k", "sub"),
            " ∈ {0, 1} marks packet k as received (0) or lost (1); lost packets arrive as zeros. A concealer "
            "must output an estimate of each lost packet using only samples before it (received or previously "
-           "concealed). Because concealed samples become context for the next prediction, both methods are "
+           "concealed). Because concealed samples become context for the next prediction, all three methods are "
            "causal and recursive: a burst of N lost packets is concealed by N successive predictions, each "
            "conditioned on the previous ones.")
 
@@ -617,19 +713,76 @@ def section_methods(r: Report, ctx: Context):
     r.body(f"where L_SC and L_mag are the spectral-convergence and log-magnitude terms of a multi-resolution STFT "
            f"loss {cite('yamamoto2020')}. Because the target of the network is s − ŝ_AR, it learns the residual "
            f"of an AR predictor with the default configuration. The pretrained challenge checkpoint is used "
-           f"unchanged; it was not retrained for any of the swept configurations (Section 2.8). The NN output is "
+           f"unchanged; it was not retrained for any of the swept configurations (Section 2.9). The NN output is "
            f"faded in over its first {concealment.NN_FADE_DIM} samples, and the same crossfade as in Section 2.2 "
            f"is applied to the combined prediction.")
 
-    r.heading("2.4  Implementation and verification", 2)
-    r.body("The two concealers are separate code paths. The AR concealer is a standalone implementation with no "
-           "dependency on the neural network or its framework; the hybrid concealer is the unmodified challenge "
-           "implementation with the network always enabled. With identical hyperparameters, the standalone AR "
-           "concealer was verified to produce output identical to the hybrid model's internal AR branch "
-           "(mean squared error 0.0). Every difference reported below can therefore be attributed to the neural "
-           "residual alone, and not to implementation details.")
+    r.heading("2.4  Sparse AR concealment", 2)
+    r.body(f"Sparse AR {cite('severi2025')} replaces the dense AR fit with two components. A short Burg model "
+           f"of order p", ("b", "sub"), f" (default {hp['burg_order_pb']}) captures local, short-term structure. "
+           f"Separately, its residual on the same context -- what the short-term model does not explain -- is "
+           f"searched for up to k (default {hp['max_k_lags']}) non-contiguous lags d", ("i", "sub"),
+           f" among the first L (default {hp['max_lag_l']}) candidates, each selected greedily by orthogonal "
+           f"matching pursuit {cite('pati1993')} to maximize its correlation with what the previously selected "
+           f"lags do not yet explain:")
+    r.equation("ŝ[n] = Σᵢ aᵢ·s[n−i]  (short-term)  +  Σⱼ φⱼ·e[n−dⱼ]  (long-term, on the residual e)")
+    r.body(f"The long-term coefficients φ are re-optimized after every new lag by solving a small, Tikhonov-"
+           f"regularized system (regularization λ_reg, default {fg(hp['lambda_reg'])}, as a fraction of the "
+           f"residual's own zero-lag autocorrelation). A lag is accepted only if its correlation exceeds 0.2 of "
+           f"that value, and the search stops after one lag if that lag's correlation alone exceeds 0.55 of it "
+           f"(both fixed, from the published algorithm, not swept here).")
+    r.body(("Two points below are where this implementation had to depart from the paper's literal description "
+           "to behave sensibly on real audio, rather than choices of convenience -- both are documented with "
+           "the measurements that motivated them in parcnet-is2/sparse_ar_model.py's module docstring, which "
+           "this section summarizes.", "i"))
+    r.bullet(("Where the lag search runs. ", "b"), f"Searching the raw signal's autocorrelation, exactly as the "
+             f"published algorithm states, was tested on 60 real single-packet losses across 10 files: it "
+             f"selected lag 1 in 60 of 60 cases and scored near 0 dB gap SNR in nearly all of them, because "
+             f"ordinary oversampled audio has very high sample-to-sample correlation that has nothing to do with "
+             f"musical periodicity, and the paper's own 0.55 early-stop threshold is almost always exceeded by "
+             f"it alone. The fix implemented here is the short-term/long-term prediction split standard in "
+             f"speech and audio coding (the same structure behind OPUS/SILK, whose fast Burg method "
+             f"{cite('vos2013')} this paper itself cites): the lag search runs on the Burg model's own residual, "
+             f"not the raw signal. Re-tested on the same 60 bursts, this surfaces real, plausible pitch-period "
+             f"lags (e.g. 672 samples at 44.1 kHz is about 66 Hz) and Sparse AR then matches or beats AR(256) on "
+             f"roughly half of them, instead of 0 of 60.")
+    r.bullet(("How the two components combine. ", "b"), "The published algorithm computes the short-term and "
+             "long-term predictions as two separate phases (Burg for an initial handful of samples, then the "
+             "long-term model for the rest), spliced together by searching for the best crossfade point. With "
+             "the long-term model now defined on the Burg residual rather than the raw signal, the natural and "
+             "standard way to synthesize -- as in the codecs above -- is a single continuous recursion: predict "
+             "both components at every step and add them, which needs no splice or crossfade search.")
+    sparse_tab = r.next_tab()
+    r.body("Neither change was tuned to produce better numbers; both were adopted because the algorithm as "
+           "literally published does not produce usable output on this dataset, and the fix is a named, "
+           "standard technique rather than an invented one. The result (Section 3.2) is still, honestly, that "
+           "Sparse AR trails AR(256) on quality by a wide margin on this dataset -- the 'preliminary performance "
+           f"analysis' in {cite('severi2025')} reports one favorable qualitative example and no quantitative SNR "
+           "benchmarking at all, so this is presented as a real finding about the method at this configuration, "
+           "not a failure of the reimplementation. Sparse AR reuses the same per-packet recursive loop and "
+           "external crossfade as AR alone (Section 2.2), so its output is directly comparable to the other two "
+           f"methods'; its own hyperparameters (Table {sparse_tab}) are independent of theirs.")
+    r.table(["Hyperparameter", "Symbol", "Default", "Meaning"], [
+        ["Max. long-term lags", "k", hp["max_k_lags"], "non-contiguous lags selected by matching pursuit"],
+        ["Max. lag searched", "L", hp["max_lag_l"], "upper bound on candidate lag distance"],
+        ["Burg (short-term) order", "p_b", hp["burg_order_pb"], "order of the short-term linear predictor"],
+        ["Regularization", "λ_reg", fg(hp["lambda_reg"]), "Tikhonov term, as a fraction of residual r0"],
+    ], "Sparse AR's own default hyperparameters (paper defaults).", col_widths_cm=[3.3, 1.5, 2.2, 7.5])
 
-    r.heading("2.5  Dataset and loss traces", 2)
+    r.heading("2.5  Implementation and verification", 2)
+    r.body("The three concealers are separate code paths. The AR concealer is a standalone implementation with "
+           "no dependency on the neural network or its framework; the hybrid concealer is the unmodified "
+           "challenge implementation with the network always enabled. With identical hyperparameters, the "
+           "standalone AR concealer was verified to produce output identical to the hybrid model's internal AR "
+           "branch (mean squared error 0.0), so every difference between those two can be attributed to the "
+           "neural residual alone, not to implementation details. Sparse AR is a separate algorithm with no "
+           "published reference implementation available, so it does not participate in that bit-identity "
+           "check; it was instead verified component-by-component against synthetic signals with known answers "
+           "(the Burg fit recovers a pure sinusoid's continuation to under 0.001 RMS error) and checked for "
+           "numerical stability (no NaNs or unbounded output) across real files before being used for any "
+           "reported result.")
+
+    r.heading("2.6  Dataset and loss traces", 2)
     n = ctx.net
     r.body(f"Experiments use the example test set released with the IEEE-IS² 2024 Music PLC Challenge "
            f"{cite('challenge2024')}: {n['n_files']} single-channel recordings of solo instrumental music at "
@@ -654,7 +807,7 @@ def section_methods(r: Report, ctx: Context):
            f"stratified across five quantile bins of spectral flatness, so that tonal and noise-like material "
            f"are both represented. Every file is concealed whole, against its own real trace.")
 
-    r.heading("2.6  Objective quality metrics", 2)
+    r.heading("2.7  Objective quality metrics", 2)
     r.body("Two families of metrics are used, because a concealment can be close to the original waveform "
            "without sounding natural, and vice versa:")
     r.bullet(("SNR (dB, higher is better). ", "b"), "Time-domain signal-to-noise ratio between the clean and the "
@@ -674,13 +827,15 @@ def section_methods(r: Report, ctx: Context):
            f"clean file (ratio of geometric to arithmetic mean of the power spectrum; 0 = tonal, 1 = noise-like) "
            f"{cite('gray1974')}.")
 
-    r.heading("2.7  Statistical analysis", 2)
-    r.body(f"The design is paired: both methods conceal the same files. For each metric, the per-file "
-           f"difference is oriented so that a positive value always means 'the hybrid model is better'. "
-           f"Differences are tested with the two-sided Wilcoxon signed-rank test {cite('wilcoxon1945')} (ties "
-           f"dropped), which does not assume normality. Because four metrics are tested, p-values are adjusted "
-           f"with the Holm-Bonferroni procedure {cite('holm1979')} and compared with α = 0.05. Effect size is "
-           f"the matched-pairs rank-biserial correlation {cite('kerby2014')},")
+    r.heading("2.8  Statistical analysis", 2)
+    r.body(f"The design is paired: every method conceals the same files. For each metric and each pair of "
+           f"methods, the per-file difference is oriented so that a positive value always means the first-named "
+           f"method is better. Differences are tested with the two-sided Wilcoxon signed-rank test "
+           f"{cite('wilcoxon1945')} (ties dropped), which does not assume normality. With 3 methods there are "
+           f"3 pairs (AR-Hybrid, AR-Sparse AR, Hybrid-Sparse AR); across 4 metrics that is 12 tests, and "
+           f"p-values are adjusted with the Holm-Bonferroni procedure {cite('holm1979')} over all 12 together "
+           f"(not per pair), compared with α = 0.05. Effect size is the matched-pairs rank-biserial correlation "
+           f"{cite('kerby2014')},")
     r.equation("r = (W⁺ − W⁻) / (W⁺ + W⁻)")
     r.body(f"where W⁺ and W⁻ are the rank sums of positive and negative differences (|r| < 0.1 negligible, "
            f"< 0.3 small, < 0.5 medium, otherwise large). The mean difference is reported with a 95% percentile "
@@ -688,31 +843,41 @@ def section_methods(r: Report, ctx: Context):
            f"bursts from the same file are not independent, so confidence intervals there use a cluster "
            f"bootstrap that resamples whole files.")
 
-    r.heading("2.8  Hyperparameter sweeps", 2)
+    r.heading("2.9  Hyperparameter sweeps", 2)
     rows = []
     for param, (df, _) in ctx.sweeps.items():
         label, key = SWEEP_LABELS.get(param, (param, param))
         values = sorted(df["value"].unique())
-        rows.append([label, fg(ctx.hparams.get(key, np.nan)), ", ".join(fg(v) for v in values), df["file"].nunique()])
+        methods_here = [m for m in METHOD_KEYS if f"snr_{m}" in df.columns]
+        method_txt = "/".join(METHOD_LABEL[m].replace("This ", "") for m in methods_here)
+        rows.append([label, method_txt, fg(ctx.hparams.get(key, np.nan)),
+                    ", ".join(fg(v) for v in values), df["file"].nunique()])
     r.body(f"Each hyperparameter was varied on its own while the others were held at their defaults "
-           f"(one-at-a-time design). At every value, the same files were concealed whole with their real traces "
-           f"by both methods and scored with all four metrics; compute time was recorded per file "
+           f"(one-at-a-time design), and only for the method(s) it actually affects: AR order and diagonal "
+           f"loading are specific to the dense AR fit shared by AR and Hybrid; context length and crossfade "
+           f"length are structural parameters shared by all three; the four Sparse AR parameters "
+           f"(Table {sparse_tab}) are specific to it. At every value, the relevant files were concealed whole "
+           f"with their real traces and "
+           f"scored with all four metrics; compute time was recorded per file "
            f"(Table {r.next_tab()}). Burst length is deliberately not swept: in a causal, recursive concealer it "
            f"is a property of the network, not a design choice, and its effect is instead measured on the real "
            f"bursts (Section 3.4).")
     if rows:
-        r.table(["Hyperparameter", "Default", "Values tested", "Files"], rows,
-                "Hyperparameter sweep design.", col_widths_cm=[4.2, 1.8, 8.5, 1.5])
+        ctx.sweep_design_table = r.table(["Hyperparameter", "Method(s)", "Default", "Values tested", "Files"], rows,
+                                         "Hyperparameter sweep design.", col_widths_cm=[4.0, 2.5, 1.8, 6.2, 1.5])
 
-    r.heading("2.9  Computational cost", 2)
+    r.heading("2.10  Computational cost", 2)
     info = ctx.run_info
     machine = (f"{info.get('processor') or info.get('platform', 'unknown CPU')}, {info.get('cpu_count', '?')} "
                f"logical cores, PyTorch using {info.get('torch_threads', '?')} threads") if info else "the evaluation machine"
     r.body(f"The wall-clock time of each method's concealment of each file was measured after a warm-up run "
-           f"(model loading excluded). Since both methods only do work on lost packets, the time per file divided "
-           f"by its number of lost packets gives the cost of concealing one packet. The real-time factor is")
+           f"(model loading excluded). Since every method only does work on lost packets, the time per file "
+           f"divided by its number of lost packets gives the cost of concealing one packet. The real-time factor is")
     r.equation(f"RTF = t_packet / (P / f_s) = t_packet / {ctx.packet_ms:.1f} ms")
-    r.body(f"A method can keep up with live audio only if RTF < 1. All timings were measured on CPU ({machine}).")
+    r.body(f"A method can keep up with live audio only if RTF < 1. All timings were measured on CPU ({machine}). "
+           f"Sparse AR's timings describe this project's unoptimized Python/NumPy/Numba implementation, not the "
+           f"optimized C++ (FFTW, Eigen3) implementation the original paper reports sub-millisecond figures for "
+           f"{cite('severi2025')}; the two are not directly comparable.")
 
 
 def section_results(r: Report, ctx: Context):
@@ -738,66 +903,71 @@ def section_results(r: Report, ctx: Context):
         r.para(("Significance tests not available -- run run_statistical_analysis.py.", "i"))
     else:
         tab = r.next_tab()
-        r.body(f"Table {tab} summarizes the paired comparison over {ctx.n_files} files. "
-               + significance_sentence(ctx))
+        summary = " ".join(s for s in (significance_sentence(ctx, m) for m in ctx.non_baseline_present) if s)
+        r.body(f"Table {tab} summarizes the paired comparison over {ctx.n_files} files, for every metric and "
+               f"every pair of methods. {summary}")
         rows = []
         for _, t in ctx.tests.iterrows():
-            rows.append([t["metric"], f(t["mean_lpc"], 3), f(t["mean_nn"], 3),
-                         f"{fs(t['mean_nn_advantage'], 3)} [{fs(t['ci95_low'], 3)}, {fs(t['ci95_high'], 3)}]",
-                         f"{t['nn_win_rate_pct']:.0f}%", fp(t["p_holm"]),
+            rows.append([t["metric"], t["pair"],
+                         f"{fs(t['mean_a_advantage'], 3)} [{fs(t['ci95_low'], 3)}, {fs(t['ci95_high'], 3)}]",
+                         f"{t['a_win_rate_pct']:.0f}%", fp(t["p_holm"]),
                          f"{t['rank_biserial_r']:+.2f} ({t['effect_size']})", t["verdict"]])
-        r.table(["Metric", "AR (mean)", "Hybrid (mean)", "Hybrid advantage [95% CI]", "Hybrid wins",
+        r.table(["Metric", "Pair (A vs. B)", "A advantage [95% CI]", "A wins",
                  "p (Holm)", "Effect size r", "Verdict"], rows,
-                f"Paired comparison of AR-only and hybrid (AR + NN) concealment over {ctx.n_files} files.",
-                col_widths_cm=[2.4, 1.5, 1.6, 3.3, 1.3, 1.4, 2.2, 2.3], font_size=8,
-                notes="Advantage = hybrid minus AR, sign-flipped for MR-STFT so that positive always favours the "
-                      "hybrid model. CI: bootstrap 95% confidence interval of the mean. p: two-sided Wilcoxon "
-                      "signed-rank test, Holm-corrected over the four metrics. r: matched-pairs rank-biserial "
-                      "correlation.")
+                f"Paired comparison of all three methods over {ctx.n_files} files, every metric x method-pair "
+                f"combination (12 tests).",
+                col_widths_cm=[2.2, 3.4, 3.3, 1.3, 1.4, 2.2, 2.2], font_size=8,
+                notes="Advantage = A minus B, sign-flipped for MR-STFT so that positive always favours A (the "
+                      "first-named method). CI: bootstrap 95% confidence interval of the mean. p: two-sided "
+                      "Wilcoxon signed-rank test, Holm-corrected over all 12 tests together. r: matched-pairs "
+                      "rank-biserial correlation.")
 
         f_win, f_dist, f_diff = r.next_fig(), r.next_fig() + 1, r.next_fig() + 2
-        r.body(f"The win rate (Figure {f_win}) only tells which method was better on each file. The per-file "
-               f"distributions (Figure {f_dist}) and the paired differences (Figure {f_diff}) show how large the "
-               f"differences are and how consistent they are across files.")
+        r.body(f"The win rate (Figure {f_win}) only tells which method was better on each file, each against "
+               f"the AR baseline. The per-file distributions (Figure {f_dist}) and the paired differences "
+               f"(Figure {f_diff}, every pair) show how large the differences are and how consistent they are "
+               f"across files.")
         r.figure(ctx.out / "metrics_comparison" / "win_rate_summary.png",
-                 "Percentage of files on which the hybrid model scores better than AR alone, per metric. The "
-                 "dashed line marks 50% (no systematic difference).", width_cm=14)
+                 "Percentage of files on which each non-baseline method scores better than AR alone, per metric. "
+                 "The dashed line marks 50% (no systematic difference).", width_cm=14)
         r.figure(ctx.out / "statistical_analysis" / "metric_distributions.png",
-                 "Per-file metric values of both methods (boxes: median and interquartile range; whiskers: 1.5 "
-                 "IQR). Gray lines connect the two results of the same file.")
+                 "Per-file metric values of all three methods (boxes: median and interquartile range; whiskers: "
+                 "1.5 IQR). Gray lines connect the three results of the same file.")
         r.figure(ctx.out / "statistical_analysis" / "paired_differences.png",
-                 "Per-file difference between the methods, oriented so that values above zero favour the "
-                 "hybrid model. Black marker: mean with bootstrap 95% confidence interval. Panel titles give "
-                 "the Holm-corrected Wilcoxon p-value and the rank-biserial effect size.")
+                 "Per-file difference between every pair of methods, oriented so that values above zero favour "
+                 "the first-named method. Black marker: mean with bootstrap 95% confidence interval. Panel "
+                 "titles give the Holm-corrected Wilcoxon p-value and the rank-biserial effect size.")
 
     # 3.3 ------------------------------------------------------------------
     r.heading("3.3  Dependence on signal complexity (RQ2)", 2)
     if ctx.per_file is not None:
         rows, notable = [], []
-        for key, label, lib in ALL_METRICS:
-            adv = oriented(ctx.per_file, key, lib)
-            flat = ctx.per_file["complexity_flatness"]
-            if adv.nunique() > 1 and flat.nunique() > 1:
-                rho, p = stats.spearmanr(flat, adv)
-            else:
-                rho, p = np.nan, np.nan
-            rows.append([label, fs(rho), fp(p)])
-            if not np.isnan(p) and p < 0.05:
-                notable.append(f"{label} (ρ = {rho:+.2f})")
+        for m in ctx.non_baseline_present:
+            for key, label, lib in ALL_METRICS:
+                adv = oriented(ctx.per_file, key, lib, m, BASELINE_KEY)
+                flat = ctx.per_file["complexity_flatness"]
+                if adv.nunique() > 1 and flat.nunique() > 1:
+                    rho, p = stats.spearmanr(flat, adv)
+                else:
+                    rho, p = np.nan, np.nan
+                rows.append([METHOD_LABEL[m], label, fs(rho), fp(p)])
+                if not np.isnan(p) and p < 0.05:
+                    notable.append(f"{METHOD_LABEL[m]} {label} (ρ = {rho:+.2f})")
         fig, tab = r.next_fig(), r.next_tab()
         text = (f"Figure {fig} plots each metric against the spectral flatness of the clean file, and Table {tab} "
-                f"gives the Spearman rank correlation between flatness and the hybrid model's advantage. ")
+                f"gives the Spearman rank correlation between flatness and each non-baseline method's advantage "
+                f"over AR. ")
         text += (f"The advantage correlated significantly with signal complexity for {join_words(notable)}."
                  if notable else
-                 "No metric showed a significant correlation between signal complexity and the hybrid model's "
-                 "advantage (uncorrected p ≥ 0.05).")
+                 "No metric showed a significant correlation between signal complexity and any method's "
+                 "advantage over AR (uncorrected p ≥ 0.05).")
         r.body(text)
         r.figure(ctx.out / "metrics_comparison" / "complexity_grid.png",
                  "Concealment quality versus signal complexity (mean spectral flatness of the clean file, log "
                  "scale). One dot per file and method; dashed lines are least-squares trends in log-flatness.")
-        r.table(["Metric", "Spearman ρ (flatness vs. hybrid advantage)", "p (uncorrected)"], rows,
-                "Correlation between signal complexity and the hybrid model's advantage.",
-                col_widths_cm=[4, 8, 4])
+        r.table(["Method", "Metric", "Spearman ρ (flatness vs. advantage over AR)", "p (uncorrected)"], rows,
+                "Correlation between signal complexity and each non-baseline method's advantage over AR.",
+                col_widths_cm=[2.5, 2.5, 7, 4], font_size=8)
 
     # 3.4 ------------------------------------------------------------------
     r.heading("3.4  Dependence on burst length (RQ2)", 2)
@@ -811,18 +981,24 @@ def section_results(r: Report, ctx: Context):
                f"{audible['file'].nunique()} files after excluding {len(ctx.per_burst) - len(audible):,} "
                f"near-silent gaps (Figure {fig}, Table {tab}). " + burst_sentence(ctx))
         r.figure(ctx.out / "statistical_analysis" / "burst_length_quality.png",
-                 "Gap SNR versus real burst length. Left: mean gap SNR of each method. Right: mean difference "
-                 "(hybrid minus AR). Error bars: 95% confidence intervals from a cluster bootstrap over files; "
-                 "n is the number of bursts per bin.")
-        rows = [[b["burst_length_bin"], int(b["n_bursts"]), int(b["n_files"]),
-                 f"{f(b['gap_snr_lpc_mean'])} [{f(b['gap_snr_lpc_ci_low'])}, {f(b['gap_snr_lpc_ci_high'])}]",
-                 f"{f(b['gap_snr_nn_mean'])} [{f(b['gap_snr_nn_ci_low'])}, {f(b['gap_snr_nn_ci_high'])}]",
-                 f"{fs(b['nn_advantage_mean'])} [{fs(b['nn_advantage_ci_low'])}, {fs(b['nn_advantage_ci_high'])}]",
-                 f"{b['nn_win_rate_pct']:.0f}%"] for _, b in ctx.burst_q.iterrows()]
-        r.table(["Burst (packets)", "Bursts", "Files", "AR gap SNR (dB)", "Hybrid gap SNR (dB)",
-                 "Hybrid advantage (dB)", "Hybrid wins"], rows,
-                "Gap SNR by burst length (mean [95% cluster-bootstrap CI]).",
-                col_widths_cm=[1.8, 1.4, 1.2, 3.2, 3.2, 3.4, 1.8], font_size=8)
+                 "Gap SNR versus real burst length. Left: mean gap SNR of each method. Right: each non-baseline "
+                 "method's mean advantage over AR. Error bars: 95% confidence intervals from a cluster bootstrap "
+                 "over files; n is the number of bursts per bin.")
+        snr_methods = [m for m in ctx.methods_present if f"gap_snr_{m}_mean" in ctx.burst_q.columns]
+        adv_methods = [m for m in ctx.non_baseline_present if f"{m}_advantage_mean" in ctx.burst_q.columns]
+        rows = []
+        for _, b in ctx.burst_q.iterrows():
+            row = [b["burst_length_bin"], int(b["n_bursts"]), int(b["n_files"])]
+            row += [f"{f(b[f'gap_snr_{m}_mean'])} [{f(b[f'gap_snr_{m}_ci_low'])}, {f(b[f'gap_snr_{m}_ci_high'])}]"
+                   for m in snr_methods]
+            row += [f"{fs(b[f'{m}_advantage_mean'])} [{fs(b[f'{m}_advantage_ci_low'])}, "
+                   f"{fs(b[f'{m}_advantage_ci_high'])}] ({b[f'{m}_win_rate_pct']:.0f}% wins)" for m in adv_methods]
+            rows.append(row)
+        headers = (["Burst (pkts)", "Bursts", "Files"] + [f"{METHOD_LABEL[m]} gap SNR (dB)" for m in snr_methods] +
+                  [f"{METHOD_LABEL[m]} advantage over AR (dB)" for m in adv_methods])
+        widths = [1.4, 1.1, 0.9] + [2.6] * len(snr_methods) + [3.2] * len(adv_methods)
+        r.table(headers, rows, "Gap SNR by burst length (mean [95% cluster-bootstrap CI]).",
+                col_widths_cm=widths, font_size=7)
 
     # 3.5 ------------------------------------------------------------------
     r.heading("3.5  Hyperparameter sensitivity (RQ3)", 2)
@@ -830,26 +1006,40 @@ def section_results(r: Report, ctx: Context):
         r.para(("Sweep results not available -- run run_hparam_sweeps.py.", "i"))
     else:
         first = r.next_fig()
+        sweep_design_ref = f"Table {ctx.sweep_design_table}" if hasattr(ctx, "sweep_design_table") else "Table 2"
         r.body(f"Figures {first}-{first + len(ctx.sweeps) - 1} show every metric and the compute time as a "
-               f"function of each hyperparameter, and Table {r.next_tab()} lists the best value found for SNR and "
-               f"PLCMOS. Because the network was trained on the residual of the default AR configuration, values "
-               f"away from the default change both the AR prediction and the input statistics the network sees; "
-               f"the hybrid results at non-default settings therefore measure robustness to this mismatch, not "
-               f"the performance of a network retrained for that setting.")
+               f"function of each hyperparameter, for the method(s) it affects ({sweep_design_ref}), and "
+               f"Table {r.next_tab()} lists the best value found for SNR and PLCMOS. Because the hybrid network "
+               f"was trained on the "
+               f"residual of the default AR configuration, values away from the default change both the AR "
+               f"prediction and the input statistics the network sees; its results at non-default settings "
+               f"therefore measure robustness to this mismatch, not the performance of a network retrained for "
+               f"that setting. No equivalent coupling applies to Sparse AR's own sweeps, since its long-term "
+               f"lag search is fit fresh at every setting.")
         for param, (df, png) in ctx.sweeps.items():
             label, key = SWEEP_LABELS.get(param, (param, param))
-            by = df.groupby("value")[["snr_lpc", "snr_nn", "plcmos_lpc", "plcmos_nn"]].mean()
-            nn_snr = int((by["snr_nn"] > by["snr_lpc"]).sum())
-            nn_mos = int((by["plcmos_nn"] > by["plcmos_lpc"]).sum())
+            methods_here = [m for m in METHOD_KEYS if f"snr_{m}" in df.columns]
+            by = df.groupby("value")[[f"{k}_{m}" for k in ("snr", "plcmos") for m in methods_here]].mean()
             n_sw = df["file"].nunique()
             files_txt = f"{n_sw} file{'s' if n_sw != 1 else ''} per value"
             r.heading(f"3.5.{list(ctx.sweeps).index(param) + 1}  {label}", 3)
-            r.body(f"Over the {len(by)} values tested ({files_txt}), the hybrid model "
-                   f"had the higher mean SNR at {nn_snr} and the higher mean PLCMOS at {nn_mos} of them. Mean SNR "
-                   f"ranged from {f(by['snr_lpc'].min())} to {f(by['snr_lpc'].max())} dB for AR and from "
-                   f"{f(by['snr_nn'].min())} to {f(by['snr_nn'].max())} dB for the hybrid model.")
+            if len(methods_here) > 1:
+                base = methods_here[0] if methods_here[0] != BASELINE_KEY else methods_here[1]
+                comparisons = [m for m in methods_here if m != base]
+                bits = []
+                for m in comparisons:
+                    wins = int((by[f"snr_{m}"] > by[f"snr_{base}"]).sum())
+                    bits.append(f"{METHOD_LABEL[m]} had the higher mean SNR at {wins} of them")
+                r.body(f"Over the {len(by)} values tested ({files_txt}), {join_words(bits)}. Mean SNR ranged " +
+                       "; ".join(f"from {f(by[f'snr_{m}'].min())} to {f(by[f'snr_{m}'].max())} dB for "
+                                f"{METHOD_LABEL[m]}" for m in methods_here) + ".")
+            else:
+                m = methods_here[0]
+                r.body(f"Over the {len(by)} values tested ({files_txt}), {METHOD_LABEL[m]}'s mean SNR ranged "
+                       f"from {f(by[f'snr_{m}'].min())} to {f(by[f'snr_{m}'].max())} dB.")
             r.figure(png, f"Sweep of the {label} (default {fg(ctx.hparams.get(key, np.nan))}; other "
-                          f"hyperparameters at their defaults; {files_txt}). Panels: "
+                          f"hyperparameters at their defaults; {files_txt}; evaluated for "
+                          f"{join_words([METHOD_LABEL[m] for m in methods_here])}). Panels: "
                           f"SNR, MR-STFT distance, PLCMOS and ViSQOL (mean ± 1 SD across files) and compute time "
                           f"per file (median and interquartile range).")
         if ctx.sweep_summary is not None:
@@ -857,7 +1047,7 @@ def section_results(r: Report, ctx: Context):
             rows = []
             for (param, method), g in ss.groupby(["hyperparameter", "method"], sort=False):
                 label = SWEEP_LABELS.get(param, (param,))[0]
-                cells = [label, "Hybrid" if method == "NN" else "AR"]
+                cells = [label, method]
                 for metric in ("SNR (dB)", "PLCMOS"):
                     row = g[g["metric"] == metric]
                     if row.empty:
@@ -871,7 +1061,7 @@ def section_results(r: Report, ctx: Context):
             r.table(["Hyperparameter", "Method", "Best for SNR (gain)", "Best for PLCMOS (gain)",
                      "Time/file (ms), default → best"], rows,
                     "Best value of each hyperparameter and gain over the default (positive = better than default).",
-                    col_widths_cm=[4, 1.6, 3.4, 3.4, 3.6], font_size=8,
+                    col_widths_cm=[4, 2.0, 3.2, 3.2, 3.6], font_size=7.5,
                     notes="Gains are differences of means across files and are not tested for significance. "
                           "Time is the median per-file concealment time at the best SNR value. The full table "
                           "for all four metrics is in Appendix C.")
@@ -882,18 +1072,24 @@ def section_results(r: Report, ctx: Context):
         r.para(("Timing data not available -- re-run run_metrics_comparison.py.", "i"))
     else:
         rows = []
-        for method, name in (("lpc", "AR only"), ("nn", "Hybrid (AR + NN)")):
+        for method in ctx.methods_present:
             ms = ctx.per_file[f"ms_per_lost_packet_{method}"].dropna()
             rtf = ctx.rtf(method)
-            rows.append([name, f"{np.median(ms):.2f}", f"{np.percentile(ms, 25):.2f}-{np.percentile(ms, 75):.2f}",
-                         f"{np.median(rtf):.3f}", "yes" if np.median(rtf) < 1 else "no"])
+            rows.append([METHOD_LABEL[method], f"{np.median(ms):.2f}",
+                        f"{np.percentile(ms, 25):.2f}-{np.percentile(ms, 75):.2f}",
+                        f"{np.median(rtf):.3f}", "yes" if np.median(rtf) < 1 else "no"])
         fig, tab = r.next_fig(), r.next_tab()
-        ratio = np.median(ctx.per_file["ms_per_lost_packet_nn"].dropna()) / np.median(
-            ctx.per_file["ms_per_lost_packet_lpc"].dropna())
+        ctx.realtime_fig = fig
+        lpc_ms = np.median(ctx.per_file["ms_per_lost_packet_lpc"].dropna())
+        ratios = ", ".join(f"{METHOD_LABEL[m]} by about "
+                           f"{np.median(ctx.per_file[f'ms_per_lost_packet_{m}'].dropna()) / lpc_ms:.0f}x"
+                           for m in ctx.non_baseline_present)
         r.body(f"Table {tab} and Figure {fig} report the cost of concealing one packet. "
-               + realtime_sentence(ctx) + f" The neural residual multiplies the per-packet cost by a factor of "
-               f"about {ratio:.0f}. The challenge rules do not disqualify slower-than-real-time systems but encourage "
-               f"real-time operation {cite('challenge2024')}.")
+               + realtime_sentence(ctx) + f" Relative to AR, the per-packet cost is multiplied by {ratios}. "
+               f"The challenge rules do not disqualify slower-than-real-time systems but encourage real-time "
+               f"operation {cite('challenge2024')}. Sparse AR's figures reflect this project's unoptimized "
+               f"Python implementation and are not comparable to the original paper's optimized C++ timings "
+               f"(Section 2.10).")
         r.table(["Method", "Median ms / packet", "IQR (ms)", "Median RTF", "Real time?"], rows,
                 f"Per-packet concealment cost (packet duration {ctx.packet_ms:.1f} ms).",
                 col_widths_cm=[4, 3, 3, 3, 3])
@@ -908,67 +1104,76 @@ def section_results(r: Report, ctx: Context):
         r.para(("Burst examples not available -- run plot_burst_comparison.py.", "i"))
     else:
         r.body("To show what the metrics above summarize, one real burst of each length was selected and "
-               "plotted in three ways: the waveform and spectrogram around the gap (shaded) for both methods; the "
-               "sample-wise difference between the two concealments; and a zoom on the hand-back point where "
-               "concealment crossfades into the next received packet, together with the clean reference. Table "
-               f"{r.next_tab()} lists the mean squared difference between the two methods inside each gap.")
+               "plotted in three ways: the waveform and spectrogram around the gap (shaded) for all three "
+               "methods; the sample-wise difference for every pair of methods; and a zoom on the hand-back point "
+               "where concealment crossfades into the next received packet, together with the clean reference. "
+               f"Table {r.next_tab()} lists the mean squared difference between every pair of methods inside "
+               f"each gap.")
         if ctx.gap_mse is not None:
-            col = [c for c in ctx.gap_mse.columns if "_vs_" in c][0]
-            r.table(["Burst (packets)", "File", "Start packet", "Gap MSE between methods"],
-                    [[int(g["burst_length"]), g["file"][:28] + "…", int(g["start_packet"]), f"{g[col]:.3e}"]
+            pair_cols = [c for c in ctx.gap_mse.columns if "_vs_" in c]
+            r.table(["Burst (packets)", "File", "Start packet"] + [c.replace("_", " ").title() for c in pair_cols],
+                    [[int(g["burst_length"]), g["file"][:20] + "…", int(g["start_packet"])] +
+                     [f"{g[c]:.3e}" for c in pair_cols]
                      for _, g in ctx.gap_mse.sort_values("burst_length").iterrows()],
-                    "Selected example bursts.", col_widths_cm=[2.5, 7, 2.5, 4])
+                    "Selected example bursts: gap MSE between every pair of methods.",
+                    col_widths_cm=[2.0, 5.0, 1.8] + [2.4] * len(pair_cols), font_size=7)
         for i, (length, tag, paths) in enumerate(sets, start=1):
             r.heading(f"3.7.{i}  {length}-packet burst ({length * ctx.packet_ms:.1f} ms)", 3)
             r.figure(paths["compare"], f"{length}-packet burst in file {tag}: waveform (top) and spectrogram "
-                                       f"(bottom) of the AR (left) and hybrid (right) concealment. Shaded: lost "
-                                       f"samples.")
-            r.figure(paths["diff"], f"{length}-packet burst: AR concealment minus hybrid concealment; the "
-                                    f"gap-MSE in the title quantifies the neural contribution.", width_cm=11)
+                                       f"(bottom) of all three methods. Shaded: lost samples.")
+            r.figure(paths["diff"], f"{length}-packet burst: pairwise differences between all three methods; "
+                                    f"the gap-MSE in each title quantifies that pair's divergence.", width_cm=15)
             r.figure(paths["crossfade"], f"{length}-packet burst: zoom on the hand-back point (dashed line) where "
                                          f"concealment ends; the shaded region is the {ctx.hparams['extra_dim']}-"
                                          f"sample crossfade into the received packet.")
 
     # 3.8 ------------------------------------------------------------------
     r.heading("3.8  Failure cases", 2)
-    if ctx.failures is None or ctx.failures.empty:
-        r.para(("No failure cases available (either the hybrid model never lost on the selected metric, or "
-                "run_statistical_analysis.py has not been run).", "i"))
+    if not ctx.failures:
+        r.para(("No failure cases available (either no non-baseline method ever lost to AR on the selected "
+                "metric, or run_statistical_analysis.py has not been run).", "i"))
     else:
-        metric_key = [c[:-4] for c in ctx.failures.columns if c.endswith("_lpc")][0]
-        label = next(l for k, l, _ in ALL_METRICS if k == metric_key)
-        flat_med = ctx.per_file["complexity_flatness"].median()
-        loss_med = ctx.per_file["loss_rate_pct"].median()
-        r.body(f"Reporting only favourable examples would bias the picture. The {len(ctx.failures)} files on "
-               f"which AR alone beat the hybrid model by the largest {label} margin are listed in Table "
-               f"{r.next_tab()}; for each, the burst with the largest AR advantage in gap SNR is plotted. Their "
-               f"spectral flatness ranged from {ctx.failures['complexity_flatness'].min():.2e} to "
-               f"{ctx.failures['complexity_flatness'].max():.2e} (median of all evaluated files: {flat_med:.2e}), "
-               f"and their loss rates from {ctx.failures['loss_rate_pct'].min():.1f}% to "
-               f"{ctx.failures['loss_rate_pct'].max():.1f}% (median {loss_med:.1f}%).")
-        r.table(["Case", "File", f"AR {label}", f"Hybrid {label}", "Advantage", "Flatness", "Loss rate",
-                 "Plotted burst"],
-                [[int(c["case"]), c["file"][:22] + "…", f(c[f"{metric_key}_lpc"]), f(c[f"{metric_key}_nn"]),
-                  fs(c["nn_advantage"]), f"{c['complexity_flatness']:.2e}", f"{c['loss_rate_pct']:.1f}%",
-                  f"{int(c['plotted_burst_length'])} pkt @ {int(c['plotted_burst_start'])}"]
-                 for _, c in ctx.failures.iterrows()],
-                f"Files with the largest AR advantage on {label}.",
-                col_widths_cm=[1, 4, 1.8, 1.8, 1.8, 1.8, 1.6, 2.2], font_size=8)
-        fail_dir = ctx.out / "statistical_analysis" / "failure_cases"
-        for length, tag, paths in burst_figure_sets(fail_dir, "failure"):
-            case = tag.split("_", 1)[0].replace("failure", "")
-            r.heading(f"3.8.{case}  Failure case {case}", 3)
-            r.figure(paths["compare"], f"Failure case {case}: waveform and spectrogram around the plotted "
-                                       f"{length}-packet burst, AR (left) and hybrid (right).")
-            r.figure(paths["diff"], f"Failure case {case}: AR minus hybrid concealment.", width_cm=11)
-            r.figure(paths["crossfade"], f"Failure case {case}: hand-back crossfade with the clean reference.")
+        r.body("Reporting only favourable examples would bias the picture. For each non-baseline method, the "
+               "files on which it lost to AR by the largest margin on SNR are shown below, with the burst where "
+               "its disadvantage was largest in gap SNR.")
+        for sub_i, (method, failures) in enumerate(ctx.failures.items(), start=1):
+            metric_key = [c[:-len(f"_{method}")] for c in failures.columns if c.endswith(f"_{method}")][0]
+            label = next(l for k, l, _ in ALL_METRICS if k == metric_key)
+            flat_med = ctx.per_file["complexity_flatness"].median()
+            loss_med = ctx.per_file["loss_rate_pct"].median()
+            tab = r.next_tab()
+            r.heading(f"3.8.{sub_i}  {METHOD_LABEL[method]} vs. AR", 3)
+            r.body(f"The {len(failures)} files on which {METHOD_LABEL[method]} lost to AR by the largest {label} "
+                   f"margin are listed in Table {tab}. Their spectral flatness ranged from "
+                   f"{failures['complexity_flatness'].min():.2e} to {failures['complexity_flatness'].max():.2e} "
+                   f"(median of all evaluated files: {flat_med:.2e}), and their loss rates from "
+                   f"{failures['loss_rate_pct'].min():.1f}% to {failures['loss_rate_pct'].max():.1f}% "
+                   f"(median {loss_med:.1f}%).")
+            r.table(["Case", "File", f"AR {label}", f"{METHOD_LABEL[method]} {label}", "Advantage",
+                     "Flatness", "Loss rate", "Plotted burst"],
+                    [[int(c["case"]), c["file"][:18] + "…", f(c[f"{metric_key}_{BASELINE_KEY}"]),
+                      f(c[f"{metric_key}_{method}"]), fs(c[f"{method}_advantage"]),
+                      f"{c['complexity_flatness']:.2e}", f"{c['loss_rate_pct']:.1f}%",
+                      f"{int(c['plotted_burst_length'])} pkt @ {int(c['plotted_burst_start'])}"]
+                     for _, c in failures.iterrows()],
+                    f"Files with the largest AR advantage over {METHOD_LABEL[method]} on {label}.",
+                    col_widths_cm=[1, 3.2, 1.6, 1.8, 1.6, 1.6, 1.6, 2.2], font_size=7.5)
+            fail_dir = ctx.out / "statistical_analysis" / "failure_cases" / method
+            for length, tag, paths in burst_figure_sets(fail_dir, "failure"):
+                case = tag.split("_", 1)[0].replace("failure", "")
+                r.heading(f"3.8.{sub_i}.{case}  {METHOD_LABEL[method]} failure case {case}", 3)
+                r.figure(paths["compare"], f"Failure case {case}: waveform and spectrogram around the plotted "
+                                           f"{length}-packet burst, all three methods.")
+                r.figure(paths["diff"], f"Failure case {case}: pairwise differences between all three methods.",
+                         width_cm=15)
+                r.figure(paths["crossfade"], f"Failure case {case}: hand-back crossfade with the clean reference.")
 
 
 def section_discussion(r: Report, ctx: Context):
     r.heading("4  Discussion", 1)
-    if ctx.tests is not None:
-        adv = {k: ctx.test_row(k)["mean_nn_advantage"] for k, _, _ in ALL_METRICS}
-        sig = {k: ctx.test_row(k)["verdict"] for k, _, _ in ALL_METRICS}
+    if ctx.tests is not None and "nn" in ctx.non_baseline_present:
+        adv = {k: ctx.advantage(k, "nn", BASELINE_KEY)["mean_a_advantage"] for k, _, _ in ALL_METRICS}
+        sig = {k: ctx.advantage(k, "nn", BASELINE_KEY)["verdict"] for k, _, _ in ALL_METRICS}
         spectral_pos = [METRIC_DESC[k] for k in ("mrstft", "plcmos", "visqol") if adv[k] > 0]
         r.heading("4.1  What the neural residual adds", 2)
         if adv["snr"] <= 0 and spectral_pos:
@@ -991,35 +1196,58 @@ def section_discussion(r: Report, ctx: Context):
             r.body(f"With only {ctx.n_files} files, none of these directions can be regarded as established; "
                    f"they should be read as hypotheses for the full experiment.")
 
-    r.heading("4.2  Burst length, complexity and recursion", 2)
-    observed = ""
-    if ctx.burst_q is not None and len(ctx.burst_q) > 1:
-        first, last = ctx.burst_q.iloc[0], ctx.burst_q.iloc[-1]
-        fell = (last["gap_snr_lpc_mean"] < first["gap_snr_lpc_mean"] and
-                last["gap_snr_nn_mean"] < first["gap_snr_nn_mean"])
-        observed = (", as observed here for both methods" if fell else
-                    ", although this was not observed consistently in the present data")
-    r.body("Because both concealers are recursive, every packet of a burst is predicted from the previous "
-           f"predictions, so errors accumulate and gap quality is expected to fall with burst length{observed}. "
-           "Whether the neural residual helps more on long bursts is the practically important "
-           f"question, but long bursts are rare in real traces (Table {ctx.net_table}), which makes the long-burst bins the "
-           "least certain ones; their confidence intervals should be read accordingly.")
+    if ctx.tests is not None and "sparse_ar" in ctx.non_baseline_present:
+        adv = {k: ctx.advantage(k, "sparse_ar", BASELINE_KEY)["mean_a_advantage"] for k, _, _ in ALL_METRICS}
+        r.heading("4.2  What the sparse, periodicity-aware model trades off", 2)
+        r.body(f"Sparse AR's advantage over AR(256) was negative on every metric in this evaluation "
+               f"({'; '.join(f'{METRIC_DESC[k]} {fs(v, 3)}' for k, v in adv.items())}): replacing the dense, "
+               f"256-tap fit with a short Burg model plus a handful of matching-pursuit lags loses quality here, "
+               f"it does not trade one kind of quality for another the way the hybrid model does. Section 2.4 "
+               f"documents why a literal reading of the published algorithm is unusable on this dataset (it "
+               f"degenerates to picking the trivial lag-1 correlation and predicting near-silence) and what "
+               f"standard, named fix was applied instead; even with that fix, the short-term component alone "
+               f"decays to silence within a packet for most real bursts, and a genuine long-term periodic lag "
+               f"is found only for a minority of them -- the real-time plot "
+               f"(Figure {getattr(ctx, 'realtime_fig', '?')}) nonetheless confirms the method's actual appeal: "
+               f"it is as cheap as plain AR, nowhere near the hybrid model's cost. "
+               f"Whether a higher-order short-term stage within the same architecture closes any of this gap "
+               f"is a genuine open question the Section 3.5 sweeps over burg_order_pb speak to directly, rather "
+               f"than something resolved by further hand-tuning here.")
 
-    r.heading("4.3  Cost-quality trade-off", 2)
+    r.heading("4.3  Burst length, complexity and recursion", 2)
+    observed = ""
+    if ctx.burst_q is not None and len(ctx.burst_q) > 1 and "gap_snr_lpc_mean" in ctx.burst_q.columns:
+        first, last = ctx.burst_q.iloc[0], ctx.burst_q.iloc[-1]
+        fell = all(last.get(f"gap_snr_{m}_mean", np.inf) < first.get(f"gap_snr_{m}_mean", -np.inf)
+                  for m in ctx.methods_present)
+        observed = (", as observed here for every method" if fell else
+                    ", although this was not observed consistently for every method in the present data")
+    r.body("Because every concealer here is recursive, each packet of a burst is predicted from the previous "
+           f"predictions, so errors accumulate and gap quality is expected to fall with burst length{observed}. "
+           "Whether either alternative to plain AR helps more on long bursts is the practically important "
+           f"question, but long bursts are rare in real traces (Table {ctx.net_table}), which makes the "
+           "long-burst bins the least certain ones; their confidence intervals should be read accordingly.")
+
+    r.heading("4.4  Cost-quality trade-off", 2)
     if ctx.has_timing:
-        nn_rtf, lpc_rtf = np.median(ctx.rtf("nn")), np.median(ctx.rtf("lpc"))
-        r.body(f"The AR concealer {'runs in real time' if lpc_rtf < 1 else 'does not run in real time'} on the "
-               f"evaluation CPU (median RTF {lpc_rtf:.2f}), whereas the hybrid "
-               f"model {'exceeded' if nn_rtf > 1 else 'stayed within'} the real-time budget "
-               f"(median RTF {nn_rtf:.2f}). Any quality benefit of the residual must therefore be weighed against "
-               f"a cost about {nn_rtf / lpc_rtf:.0f} times higher; options such as multi-threaded or GPU inference, model "
-               f"quantization or a smaller network would need to be considered for live deployment.")
-    r.heading("4.4  Coupling between the AR configuration and the network", 2)
-    r.body("The network was trained on residuals of the default AR configuration. Changing the AR order, "
+        lpc_rtf = np.median(ctx.rtf(BASELINE_KEY))
+        bits = [f"{METHOD_LABEL[m]} ({np.median(ctx.rtf(m)):.2f})" for m in ctx.non_baseline_present]
+        over = [m for m in ctx.non_baseline_present if np.median(ctx.rtf(m)) > 1]
+        r.body(f"AR {'runs in real time' if lpc_rtf < 1 else 'does not run in real time'} on the evaluation CPU "
+               f"(median RTF {lpc_rtf:.2f}). Of the alternatives, median RTF was {join_words(bits)}" +
+               (f"; {join_words([METHOD_LABEL[m] for m in over])} exceeded the real-time budget" if over else
+                ", both within it") +
+               f". Any quality benefit (Sections 4.1-4.2) must be weighed against this cost; for the hybrid "
+               f"model, options such as multi-threaded or GPU inference, model quantization or a smaller "
+               f"network would need to be considered for live deployment. For Sparse AR, see Section 2.10's "
+               f"caveat on what these particular timings do and do not represent.")
+    r.heading("4.5  Coupling between the AR configuration and the network", 2)
+    r.body("The hybrid network was trained on residuals of the default AR configuration. Changing the AR order, "
            "context length or regularization changes those residuals, so the hybrid model operates outside its "
            "training conditions. The sweeps therefore measure how robust a fixed network is to such changes; a "
            "fair test of a different AR configuration for the hybrid model would require retraining the network "
-           "for it.")
+           "for it. Sparse AR has no analogous coupling: its long-term lag search is refit from scratch at "
+           "every setting, so its own sweeps measure the algorithm directly.")
 
 
 def section_limitations(r: Report, ctx: Context):
@@ -1038,20 +1266,33 @@ def section_limitations(r: Report, ctx: Context):
              "pretrained challenge baseline. Generalization to other content (for example the speech validation "
              "set of the ICASSP 2024 PLC Challenge, which uses 48 kHz audio and 20 ms packets) and to retrained "
              "networks remains to be tested.")
+    r.bullet(("Sparse AR's departures from its source paper. ", "b"), "Section 2.4 documents two points "
+             "(where the lag search runs; how the short-term and long-term components combine) where this "
+             "implementation had to depart from the published algorithm's literal description to produce usable "
+             "output, with measured evidence for each. Both are standard, named techniques, not arbitrary "
+             "choices, but no published reference implementation exists to confirm they reproduce the author's "
+             "own intended behavior, and the paper's own 'preliminary performance analysis' section provides no "
+             "quantitative benchmark to compare against.")
     r.bullet(("Gap SNR is phase-sensitive. ", "b"), "The per-burst analysis uses SNR because the perceptual "
              "models need longer inputs; it penalizes plausible but phase-shifted concealments.")
     r.bullet(("One-at-a-time sweeps. ", "b"), "Interactions between hyperparameters (for example AR order and "
-             "context length) are not explored; a joint search would be needed to find a global optimum.")
+             "context length, or Sparse AR's own burg_order_pb and max_k_lags) are not explored; a joint search "
+             "would be needed to find a global optimum for any method.")
     r.bullet(("Timing on one CPU. ", "b"), "Real-time factors depend on hardware, threading and implementation; "
-             "they are indicative of the relative cost, not of every deployment.")
+             "they are indicative of the relative cost, not of every deployment -- and Sparse AR's specifically "
+             "reflect an unoptimized Python port, not the original paper's optimized C++ implementation.")
 
 
 def section_conclusion(r: Report, ctx: Context):
     r.heading("6  Conclusion", 1)
-    text = (f"This report compared AR-only and hybrid AR + neural (PARCnet) packet loss concealment for "
-            f"networked music on real loss traces, using two independently implemented concealers that are "
-            f"identical except for the neural residual. ")
-    text += " ".join(s for s in [significance_sentence(ctx), burst_sentence(ctx), realtime_sentence(ctx)] if s)
+    text = (f"This report compared AR-only, hybrid AR + neural (PARCnet), and Sparse AR (Severi 2025) packet "
+            f"loss concealment for networked music on real loss traces, using independently implemented "
+            f"concealers -- the AR and hybrid ones verified bit-identical at the AR level, and Sparse AR built "
+            f"from scratch from its published equations, with two documented, evidence-based departures where "
+            f"the literal algorithm proved unusable on real audio. ")
+    sentences = [significance_sentence(ctx, m) for m in ctx.non_baseline_present]
+    sentences += [burst_sentence(ctx), realtime_sentence(ctx)]
+    text += " ".join(s for s in sentences if s)
     if ctx.preliminary:
         text += " These conclusions are preliminary and will be updated with the full experiments."
     r.body(text)
@@ -1090,24 +1331,24 @@ def section_appendix(r: Report, ctx: Context):
         r.heading("Appendix B  Descriptive statistics", 1)
         rows = []
         for key, label, _ in ALL_METRICS:
-            for method, name in (("lpc", "AR"), ("nn", "Hybrid")):
+            for method in ctx.methods_present:
                 v = ctx.per_file[f"{key}_{method}"]
-                rows.append([label, name, f(v.mean(), 3), f(v.std(), 3), f(v.median(), 3),
+                rows.append([label, METHOD_LABEL[method], f(v.mean(), 3), f(v.std(), 3), f(v.median(), 3),
                              f"{v.quantile(0.25):.3f}-{v.quantile(0.75):.3f}", f"{v.min():.3f}-{v.max():.3f}"])
         r.table(["Metric", "Method", "Mean", "SD", "Median", "IQR", "Range"], rows,
                 f"Descriptive statistics of all metrics over {ctx.n_files} files.",
-                col_widths_cm=[3, 1.8, 1.8, 1.8, 1.8, 2.9, 2.9], font_size=8)
+                col_widths_cm=[3, 2.2, 1.6, 1.6, 1.6, 2.7, 2.7], font_size=8)
 
     if ctx.sweep_summary is not None:
         r.heading("Appendix C  Full hyperparameter sweep summary", 1)
         ss = ctx.sweep_summary
         rows = [[SWEEP_LABELS.get(s["hyperparameter"], (s["hyperparameter"],))[0],
-                 "Hybrid" if s["method"] == "NN" else "AR", s["metric"], fg(s["best_value"]),
+                 s["method"], s["metric"], fg(s["best_value"]),
                  f(s["metric_at_default"], 3), f(s["metric_at_best"], 3), fs(s["gain_over_default"], 3)]
                 for _, s in ss.iterrows()]
         r.table(["Hyperparameter", "Method", "Metric", "Best value", "At default", "At best", "Gain"], rows,
                 "Best value per hyperparameter, method and metric.",
-                col_widths_cm=[3.6, 1.5, 2.8, 1.8, 2.1, 2.1, 2.1], font_size=7.5)
+                col_widths_cm=[3.6, 1.8, 2.6, 1.8, 2.0, 2.0, 2.0], font_size=7.5)
 
 
 def build(output_dir: Path, out_path: Path) -> Path:

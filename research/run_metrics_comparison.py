@@ -1,8 +1,22 @@
 """
-Research-level comparison of AR-only (LPC) vs AR+NN (PARCnet) concealment,
-using the real parcnet-is2/example_test_set dataset -- every (clean, lossy,
-trace) triplet there is the genuine ground truth, not a synthetic/arbitrary
-pairing, so this is the most rigorous dataset available in this project.
+Research-level comparison of three causal concealment methods, using the real
+parcnet-is2/example_test_set dataset -- every (clean, lossy, trace) triplet
+there is the genuine ground truth, not a synthetic/arbitrary pairing, so this
+is the most rigorous dataset available in this project:
+
+  AR-only (LPC)    -- pure AR(order) recursive linear prediction
+  AR+NN (Hybrid)   -- PARCnet (AR + a trained neural residual)
+  Sparse AR        -- Severi (2025)'s OMP-based sparse AR concealer -- see
+                       research/concealment.py and parcnet-is2/
+                       sparse_ar_model.py's module docstrings for the
+                       algorithm and, importantly, where this implementation
+                       had to depart from the paper's literal text
+
+LPC is treated as the baseline the other two are compared against (both are,
+in different ways, "AR plus something"), so every win-rate figure here reads
+as "how often does method X beat plain LPC", not every pairwise combination
+-- the full pairwise statistics (all three pairs) are run_statistical_
+analysis.py's job, not this script's.
 
 Two families of metrics are computed for every file, matching what a PLC
 paper would report:
@@ -16,17 +30,17 @@ paper would report:
 Nothing here is fixed to one file or one hyperparameter setting -- how many
 files, which hyperparameters, and where results are saved are all arguments.
 Produces:
-  - a per-file CSV with every metric for both methods, plus wall-clock
+  - a per-file CSV with every metric for all three methods, plus wall-clock
     concealment time per method (and per concealed packet)
   - a per-burst CSV: for every real burst in every evaluated file, the SNR
     of each method measured only inside that gap -- the input to
     run_statistical_analysis.py's quality-vs-burst-length analysis, collected
-    here so the expensive NN pass runs once, not twice
+    here so each method's expensive pass runs once, not once per analysis
   - run_info.json: machine/hparam details, so timing results are always
     traceable to the hardware they were measured on
-  - a win-rate summary chart across all 4 metrics
-  - a signal-complexity grid: for each metric, how LPC vs NN quality varies
-    with the clean signal's spectral flatness (low = tonal/simple, high =
+  - a win-rate summary chart (each non-baseline method vs. LPC) across all 4 metrics
+  - a signal-complexity grid: for each metric, how quality varies with the
+    clean signal's spectral flatness (low = tonal/simple, high =
     noise-like/complex) -- a continuous, measured axis instead of a manual
     genre/instrument label
 
@@ -63,6 +77,15 @@ from research import dataset_utils, concealment, metrics, complexity, plotting, 
 
 OUT_DIR = Path(__file__).resolve().parent / "output" / "metrics_comparison"
 
+# (key, display label, concealment function, plot color)
+METHODS = [
+    ("lpc", "This LPC", concealment.conceal_lpc, plotting.LPC_COLOR),
+    ("nn", "This NN", concealment.conceal_nn, plotting.NN_COLOR),
+    ("sparse_ar", "This Sparse AR", concealment.conceal_sparse_ar, plotting.SPARSE_AR_COLOR),
+]
+BASELINE_KEY = "lpc"
+NON_BASELINE = [m for m in METHODS if m[0] != BASELINE_KEY]
+
 # (column prefix, display label, lower_is_better)
 # SI-SDR and LSD were dropped: across 40 files they tracked SNR and MR-STFT so
 # closely (same win-rate, same ranking) that they added clutter, not
@@ -77,46 +100,47 @@ PHYSICAL_KEYS = {"snr", "mrstft"}
 
 
 def warmup(hparams: dict) -> None:
-    """Loads the NN checkpoint and runs one throwaway forward pass per method
-    before anything is timed -- otherwise the first file's NN time would
-    include checkpoint loading and torch's first-call overhead."""
+    """Runs one throwaway call per method on dummy input before anything is
+    timed -- otherwise the first file's time would include the NN's
+    checkpoint load, torch's first-call overhead, and (for Sparse AR) numba
+    JIT compilation, instead of just the real per-file cost."""
     dummy = np.zeros(concealment.PACKET_SIZE * 16, dtype=np.float32)
     dummy_trace = np.zeros(16, dtype=int)
     dummy_trace[10] = 1
-    concealment.conceal_lpc(dummy, dummy_trace, **hparams)
-    concealment.conceal_nn(dummy, dummy_trace, **hparams)
+    for _, _, fn, _ in METHODS:
+        fn(dummy, dummy_trace, **hparams)
 
 
-def burst_rows(tf: dataset_utils.TestFile, this_lpc: np.ndarray, this_nn: np.ndarray) -> list[dict]:
+def burst_rows(tf: dataset_utils.TestFile, outputs: dict[str, np.ndarray]) -> list[dict]:
     """Gap-local quality for every real burst in the file: SNR measured only
-    over the lost samples. Waveform SNR is the only metric here because the
-    perceptual models (PLCMOS, ViSQOL) need seconds of audio, not a
-    single-packet gap. The clean gap's level is stored so near-silent gaps,
-    where SNR is meaningless, can be filtered out later."""
+    over the lost samples, for every method. Waveform SNR is the only metric
+    here because the perceptual models (PLCMOS, ViSQOL) need seconds of
+    audio, not a single-packet gap. The clean gap's level is stored so
+    near-silent gaps, where SNR is meaningless, can be filtered out later."""
     rows = []
     for start, length in dataset_utils.find_bursts(tf.trace):
         a, b = start * concealment.PACKET_SIZE, (start + length) * concealment.PACKET_SIZE
         clean_gap = tf.clean[a:b]
-        rows.append({
+        row = {
             "file": tf.stem,
             "start_packet": start,
             "burst_length": length,
             "clean_gap_rms_db": float(20 * np.log10(np.sqrt(np.mean(clean_gap ** 2)) + 1e-12)),
-            "gap_snr_lpc": metrics.snr_db(clean_gap, this_lpc[a:b]),
-            "gap_snr_nn": metrics.snr_db(clean_gap, this_nn[a:b]),
-        })
+        }
+        for key, _, _, _ in METHODS:
+            row[f"gap_snr_{key}"] = metrics.snr_db(clean_gap, outputs[key][a:b])
+        rows.append(row)
     return rows
 
 
 def evaluate_file(tf: dataset_utils.TestFile, hparams: dict) -> tuple[dict, list[dict]]:
-    """Runs both concealment methods on one file (timed), computes every
-    metric, and returns (per-file row, per-burst rows)."""
-    t0 = time.perf_counter()
-    this_lpc = concealment.conceal_lpc(tf.lossy, tf.trace, **hparams)
-    time_lpc = (time.perf_counter() - t0) * 1000
-    t0 = time.perf_counter()
-    this_nn = concealment.conceal_nn(tf.lossy, tf.trace, **hparams)
-    time_nn = (time.perf_counter() - t0) * 1000
+    """Runs all three concealment methods on one file (each timed), computes
+    every metric, and returns (per-file row, per-burst rows)."""
+    outputs, timings = {}, {}
+    for key, _, fn, _ in METHODS:
+        t0 = time.perf_counter()
+        outputs[key] = fn(tf.lossy, tf.trace, **hparams)
+        timings[key] = (time.perf_counter() - t0) * 1000
 
     n_lost = int(tf.trace.sum())
     row = {
@@ -126,22 +150,20 @@ def evaluate_file(tf: dataset_utils.TestFile, hparams: dict) -> tuple[dict, list
         "sample_rate": tf.sample_rate,
         "loss_rate_pct": tf.loss_rate * 100,
         "complexity_flatness": complexity.spectral_flatness(tf.clean),
-        "time_ms_lpc": time_lpc,
-        "time_ms_nn": time_nn,
-        # Both methods only do work on lost packets, so total time / lost
-        # packets is the cost of concealing one packet.
-        "ms_per_lost_packet_lpc": time_lpc / n_lost if n_lost else np.nan,
-        "ms_per_lost_packet_nn": time_nn / n_lost if n_lost else np.nan,
-        "snr_lpc": metrics.snr_db(tf.clean, this_lpc),
-        "snr_nn": metrics.snr_db(tf.clean, this_nn),
-        "mrstft_lpc": metrics.multires_stft_distance(tf.clean, this_lpc),
-        "mrstft_nn": metrics.multires_stft_distance(tf.clean, this_nn),
-        "plcmos_lpc": metrics.plcmos_score(this_lpc, tf.sample_rate),
-        "plcmos_nn": metrics.plcmos_score(this_nn, tf.sample_rate),
-        "visqol_lpc": metrics.visqol_score(tf.clean, this_lpc, tf.sample_rate),
-        "visqol_nn": metrics.visqol_score(tf.clean, this_nn, tf.sample_rate),
     }
-    return row, burst_rows(tf, this_lpc, this_nn)
+    for key, _, _, _ in METHODS:
+        row[f"time_ms_{key}"] = timings[key]
+        # Every method only does work on lost packets, so total time / lost
+        # packets is the cost of concealing one packet.
+        row[f"ms_per_lost_packet_{key}"] = timings[key] / n_lost if n_lost else np.nan
+    for key, _, _, _ in METHODS:
+        out = outputs[key]
+        row[f"snr_{key}"] = metrics.snr_db(tf.clean, out)
+        row[f"mrstft_{key}"] = metrics.multires_stft_distance(tf.clean, out)
+        row[f"plcmos_{key}"] = metrics.plcmos_score(out, tf.sample_rate)
+        row[f"visqol_{key}"] = metrics.visqol_score(tf.clean, out, tf.sample_rate)
+
+    return row, burst_rows(tf, outputs)
 
 
 def init_worker(hparams: dict, single_thread: bool) -> None:
@@ -174,29 +196,44 @@ def save_run_info(out_dir: Path, hparams: dict, args) -> None:
 
 
 def plot_win_rates(df: pd.DataFrame, out_path: Path) -> dict:
-    win_rates = {}
+    """Each non-baseline method's win rate against LPC, per metric (grouped
+    bars: one group per metric, one bar per non-baseline method). Not every
+    pairwise combination -- see the module docstring for why LPC is the
+    baseline here, and run_statistical_analysis.py for the full pairwise
+    tests.
+    """
+    win_rates: dict[tuple[str, str], float] = {}
     print(f"\n===== Aggregate results over {len(df)} files =====")
     for key, label, lower_is_better in ALL_METRICS:
-        lpc_col, nn_col = f"{key}_lpc", f"{key}_nn"
-        nn_wins = (df[nn_col] < df[lpc_col]).sum() if lower_is_better else (df[nn_col] > df[lpc_col]).sum()
-        win_rates[label] = 100 * nn_wins / len(df)
+        base_col = f"{key}_{BASELINE_KEY}"
         print(f"\n{label} ({'lower=better' if lower_is_better else 'higher=better'}):")
-        print(f"  NN better on {nn_wins}/{len(df)} files ({win_rates[label]:.1f}%)")
-        print(f"  Mean  -- LPC: {df[lpc_col].mean():.4f}   NN: {df[nn_col].mean():.4f}")
-        print(f"  Median-- LPC: {df[lpc_col].median():.4f}   NN: {df[nn_col].median():.4f}")
+        print(f"  Mean  -- " + "   ".join(f"{m[1]}: {df[f'{key}_{m[0]}'].mean():.4f}" for m in METHODS))
+        print(f"  Median-- " + "   ".join(f"{m[1]}: {df[f'{key}_{m[0]}'].median():.4f}" for m in METHODS))
+        for mkey, mlabel, _, _ in NON_BASELINE:
+            col = f"{key}_{mkey}"
+            wins = (df[col] < df[base_col]).sum() if lower_is_better else (df[col] > df[base_col]).sum()
+            pct = 100 * wins / len(df)
+            win_rates[(mkey, key)] = pct
+            print(f"  {mlabel} beats This LPC on {wins}/{len(df)} files ({pct:.1f}%)")
 
     fig, ax = plotting.new_axes(figsize=(10, 4.5))
-    labels, values = list(win_rates.keys()), list(win_rates.values())
-    colors = [plotting.NN_COLOR if key in PHYSICAL_KEYS else "#6D5BD0" for key, _, _ in ALL_METRICS]
-    bars = ax.bar(labels, values, color=colors, width=0.55, zorder=3)
+    n_metrics, n_methods = len(ALL_METRICS), len(NON_BASELINE)
+    width = 0.8 / n_methods
+    x = np.arange(n_metrics)
+    for i, (mkey, mlabel, _, color) in enumerate(NON_BASELINE):
+        offset = (i - (n_methods - 1) / 2) * width
+        values = [win_rates[(mkey, key)] for key, _, _ in ALL_METRICS]
+        bars = ax.bar(x + offset, values, width=width * 0.9, color=color, label=mlabel, zorder=3)
+        for bar, val in zip(bars, values):
+            ax.text(bar.get_x() + bar.get_width() / 2, val + 1.5, f"{val:.0f}%",
+                    ha="center", va="bottom", fontsize=8, color="#1f2937")
     ax.axhline(50, color=plotting.TIE_COLOR, linewidth=1.5, linestyle="--", zorder=2)
-    ax.text(len(labels) - 0.4, 51.5, "50% = coin flip", color=plotting.TIE_COLOR, fontsize=9, ha="right")
-    for bar, val in zip(bars, values):
-        ax.text(bar.get_x() + bar.get_width() / 2, val + 1.5, f"{val:.0f}%",
-                ha="center", va="bottom", fontsize=10, color="#1f2937")
+    ax.text(n_metrics - 0.5, 51.5, "50% = coin flip", color=plotting.TIE_COLOR, fontsize=9, ha="right")
+    ax.set_xticks(x, [label for _, label, _ in ALL_METRICS])
     ax.set_ylim(0, 100)
-    ax.set_ylabel("Files where NN beats LPC (%)")
-    ax.set_title(f"NN vs. LPC win rate across {len(df)} files (example_test_set)")
+    ax.set_ylabel("Files where method beats This LPC (%)")
+    ax.set_title(f"Win rate vs. This LPC across {len(df)} files (example_test_set)")
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.18), ncol=n_methods, frameon=False, fontsize=9)
     plotting.style_axis(ax)
     fig.tight_layout()
     plotting.save_fig(fig, out_path, dpi=150, bbox_inches="tight")
@@ -207,8 +244,8 @@ def plot_win_rates(df: pd.DataFrame, out_path: Path) -> dict:
 def plot_complexity_grid(df: pd.DataFrame, out_path: Path) -> None:
     """One scatter panel per metric: x = signal complexity (spectral flatness
     of the clean file), y = metric value, one dot per file per method. Shows
-    whether the NN's advantage (or disadvantage) depends on how complex the
-    content is, instead of collapsing everything into one aggregate number.
+    whether each method's quality depends on how complex the content is,
+    instead of collapsing everything into one aggregate number.
 
     Log-scaled x-axis: this dataset's files are mostly low-flatness
     (tonal/melodic) content, so a linear axis crams nearly every point into
@@ -219,11 +256,10 @@ def plot_complexity_grid(df: pd.DataFrame, out_path: Path) -> None:
     fig, axes = plotting.new_axes(figsize=(6, 4.5), ncols=2, nrows=2)
     for ax, (key, label, _) in zip(axes.flat, ALL_METRICS):
         log_x = np.log10(df["complexity_flatness"])
-        for method, color, series_label in [("lpc", plotting.LPC_COLOR, "This LPC"),
-                                             ("nn", plotting.NN_COLOR, "This NN")]:
-            y = df[f"{key}_{method}"]
-            ax.scatter(df["complexity_flatness"], y, color=color, label=series_label,
-                       s=24, alpha=0.75, zorder=3)
+        for mkey, mlabel, _, color in METHODS:
+            y = df[f"{key}_{mkey}"]
+            ax.scatter(df["complexity_flatness"], y, color=color, label=mlabel,
+                       s=20, alpha=0.7, zorder=3)
             slope, intercept = np.polyfit(log_x, y, 1)
             x_line = np.linspace(log_x.min(), log_x.max(), 50)
             ax.plot(10 ** x_line, slope * x_line + intercept, color=color,
@@ -232,7 +268,7 @@ def plot_complexity_grid(df: pd.DataFrame, out_path: Path) -> None:
         ax.set_title(label, fontsize=11)
         ax.set_xlabel("Spectral flatness, log scale (0=tonal, 1=noise-like)", fontsize=9)
         plotting.style_axis(ax, grid_axis="both")
-    axes.flat[0].legend(fontsize=9, frameon=False)
+    axes.flat[0].legend(fontsize=8, frameon=False)
     fig.suptitle("Concealment quality vs. signal complexity\n(dots = files, dashed lines = trend)",
                  fontsize=13, y=1.04)
     fig.tight_layout()
@@ -244,19 +280,27 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--n-files", type=int, default=300, help="How many files to sample from example_test_set.")
     parser.add_argument("--seed", type=int, default=0, help="Random seed for the file sample.")
-    parser.add_argument("--ar-order", type=int, default=256)
-    parser.add_argument("--diagonal-load", type=float, default=0.001)
-    parser.add_argument("--context-dim-packets", type=int, default=8)
-    parser.add_argument("--extra-dim", type=int, default=256)
+    parser.add_argument("--ar-order", type=int, default=256, help="LPC/Hybrid only.")
+    parser.add_argument("--diagonal-load", type=float, default=0.001, help="LPC/Hybrid only.")
+    parser.add_argument("--context-dim-packets", type=int, default=8, help="Shared by all three methods.")
+    parser.add_argument("--extra-dim", type=int, default=256, help="Shared by all three methods.")
+    parser.add_argument("--max-k-lags", type=int, default=3, help="Sparse AR only.")
+    parser.add_argument("--max-lag-l", type=int, default=1024, help="Sparse AR only.")
+    parser.add_argument("--burg-order-pb", type=int, default=8, help="Sparse AR only.")
+    parser.add_argument("--lambda-reg", type=float, default=0.01, help="Sparse AR only.")
     parser.add_argument("--out-dir", type=Path, default=OUT_DIR)
     parser.add_argument("--workers", type=int, default=1,
                         help="Parallel processes (one file each). Use about the number of physical cores. "
                              "Per-file timings are then single-threaded and measured under load.")
+    parser.add_argument("--fresh", action="store_true",
+                        help="Ignore results saved by an earlier (possibly crashed) run and start over.")
     args = parser.parse_args()
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     hparams = dict(ar_order=args.ar_order, diagonal_load=args.diagonal_load,
-                   context_dim_packets=args.context_dim_packets, extra_dim=args.extra_dim)
+                   context_dim_packets=args.context_dim_packets, extra_dim=args.extra_dim,
+                   max_k_lags=args.max_k_lags, max_lag_l=args.max_lag_l,
+                   burg_order_pb=args.burg_order_pb, lambda_reg=args.lambda_reg)
 
     stems = dataset_utils.select_diverse_stems(args.n_files, seed=args.seed, workers=args.workers)
     print(f"Sampled {len(stems)} files from example_test_set (seed={args.seed}), "
@@ -264,15 +308,30 @@ def main():
 
     save_run_info(args.out_dir, hparams, args)
 
+    # Every finished file goes straight to the checkpoint, so a crash loses
+    # only the files in flight and re-running the same command resumes.
+    checkpoint = safe_io.Checkpoint(args.out_dir / "checkpoint.jsonl", fresh=args.fresh)
+    key_of = {stem: f"{stem}|{json.dumps(hparams, sort_keys=True)}" for stem in stems}
+    todo = [stem for stem in stems if key_of[stem] not in checkpoint]
+    n_done = len(stems) - len(todo)
+    if n_done:
+        print(f"Resuming: {n_done} files already in {checkpoint.path.name}, {len(todo)} to go "
+              f"(use --fresh to start over).", flush=True)
+
+    results = dataset_utils.resilient_map(evaluate_stem, [(stem, hparams) for stem in todo], args.workers,
+                                          initializer=init_worker, initargs=(hparams, args.workers > 1))
+    for task_index, (row, file_burst_rows) in results:
+        checkpoint.add(key_of[todo[task_index]], {"row": row, "bursts": file_burst_rows})
+        n_done += 1
+        print(f"[{n_done}/{len(stems)}] {row['file']} ({row['n_packets']} pkts, {row['loss_rate_pct']:.1f}% lost): "
+              f"SNR lpc={row['snr_lpc']:.2f} nn={row['snr_nn']:.2f} sparse_ar={row['snr_sparse_ar']:.2f} dB",
+              flush=True)
+
     rows, all_burst_rows = [], []
-    results = dataset_utils.parallel_map(evaluate_stem, [(stem, hparams) for stem in stems], args.workers,
-                                         initializer=init_worker, initargs=(hparams, args.workers > 1))
-    for i, (row, file_burst_rows) in enumerate(results, start=1):
-        rows.append(row)
-        all_burst_rows.extend(file_burst_rows)
-        print(f"[{i}/{len(stems)}] {row['file']} ({row['n_packets']} pkts, {row['loss_rate_pct']:.1f}% lost): "
-              f"SNR lpc={row['snr_lpc']:.2f} nn={row['snr_nn']:.2f} dB | "
-              f"PLCMOS lpc={row['plcmos_lpc']:.2f} nn={row['plcmos_nn']:.2f}", flush=True)
+    for stem in stems:
+        record = checkpoint.records[key_of[stem]]
+        rows.append(record["row"])
+        all_burst_rows.extend(record["bursts"])
 
     df = pd.DataFrame(rows)
     safe_io.save_csv(df, args.out_dir / "per_file_results.csv", index=False)

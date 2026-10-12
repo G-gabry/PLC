@@ -8,3 +8,6 @@ validation_set/
 # Regenerable concealment outputs (881 MB each)
 parcnet-is2/example_test_set/enhanced/
 parcnet-is2/example_test_set/enhanced_ar_only/
+
+# Resume files written by long runs (large, machine-local)
+checkpoint.jsonl

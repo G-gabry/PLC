@@ -9,6 +9,7 @@ sidesteps this: Windows allows replacing a file that's merely open for
 reading elsewhere, it just won't let a second process open that same path
 for writing while something else holds it.
 """
+import json
 import os
 import time
 import uuid
@@ -67,3 +68,40 @@ def save_csv_safe(df, path, fallback_suffix: str = "_locked", **kwargs) -> Path:
     """save_csv that falls back to an alternate filename rather than raising
     -- see _save_with_fallback. Returns the path actually written to."""
     return _save_with_fallback(lambda p: save_csv(df, p, **kwargs), path, fallback_suffix)
+
+
+class Checkpoint:
+    """Append-only JSON-lines store of finished results, keyed by a string.
+    Each result is flushed to disk the moment it exists, so a crashed or
+    killed run loses nothing that had finished, and re-running the same
+    command resumes instead of starting over. With path=None it only keeps
+    results in memory."""
+
+    def __init__(self, path, fresh: bool = False):
+        self.path = Path(path) if path is not None else None
+        self.records = {}
+        if self.path is None:
+            return
+        if fresh:
+            self.path.unlink(missing_ok=True)
+        elif self.path.exists():
+            for line in self.path.read_text().splitlines():
+                try:
+                    entry = json.loads(line)
+                except ValueError:
+                    continue  # a line cut off mid-write by a crash
+                self.records[entry["key"]] = entry["record"]
+
+    def __contains__(self, key: str) -> bool:
+        return key in self.records
+
+    def add(self, key: str, record) -> None:
+        self.records[key] = record
+        if self.path is None:
+            return
+        line = json.dumps({"key": key, "record": record},
+                          default=lambda o: o.item() if hasattr(o, "item") else str(o))
+        with open(self.path, "a") as f:
+            f.write(line + "\n")
+            f.flush()
+            os.fsync(f.fileno())

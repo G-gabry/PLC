@@ -125,6 +125,44 @@ def parallel_map(fn, tasks, workers: int = 1, initializer=None, initargs=()):
         yield from pool.map(fn, tasks)
 
 
+def resilient_map(fn, tasks, workers: int = 1, initializer=None, initargs=(), max_restarts: int = 8):
+    """Yields (task_index, result) as each task finishes, in completion
+    order. If a worker process dies (typically killed by the OS for running
+    out of memory), the pool is restarted with three quarters of the workers
+    and only the unfinished tasks are retried, so one dead worker costs a
+    few in-flight tasks instead of the whole run."""
+    if workers <= 1:
+        if initializer:
+            initializer(*initargs)
+        for i, task in enumerate(tasks):
+            yield i, fn(task)
+        return
+    from concurrent.futures import ProcessPoolExecutor, as_completed
+    from concurrent.futures.process import BrokenProcessPool
+
+    remaining = dict(enumerate(tasks))
+    restarts = 0
+    while remaining:
+        pool = ProcessPoolExecutor(max_workers=min(workers, len(remaining)),
+                                   initializer=initializer, initargs=initargs)
+        try:
+            futures = {pool.submit(fn, task): i for i, task in remaining.items()}
+            for future in as_completed(futures):
+                result = future.result()
+                i = futures[future]
+                del remaining[i]
+                yield i, result
+        except BrokenProcessPool:
+            restarts += 1
+            if restarts > max_restarts:
+                raise
+            workers = max(1, workers * 3 // 4)
+            print(f"WARNING: a worker process died (out of memory?). Restart {restarts}/{max_restarts} "
+                  f"with {workers} workers; {len(remaining)} tasks left.", flush=True)
+        finally:
+            pool.shutdown(wait=False, cancel_futures=True)
+
+
 def select_diverse_stems(n: int, test_set_dir: Path = EXAMPLE_TEST_SET_DIR, seed: int = 0,
                           pool_size: int = 150, n_bins: int = 5, min_packets: int = 20,
                           workers: int = 1) -> list[str]:

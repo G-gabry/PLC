@@ -1,7 +1,12 @@
 # PLC Research Suite
 
 Generates the figures and per-file data behind a research-level comparison of
-AR-only (LPC) vs AR+NN (PARCnet) packet-loss concealment. This is tooling that
+three causal concealment methods -- AR-only (LPC), AR+NN (PARCnet), and Sparse
+AR (Severi 2025, a from-scratch reimplementation -- see `research/
+concealment.py` and `parcnet-is2/sparse_ar_model.py`'s module docstrings for
+the algorithm and, importantly, two points where this implementation had to
+depart from the published paper's literal description to behave sensibly on
+real audio, with the measured evidence for each). This is tooling that
 produces figures/CSVs for a report, not the report itself.
 
 ## Dataset
@@ -38,12 +43,19 @@ Python implementation and the reference tools are MATLAB-only.
 
 ## Concealment (`research/concealment.py`)
 
-Two independent functions: `conceal_lpc` (pure AR recursive prediction, no
-torch/NN dependency at all) and `conceal_nn` (the real production `PARCnet`
-class from `parcnet-is2/parcnet.py`, NN always on). At the AR level the two
-were verified bit-identical (MSE = 0.0). Every hyperparameter (AR order,
-diagonal loading, context length, extra/crossfade dimension) is a plain
-function argument, never hardcoded.
+Three independent functions: `conceal_lpc` (pure AR recursive prediction, no
+torch/NN dependency at all), `conceal_nn` (the real production `PARCnet`
+class from `parcnet-is2/parcnet.py`, NN always on), and `conceal_sparse_ar`
+(a from-scratch implementation of Severi 2025's OMP-based sparse AR
+concealer, `parcnet-is2/sparse_ar_model.py`). At the AR level, `conceal_lpc`
+and `conceal_nn` were verified bit-identical (MSE = 0.0); `conceal_sparse_ar`
+is a separate algorithm and doesn't participate in that check, but reuses the
+same per-packet recursive loop and external crossfade so its output is
+directly comparable. Every hyperparameter is a plain function argument,
+never hardcoded: AR order, diagonal loading, context length and extra/
+crossfade dimension for the first two; max. long-term lags, max. lag
+searched, Burg order and regularization for Sparse AR (context length and
+crossfade dimension are shared by all three).
 
 ## Run order
 
@@ -68,62 +80,77 @@ Samples N files (default 300) **stratified by signal complexity** (spectral
 flatness quantile buckets, via `dataset_utils.sample_diverse_test_files`) --
 a plain random sample clumps wherever this dataset happens to be dense
 (mostly tonal/simple content), so stratifying is what actually makes the
-"vs. complexity" analysis meaningful. Runs both methods at default
-hyperparameters (matching `parcnet-is2/config/config.yaml`), computes every
-metric above, and produces:
+"vs. complexity" analysis meaningful. Runs all three methods at default
+hyperparameters, computes every metric above, and produces:
 - `output/metrics_comparison/per_file_results.csv` -- every metric, plus
   concealment time per method and per concealed packet
-- `output/metrics_comparison/per_burst_results.csv` -- gap SNR of both
-  methods for every real burst in every evaluated file
+- `output/metrics_comparison/per_burst_results.csv` -- gap SNR of every
+  method for every real burst in every evaluated file
 - `output/metrics_comparison/run_info.json` -- machine and hparams, so timings
   stay traceable to the hardware they were measured on
-- `output/metrics_comparison/win_rate_summary.png` -- how often NN beats LPC, per metric
+- `output/metrics_comparison/win_rate_summary.png` -- how often each
+  non-baseline method beats LPC (the baseline), per metric
 - `output/metrics_comparison/complexity_grid.png` -- quality vs. signal complexity,
   one panel per metric, log-scaled x-axis, with a per-method trend line (linear
   fit in log-x space) so the relationship is readable without eyeballing a dot cloud
 
 ### `run_hparam_sweeps.py`
-Four sweeps (AR order, context length, diagonal loading, extra/crossfade
-dim), each varying one hyperparameter while holding the others at their
-config.yaml defaults. Every sampled file is concealed whole, against its own
-real trace -- no synthetic bursts. Measures SNR, MR-STFT, PLCMOS, ViSQOL and
-compute time; one five-panel figure plus the raw CSV per sweep, in
-`output/hparam_sweeps/`. Burst length is deliberately not swept: in a causal,
-recursive concealer it is an outcome of the network, not a design choice.
+Eight sweeps total, each varying one hyperparameter while holding the others
+at their defaults, and each evaluating only the method(s) that hyperparameter
+actually affects (see the module's own docstring for the full breakdown):
+AR order and diagonal loading (LPC + Hybrid only); context length and
+extra/crossfade dim (all three, since Sparse AR shares that structural
+plumbing); and max. long-term lags, max. lag searched, Burg order, and
+regularization (Sparse AR only -- `--skip-sparse-ar-sweeps` to omit these
+four). Every sampled file is concealed whole, against its own real trace --
+no synthetic bursts. Measures SNR, MR-STFT, PLCMOS, ViSQOL and compute time;
+one five-panel figure plus the raw CSV per sweep, in `output/hparam_sweeps/`.
+Burst length is deliberately not swept: in a causal, recursive concealer it
+is an outcome of the network, not a design choice.
 
-An earlier synthetic-burst version of these sweeps found that AR order and
-context length are not free once the NN is in the loop (moving them away
-from the trained defaults made the NN fall below AR-only). That finding
-still needs confirming with the whole-file sweeps.
+An earlier synthetic-burst version of the LPC/Hybrid sweeps found that AR
+order and context length are not free once the NN is in the loop (moving
+them away from the trained defaults made the NN fall below AR-only). That
+finding still needs confirming with the whole-file sweeps.
 
 ### `plot_burst_comparison.py`
-Network-loss statistics for the whole dataset, plus waveform/spectrogram,
-difference and crossfade-boundary plots of real bursts at chosen lengths.
+Network-loss statistics for the whole dataset, plus waveform/spectrogram
+(3-column, one per method), pairwise-difference (one panel per method pair)
+and crossfade-boundary plots of real bursts at chosen lengths.
 
 ### `run_statistical_analysis.py`
 Reads the CSVs above (no new concealment, except the failure-case plots)
 and writes `output/statistical_analysis/`:
-1. `significance_tests.csv/.md` -- paired Wilcoxon signed-rank test per
-   metric, Holm-corrected, with rank-biserial effect size and a bootstrap
-   95% CI of the mean NN advantage
-2. `metric_distributions.png`, `paired_differences.png` -- per-file values,
-   not just win rates
-3. `burst_length_quality.png/.csv` -- gap SNR vs. real burst length; CIs are
-   cluster-bootstrapped over files, because bursts from the same file are
-   not independent
+1. `significance_tests.csv/.md` -- paired Wilcoxon signed-rank test for
+   every (metric, method-pair) combination -- 4 metrics x 3 pairs = 12 tests,
+   Holm-corrected together as one family, with rank-biserial effect size and
+   a bootstrap 95% CI of the mean difference for each
+2. `metric_distributions.png`, `paired_differences.png` -- per-file values
+   for all three methods, not just win rates
+3. `burst_length_quality.png/.csv` -- gap SNR vs. real burst length, all
+   three methods, plus each non-baseline method's advantage over LPC; CIs
+   are cluster-bootstrapped over files, because bursts from the same file
+   are not independent
 4. `realtime_feasibility.png` -- time to conceal one packet divided by the
-   packet's duration; above 1.0 the method can't run live on that machine
-5. `sweep_summary.csv/.md` -- best value per hyperparameter, method and metric
-6. `failure_cases/` -- plots of the files where LPC beats the NN by the most
+   packet's duration, for every method; above 1.0 the method can't run live
+   on that machine
+5. `sweep_summary.csv/.md` -- best value per hyperparameter, method and
+   metric; each sweep only lists the methods it actually evaluated
+6. `failure_cases/<method>/` -- one subfolder per non-baseline method, with
+   plots of the files where that method loses to LPC by the most
 
 ## Style
 
 Plain functions over classes, every magic number is a keyword argument with
 a documented default, nothing is hardcoded to one file/value -- the scripts
 are meant to be re-run with different arguments, not edited.
-`research/plotting.py` fixes one color per method (orange=LPC, green=NN)
-reused across every figure in this suite, matching the colors already used
-elsewhere in the project (`test_irmas.py`, `plc_challenge_test.py`).
+`research/plotting.py` fixes one color per method (orange=LPC, green=NN,
+purple=Sparse AR) reused across every figure in this suite -- LPC/NN match
+the colors already used elsewhere in the project (`test_irmas.py`,
+`plc_challenge_test.py`); `plot_burst_comparison.py` keeps its own
+longer-standing blue/green LPC/NN palette instead (a pre-existing
+inconsistency between the two scripts), but shares the same purple for
+Sparse AR.
 `research/safe_io.py` writes every CSV/PNG via a temp-file-then-rename, since
 Windows has repeatedly locked these exact output files mid-run (antivirus/
 indexer scans, or the file simply being open in a viewer). This clears most

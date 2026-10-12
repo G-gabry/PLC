@@ -7,24 +7,19 @@ produces the dataset-wide network-loss analysis and the crossfade-boundary
 zoom -- between this script and the other two, every plot made over the
 course of this project has a home.
 
-For one (file, burst) pair, produces three figures. Colors/font sizes/
-figsize style are carried over from the project's original
-plc_challenge_test.py / PLC_Analysis.py comparison plots, but the column
-layout reflects this project's actual two methods -- not the original's
-3-column layout (This LPC (recursive) / LPC without NN (pipeline) / LPC
-with NN (PARCnet)), whose first two columns are now provably bit-identical
-(conceal_lpc vs PARCnet's own AR branch, MSE=0.0 -- see concealment.py).
-Showing that duplicate as a third column added nothing once that was
-proven, so it's dropped:
-  - A 2-column grid (This LPC (recursive) / LPC with NN (PARCnet)),
-    waveform on top and spectrogram below.
-  - A single difference figure (this_lpc vs lpc_with_nn) with the pair's
-    Gap MSE in its title.
-  - A crossfade-boundary zoom (new, not in the old scripts): tightly cropped
-    on the handback point where concealment splices back into real audio,
-    with a dashed line at the exact splice and a shaded box for the
-    crossfade region -- the static-plot equivalent of the live simulator's
-    "Crossfade boundary, zoomed" panels.
+For one (file, burst) pair, produces three figures, now covering all three
+concealment methods in this project (This LPC / This NN (PARCnet) / This
+Sparse AR (Severi 2025) -- see research/concealment.py and parcnet-is2/
+sparse_ar_model.py for what the third one is and its documented departures
+from the paper it implements):
+  - A 3-column grid (one per method), waveform on top and spectrogram below.
+  - A pairwise-difference figure, one panel per pair of methods (3 panels),
+    each with that pair's Gap MSE in its title.
+  - A crossfade-boundary zoom: tightly cropped on the handback point where
+    concealment splices back into real audio, with a dashed line at the
+    exact splice and a shaded box for the crossfade region -- the
+    static-plot equivalent of the live simulator's "Crossfade boundary,
+    zoomed" panels.
 
 Also, once per run (not per burst): a network-loss analysis across every
 real trace in the dataset -- global burst-length distribution and per-file
@@ -56,6 +51,18 @@ from research import dataset_utils, concealment, plotting, safe_io
 
 OUT_DIR = Path(__file__).resolve().parent / "output" / "burst_comparisons"
 PACKET_SIZE = concealment.PACKET_SIZE
+
+# (key, display label, concealment function, plot color). Colors here follow
+# this script's own long-standing palette (blue/green, from the original
+# plc_challenge_test.py), not research/plotting.py's (orange/green) -- a
+# pre-existing inconsistency between the two scripts, out of scope to unify
+# here. Sparse AR's purple is shared with plotting.py's SPARSE_AR_COLOR so
+# that one method at least has one consistent color everywhere.
+METHODS = [
+    ("this_lpc", "This LPC (recursive)", concealment.conceal_lpc, "#2a78d6"),
+    ("lpc_with_nn", "LPC with NN (PARCnet)", concealment.conceal_nn, "#1baf7a"),
+    ("sparse_ar", "This Sparse AR", concealment.conceal_sparse_ar, plotting.SPARSE_AR_COLOR),
+]
 
 
 def plot_network_analysis(out_dir: Path) -> None:
@@ -119,15 +126,15 @@ def plot_network_analysis(out_dir: Path) -> None:
 
 
 def plot_crossfade_boundary(tf: dataset_utils.TestFile, burst_start_packet: int, burst_length: int,
-                             this_lpc: np.ndarray, this_nn: np.ndarray, hparams: dict,
+                             outputs: dict[str, np.ndarray], hparams: dict,
                              out_dir: Path, tag: str, zoom_ms: float = 15) -> Path:
     """Zoomed view of the handback boundary -- the moment concealment
     splices back into real audio -- with a dashed line at the exact splice
     point and a shaded box for the crossfade (fade-in) region's actual
     extent (hparams['extra_dim'] samples). Mirrors the live web simulator's
-    "Crossfade boundary, zoomed" panels as a static plot. Takes this_lpc/
-    this_nn as arguments rather than recomputing them, since the caller
-    (plot_burst_comparison) already has them.
+    "Crossfade boundary, zoomed" panels as a static plot. Takes `outputs`
+    (one array per METHODS key) as an argument rather than recomputing them,
+    since the caller (plot_burst_comparison) already has them.
     """
     sr = tf.sample_rate
     extra_dim = hparams.get("extra_dim", 256)
@@ -139,14 +146,11 @@ def plot_crossfade_boundary(tf: dataset_utils.TestFile, burst_start_packet: int,
     win_end = min(len(tf.clean), gap_end + zoom)
     t_ms = (np.arange(win_start, win_end) - gap_end) / sr * 1000
 
-    signals = [
-        ("clean", "Clean (ground truth)", tf.clean, "#999999"),
-        ("this_lpc", "This LPC (recursive)", this_lpc, "#2a78d6"),
-        ("this_nn", "LPC with NN (PARCnet)", this_nn, "#1baf7a"),
-    ]
+    signals = [("clean", "Clean (ground truth)", tf.clean, "#999999")]
+    signals += [(key, label, outputs[key], color) for key, label, _, color in METHODS]
     y_max = max(np.max(np.abs(sig[win_start:win_end])) for _, _, sig, _ in signals) * 1.1
 
-    fig, axes = plotting.new_axes(figsize=(5, 3.4), ncols=3)
+    fig, axes = plotting.new_axes(figsize=(4, 3.4), ncols=len(signals))
     for ax, (_, label, sig, color) in zip(axes, signals):
         ax.plot(t_ms, sig[win_start:win_end], color=color, linewidth=1.2)
         ax.axvline(0, color="#333333", linestyle="--", linewidth=1.2, zorder=2)
@@ -169,24 +173,20 @@ def plot_crossfade_boundary(tf: dataset_utils.TestFile, burst_start_packet: int,
 def plot_burst_comparison(tf: dataset_utils.TestFile, burst_start_packet: int, burst_length: int,
                            hparams: dict, out_dir: Path, context_ms: float = 40,
                            tag: str | None = None) -> dict:
-    """Runs both methods on tf's real lossy/trace (not a synthetic burst --
-    this visualizes an actual loss event from the dataset), then saves the
-    waveform/spectrogram grid and the pairwise-diff figure for the given
-    burst. Returns the pairwise gap-MSE table as a dict.
+    """Runs all three methods on tf's real lossy/trace (not a synthetic
+    burst -- this visualizes an actual loss event from the dataset), then
+    saves the waveform/spectrogram grid and the pairwise-diff figure for the
+    given burst. Returns the pairwise gap-MSE table (one entry per pair) as
+    a dict.
     """
-    this_lpc_recursive = concealment.conceal_lpc(tf.lossy, tf.trace, **hparams)
-    lpc_with_nn = concealment.conceal_nn(tf.lossy, tf.trace, **hparams)
+    outputs = {key: fn(tf.lossy, tf.trace, **hparams) for key, _, fn, _ in METHODS}
 
     gap_start = burst_start_packet * PACKET_SIZE
     gap_end = gap_start + burst_length * PACKET_SIZE
     sr = tf.sample_rate
     tag = tag or tf.stem
 
-    # Colors carried over from plc_challenge_test.py's compare_all_methods.
-    signals = [
-        ("this_lpc", "This LPC (recursive)", this_lpc_recursive, "#2a78d6"),
-        ("lpc_with_nn", "LPC with NN (PARCnet)", lpc_with_nn, "#1baf7a"),
-    ]
+    signals = [(key, label, outputs[key], color) for key, label, _, color in METHODS]
 
     context = int(sr * context_ms / 1000)
     win_start = max(0, gap_start - context)
@@ -195,7 +195,8 @@ def plot_burst_comparison(tf: dataset_utils.TestFile, burst_start_packet: int, b
     gap_end_ms = (gap_end - gap_start) / sr * 1000
     y_max = max(np.max(np.abs(sig[win_start:win_end])) for _, _, sig, _ in signals) * 1.1
 
-    fig, axes = plt.subplots(2, 2, figsize=(10, 8), gridspec_kw={"height_ratios": [1, 1.15]})
+    fig, axes = plt.subplots(2, len(signals), figsize=(5 * len(signals), 8),
+                             gridspec_kw={"height_ratios": [1, 1.15]})
     for col, (_, label, sig, color) in enumerate(signals):
         ax = axes[0, col]
         ax.plot(t_ms, sig[win_start:win_end], color=color, linewidth=1.1)
@@ -230,25 +231,28 @@ def plot_burst_comparison(tf: dataset_utils.TestFile, burst_start_packet: int, b
     safe_io.save_fig(fig, compare_path, dpi=150, bbox_inches="tight")
     plt.close(fig)
 
-    name_a, label_a, sig_a, _ = signals[0]
-    name_b, label_b, sig_b, _ = signals[1]
-    diff = sig_a[win_start:win_end] - sig_b[win_start:win_end]
-    gap_mse = float(np.mean((sig_a[gap_start:gap_end] - sig_b[gap_start:gap_end]) ** 2))
-    rows = {f"{name_a}_vs_{name_b}": gap_mse}
+    pairs = [(i, j) for i in range(len(signals)) for j in range(i + 1, len(signals))]
+    rows = {}
+    diff_fig, diff_axes = plt.subplots(1, len(pairs), figsize=(6 * len(pairs), 4))
+    diff_axes = np.atleast_1d(diff_axes)
+    for ax, (i, j) in zip(diff_axes, pairs):
+        name_a, label_a, sig_a, _ = signals[i]
+        name_b, label_b, sig_b, _ = signals[j]
+        diff = sig_a[win_start:win_end] - sig_b[win_start:win_end]
+        gap_mse = float(np.mean((sig_a[gap_start:gap_end] - sig_b[gap_start:gap_end]) ** 2))
+        rows[f"{name_a}_vs_{name_b}"] = gap_mse
 
-    diff_fig, diff_ax = plt.subplots(figsize=(6, 4))
-    diff_ax.plot(t_ms, diff, color="#7d5ba6", linewidth=1.0)
-    diff_ax.axvspan(0, gap_end_ms, color="black", alpha=0.08)
-    diff_ax.set_title(f"{label_a} minus {label_b}\nGap MSE: {gap_mse:.3e}", fontsize=10)
-    diff_ax.set_xlabel("Time relative to gap start (ms)")
-    diff_fig.suptitle(f"{tag} -- difference, {burst_length}-packet burst", fontsize=12, y=1.02)
+        ax.plot(t_ms, diff, color="#7d5ba6", linewidth=1.0)
+        ax.axvspan(0, gap_end_ms, color="black", alpha=0.08)
+        ax.set_title(f"{label_a} minus {label_b}\nGap MSE: {gap_mse:.3e}", fontsize=10)
+        ax.set_xlabel("Time relative to gap start (ms)")
+    diff_fig.suptitle(f"{tag} -- pairwise differences, {burst_length}-packet burst", fontsize=12, y=1.02)
     diff_fig.tight_layout()
     diff_path = out_dir / f"diff_{tag}_{burst_length}pkt.png"
     safe_io.save_fig(diff_fig, diff_path, dpi=150, bbox_inches="tight")
     plt.close(diff_fig)
 
-    plot_crossfade_boundary(tf, burst_start_packet, burst_length, this_lpc_recursive, lpc_with_nn,
-                             hparams, out_dir, tag)
+    plot_crossfade_boundary(tf, burst_start_packet, burst_length, outputs, hparams, out_dir, tag)
 
     return rows
 
@@ -260,10 +264,14 @@ def main():
     parser.add_argument("--n-examples", type=int, default=1,
                          help="How many example files/bursts to plot per target length.")
     parser.add_argument("--seed", type=int, default=0)
-    parser.add_argument("--ar-order", type=int, default=256)
-    parser.add_argument("--diagonal-load", type=float, default=0.001)
-    parser.add_argument("--context-dim-packets", type=int, default=8)
-    parser.add_argument("--extra-dim", type=int, default=256)
+    parser.add_argument("--ar-order", type=int, default=256, help="LPC/Hybrid only.")
+    parser.add_argument("--diagonal-load", type=float, default=0.001, help="LPC/Hybrid only.")
+    parser.add_argument("--context-dim-packets", type=int, default=8, help="Shared by all three methods.")
+    parser.add_argument("--extra-dim", type=int, default=256, help="Shared by all three methods.")
+    parser.add_argument("--max-k-lags", type=int, default=3, help="Sparse AR only.")
+    parser.add_argument("--max-lag-l", type=int, default=1024, help="Sparse AR only.")
+    parser.add_argument("--burg-order-pb", type=int, default=8, help="Sparse AR only.")
+    parser.add_argument("--lambda-reg", type=float, default=0.01, help="Sparse AR only.")
     parser.add_argument("--out-dir", type=Path, default=OUT_DIR)
     parser.add_argument("--skip-network-analysis", action="store_true",
                          help="Skip the dataset-wide network-loss analysis (it's cheap -- just reads "
@@ -272,7 +280,9 @@ def main():
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
     hparams = dict(ar_order=args.ar_order, diagonal_load=args.diagonal_load,
-                   context_dim_packets=args.context_dim_packets, extra_dim=args.extra_dim)
+                   context_dim_packets=args.context_dim_packets, extra_dim=args.extra_dim,
+                   max_k_lags=args.max_k_lags, max_lag_l=args.max_lag_l,
+                   burg_order_pb=args.burg_order_pb, lambda_reg=args.lambda_reg)
 
     if not args.skip_network_analysis:
         plot_network_analysis(args.out_dir)

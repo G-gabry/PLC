@@ -10,9 +10,10 @@ import matplotlib.pyplot as plt
 
 from research import safe_io
 
-LPC_COLOR = "#E8871E"     # orange -- AR-only
-NN_COLOR = "#1BAF7A"      # green  -- AR+NN
-TIE_COLOR = "#9CA3AF"     # neutral gray -- reference lines (e.g. 50% coin flip)
+LPC_COLOR = "#E8871E"        # orange -- AR-only
+NN_COLOR = "#1BAF7A"         # green  -- AR+NN
+SPARSE_AR_COLOR = "#8E44AD"  # purple -- Sparse AR (Severi 2025)
+TIE_COLOR = "#9CA3AF"        # neutral gray -- reference lines (e.g. 50% coin flip)
 GRID_COLOR = "#E5E7EB"
 
 

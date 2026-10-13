@@ -1,0 +1,499 @@
+nohup: ignoring input
+Sampled 200 files from example_test_set (seed=0), stratified by spectral flatness for genuine content diversity.
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+[1/200] sF1D5f-429-45816-14754-487747-347380-61770-187519 (918 pkts, 1.4% lost): SNR lpc=24.44 nn=27.14 sparse_ar=24.45 dB
+[2/200] pMchYa-011-461984-248646-131237-259340-281965-474206 (1033 pkts, 3.3% lost): SNR lpc=17.47 nn=17.74 sparse_ar=14.73 dB
+[3/200] KWj8Li-521-358526-235375-78807-67455-237079-21827 (802 pkts, 14.6% lost): SNR lpc=8.79 nn=8.64 sparse_ar=8.46 dB
+[4/200] LIJKja-026-447487-148409-188815-38506-78427-479691 (1033 pkts, 5.5% lost): SNR lpc=13.07 nn=13.00 sparse_ar=12.28 dB
+[5/200] wH6bMa-009-144175-39168-315211-114587-333757-10048 (1033 pkts, 7.6% lost): SNR lpc=13.70 nn=14.04 sparse_ar=12.36 dB
+[6/200] 8lHaxa-001-437270-91230-96853-392966-377039-493700 (1033 pkts, 8.7% lost): SNR lpc=13.51 nn=13.83 sparse_ar=11.54 dB
+[7/200] l3Lvae-611-211084-218396-212842-198509-334833-311379 (1390 pkts, 4.2% lost): SNR lpc=20.58 nn=21.33 sparse_ar=15.82 dB
+[8/200] i0Ocoe-610-395609-211084-211212-108056-187519-202035 (1390 pkts, 9.8% lost): SNR lpc=11.91 nn=11.51 sparse_ar=9.94 dB
+[9/200] PBDVAf-465-366971-117533-197606-160943-60681-25579 (1722 pkts, 3.4% lost): SNR lpc=18.29 nn=17.95 sparse_ar=15.99 dB
+[10/200] rqqrUf-476-372299-90733-207508-318838-254913-53278 (1590 pkts, 15.8% lost): SNR lpc=10.38 nn=10.34 sparse_ar=9.57 dB
+[11/200] 9srcUf-448-162832-472051-219243-152140-401183-304828 (1722 pkts, 11.1% lost): SNR lpc=10.05 nn=9.47 sparse_ar=9.27 dB
+[12/200] cmHjrf-493-348077-309854-224170-458554-202179-472051 (1722 pkts, 16.1% lost): SNR lpc=8.47 nn=7.93 sparse_ar=7.46 dB
+[13/200] FPRIpe-578-474864-126584-425422-304828-148409-10737 (1550 pkts, 9.1% lost): SNR lpc=11.28 nn=12.78 sparse_ar=10.21 dB
+[14/200] SnJBwf-434-37928-376902-480197-51581-328121-350223 (1378 pkts, 5.7% lost): SNR lpc=15.26 nn=15.35 sparse_ar=13.33 dB
+[15/200] Th8NDe-613-23535-495997-395609-270487-329331-383770 (1390 pkts, 14.1% lost): SNR lpc=10.12 nn=10.60 sparse_ar=8.34 dB
+[16/200] mvvOnf-472-106-135410-148409-334242-45816-353502 (954 pkts, 4.5% lost): SNR lpc=14.59 nn=14.30 sparse_ar=13.24 dB
+[17/200] rn9v1e-583-369034-383770-175927-399756-390385-383479 (1550 pkts, 11.7% lost): SNR lpc=12.66 nn=12.70 sparse_ar=9.49 dB
+[18/200] zoFKbf-438-268009-220507-287943-286732-24538-454712 (1653 pkts, 12.6% lost): SNR lpc=10.96 nn=9.29 sparse_ar=9.07 dB
+[19/200] oRqMra-058-167772-480197-43889-36331-135873-265166 (1033 pkts, 2.9% lost): SNR lpc=23.07 nn=23.45 sparse_ar=20.37 dB
+[20/200] P4ZKje-597-228203-427818-407728-174918-211212-250174 (1550 pkts, 23.0% lost): SNR lpc=7.60 nn=7.92 sparse_ar=6.21 dB
+[21/200] amZyRf-444-7708-476924-468905-275802-405424-380077 (1722 pkts, 2.6% lost): SNR lpc=17.28 nn=17.14 sparse_ar=16.03 dB
+[22/200] 1rIrKa-023-409746-287789-276335-17243-340579-260428 (1033 pkts, 1.6% lost): SNR lpc=19.56 nn=20.90 sparse_ar=17.38 dB
+[23/200] a4WwUa-043-141142-113619-397909-469223-287427-421926 (1033 pkts, 26.4% lost): SNR lpc=6.39 nn=6.55 sparse_ar=5.53 dB
+[24/200] KFAl8f-427-406364-361413-456735-410307-286869-348733 (1722 pkts, 18.6% lost): SNR lpc=9.78 nn=9.62 sparse_ar=6.96 dB
+[25/200] 3hvoVa-051-2307-202921-218396-175927-14787-464643 (1033 pkts, 5.3% lost): SNR lpc=16.28 nn=16.73 sparse_ar=13.69 dB
+[26/200] 87hwjf-487-426805-60643-437215-160943-182650-407728 (1181 pkts, 5.1% lost): SNR lpc=13.39 nn=11.70 sparse_ar=12.03 dB
+[27/200] WVKBPa-017-469001-13769-309009-430207-5054-14754 (1033 pkts, 3.6% lost): SNR lpc=15.48 nn=15.65 sparse_ar=13.53 dB
+[28/200] xX6Wce-607-140209-262731-151331-7708-427818-497426 (1390 pkts, 3.7% lost): SNR lpc=19.30 nn=19.12 sparse_ar=15.12 dB
+[29/200] k2rvsa-021-181149-117176-94351-2985-340579-209061 (1033 pkts, 4.2% lost): SNR lpc=18.36 nn=15.67 sparse_ar=15.58 dB
+[30/200] GptLba-028-467697-29563-495971-437270-5575-211212 (1033 pkts, 2.3% lost): SNR lpc=18.57 nn=19.00 sparse_ar=16.11 dB
+[31/200] 9a98Kf-464-298969-472051-292323-179462-78575-496080 (1181 pkts, 7.3% lost): SNR lpc=13.94 nn=14.52 sparse_ar=11.56 dB
+[32/200] 98pQ7f-492-161118-44660-2985-495997-227228-191485 (1722 pkts, 3.9% lost): SNR lpc=20.07 nn=20.12 sparse_ar=13.51 dB
+[33/200] cedJli-522-192385-152140-262731-156368-123704-333757 (719 pkts, 5.3% lost): SNR lpc=12.68 nn=10.62 sparse_ar=11.81 dB
+[34/200] 3EBeof-459-212842-454791-192385-495971-180085-113105 (1033 pkts, 16.7% lost): SNR lpc=11.82 nn=11.85 sparse_ar=7.33 dB
+[35/200] 7j8l2a-034-50416-4800-287427-123375-143976-264357 (1033 pkts, 3.1% lost): SNR lpc=16.21 nn=16.72 sparse_ar=13.75 dB
+[36/200] 8C0b9f-461-182650-228203-8651-240298-176776-186349 (1704 pkts, 3.8% lost): SNR lpc=17.12 nn=17.09 sparse_ar=13.51 dB
+[37/200] f5sCDf-435-355130-41798-395609-377902-35325-116061 (1378 pkts, 11.9% lost): SNR lpc=13.93 nn=12.40 sparse_ar=10.78 dB
+[38/200] rxhq2p-211-212526-349828-67455-407790-412326-143976 (1183 pkts, 7.2% lost): SNR lpc=15.12 nn=13.90 sparse_ar=14.08 dB
+[39/200] uHCIZa-015-146882-87506-304828-333757-5054-62919 (1033 pkts, 8.6% lost): SNR lpc=12.05 nn=12.38 sparse_ar=10.34 dB
+[40/200] 5LZsPp-295-239730-414547-129636-470600-495997-1214 (1207 pkts, 22.5% lost): SNR lpc=10.35 nn=8.94 sparse_ar=6.24 dB
+[41/200] 5ALjRp-161-333766-240226-4800-482510-113619-84055 (1026 pkts, 26.8% lost): SNR lpc=6.95 nn=6.61 sparse_ar=5.17 dB
+[42/200] Paqf1p-119-254913-443221-90733-163645-32125-188815 (1450 pkts, 9.0% lost): SNR lpc=14.79 nn=15.04 sparse_ar=11.13 dB
+[43/200] bnEKPi-496-131237-487747-10048-112031-352809-171454 (719 pkts, 13.9% lost): SNR lpc=9.35 nn=7.62 sparse_ar=7.89 dB
+[44/200] cZ9D6w-670-134118-41411-423587-125189-84055-98443 (662 pkts, 5.0% lost): SNR lpc=16.92 nn=16.82 sparse_ar=13.68 dB
+[45/200] UKnMcp-124-361413-129636-57514-52991-68221-81956 (1381 pkts, 20.9% lost): SNR lpc=14.31 nn=13.61 sparse_ar=9.62 dB
+[46/200] 6UNJZa-025-136860-357104-38459-89725-366126-252054 (1033 pkts, 9.4% lost): SNR lpc=13.35 nn=13.28 sparse_ar=10.32 dB
+[47/200] wkCjvp-408-175927-2985-407790-280816-275802-343332 (1046 pkts, 16.0% lost): SNR lpc=15.41 nn=14.61 sparse_ar=9.05 dB
+[48/200] CrjLKf-468-374393-49022-14754-240504-316080-236920 (1722 pkts, 6.6% lost): SNR lpc=14.99 nn=14.85 sparse_ar=12.34 dB
+[49/200] FW6BFp-225-129636-418989-280816-386883-462467-306759 (1649 pkts, 6.2% lost): SNR lpc=15.46 nn=15.30 sparse_ar=12.62 dB
+[50/200] yc5Hmf-494-469130-474206-203381-91840-123056-149498 (1722 pkts, 13.5% lost): SNR lpc=8.84 nn=8.88 sparse_ar=7.45 dB
+[51/200] JRGxpf-495-78575-358526-483339-81956-229618-247007 (1722 pkts, 14.2% lost): SNR lpc=8.76 nn=7.10 sparse_ar=7.75 dB
+[52/200] FSyUys-545-306052-88756-228203-369609-91230-448907 (1240 pkts, 3.5% lost): SNR lpc=18.04 nn=17.28 sparse_ar=15.25 dB
+[53/200] Mtnx5i-515-495971-279778-348676-11995-306560-418034 (744 pkts, 3.2% lost): SNR lpc=16.14 nn=12.83 sparse_ar=14.64 dB
+[54/200] lDN6of-450-91840-427818-353502-327883-210172-489807 (1722 pkts, 25.0% lost): SNR lpc=5.99 nn=3.91 sparse_ar=5.94 dB
+[55/200] FiS63i-513-129107-287427-185152-454791-121010-285778 (918 pkts, 30.0% lost): SNR lpc=4.73 nn=2.53 sparse_ar=3.39 dB
+[56/200] xDMmqs-548-333766-165168-462328-336612-442126-284808 (1636 pkts, 9.8% lost): SNR lpc=11.33 nn=11.30 sparse_ar=9.28 dB
+[57/200] xlckps-555-489807-93885-138959-23535-14754-299323 (1636 pkts, 10.9% lost): SNR lpc=10.55 nn=10.49 sparse_ar=8.93 dB
+[58/200] KIklei-503-156368-5054-151331-161307-380077-177809 (898 pkts, 12.1% lost): SNR lpc=9.00 nn=7.02 sparse_ar=7.36 dB
+[59/200] 0Rve0i-524-469450-332402-376902-283921-64116-240504 (1140 pkts, 5.1% lost): SNR lpc=14.01 nn=12.99 sparse_ar=12.06 dB
+[60/200] vAlA7f-458-390385-16661-177809-112031-325632-365075 (954 pkts, 1.5% lost): SNR lpc=30.98 nn=32.80 sparse_ar=24.21 dB
+[61/200] IJqofi-526-68304-236920-183720-152419-94351-316080 (661 pkts, 34.5% lost): SNR lpc=4.57 nn=3.40 sparse_ar=2.96 dB
+[62/200] cUyODs-564-324456-286869-479691-123056-485468-274323 (1636 pkts, 14.6% lost): SNR lpc=9.64 nn=9.12 sparse_ar=7.12 dB
+[63/200] fiDqFe-589-306052-37928-421728-166792-414547-458302 (1550 pkts, 7.5% lost): SNR lpc=16.54 nn=17.34 sparse_ar=12.66 dB
+[64/200] WOhKts-537-450251-294604-27791-350223-235375-383770 (1636 pkts, 15.2% lost): SNR lpc=11.40 nn=11.65 sparse_ar=8.87 dB
+[65/200] AHwsQs-538-108297-304214-140209-237079-426805-448869 (1636 pkts, 26.5% lost): SNR lpc=7.07 nn=6.18 sparse_ar=6.43 dB
+[66/200] Q4PCSi-506-317415-237079-78108-78427-235375-285778 (1152 pkts, 8.1% lost): SNR lpc=12.44 nn=11.60 sparse_ar=10.81 dB
+[67/200] oK9Hxs-550-7708-104867-460359-299323-420765-264795 (1636 pkts, 3.9% lost): SNR lpc=16.87 nn=16.63 sparse_ar=13.87 dB
+[68/200] kxh9is-563-24999-276516-377039-462467-365075-67099 (1636 pkts, 6.4% lost): SNR lpc=17.25 nn=16.99 sparse_ar=13.15 dB
+[69/200] zKb4se-576-475285-202921-407950-32125-236920-469001 (1236 pkts, 14.6% lost): SNR lpc=11.23 nn=10.68 sparse_ar=9.86 dB
+[70/200] 9ImS8p-321-63022-306759-480197-355130-205293-103130 (1065 pkts, 1.4% lost): SNR lpc=29.76 nn=30.66 sparse_ar=21.65 dB
+[71/200] EZwkWp-195-116061-37928-384031-166684-14787-96948 (1442 pkts, 15.5% lost): SNR lpc=13.75 nn=12.77 sparse_ar=8.18 dB
+[72/200] 5Lu6ui-514-135410-151381-124082-173176-644-324310 (744 pkts, 9.9% lost): SNR lpc=11.68 nn=9.32 sparse_ar=10.35 dB
+[73/200] ItvEYp-187-347380-151331-160943-343502-92870-286732 (1222 pkts, 6.0% lost): SNR lpc=16.53 nn=16.17 sparse_ar=12.44 dB
+[74/200] rjyWTe-587-151723-247588-123704-129889-250174-123056 (1550 pkts, 12.1% lost): SNR lpc=11.53 nn=11.96 sparse_ar=8.92 dB
+[75/200] 44Zbvs-567-179462-358526-13671-355104-116061-343332 (1636 pkts, 7.4% lost): SNR lpc=12.26 nn=10.96 sparse_ar=10.53 dB
+[76/200] PiKSIp-112-109021-465867-125189-123174-211212-334242 (1021 pkts, 9.1% lost): SNR lpc=11.04 nn=9.05 sparse_ar=7.90 dB
+[77/200] caQa9p-079-134118-41798-311327-343332-125459-231167 (1139 pkts, 6.4% lost): SNR lpc=23.98 nn=24.05 sparse_ar=13.59 dB
+[78/200] ofs2Us-561-469223-161307-229618-187519-295308-129107 (1636 pkts, 15.8% lost): SNR lpc=10.91 nn=10.88 sparse_ar=7.87 dB
+[79/200] jhRr0p-088-489070-351855-386883-172725-333766-16976 (1661 pkts, 16.4% lost): SNR lpc=10.39 nn=10.23 sparse_ar=7.95 dB
+[80/200] 3Fszap-093-117533-332219-451954-336612-141428-265166 (1116 pkts, 6.5% lost): SNR lpc=16.36 nn=16.50 sparse_ar=13.90 dB
+[81/200] 69ZMRp-276-162832-2757-113105-349816-17243-289593 (1207 pkts, 16.2% lost): SNR lpc=12.84 nn=12.75 sparse_ar=10.17 dB
+[82/200] 5OQdwp-063-348077-460359-16661-112031-224170-197606 (1404 pkts, 2.8% lost): SNR lpc=18.17 nn=18.24 sparse_ar=14.37 dB
+[83/200] am1FVp-234-380077-145165-25579-145555-311495-324310 (1208 pkts, 5.4% lost): SNR lpc=16.80 nn=16.77 sparse_ar=13.16 dB
+[84/200] 0mk6rp-310-146145-90733-51581-27791-50416-437215 (1608 pkts, 1.7% lost): SNR lpc=24.85 nn=25.07 sparse_ar=20.21 dB
+[85/200] BBcZPi-501-456735-480197-495997-497448-326140-134118 (861 pkts, 0.8% lost): SNR lpc=22.53 nn=23.33 sparse_ar=22.41 dB
+[86/200] lzFhsp-134-377273-280816-60681-369034-268009-11995 (1625 pkts, 3.1% lost): SNR lpc=21.39 nn=21.34 sparse_ar=15.25 dB
+[87/200] 1zDUvp-298-108297-119460-56896-348770-68221-98443 (1510 pkts, 2.6% lost): SNR lpc=17.28 nn=17.47 sparse_ar=14.09 dB
+[88/200] oJJGwp-325-47619-442126-2985-182650-124082-457067 (1710 pkts, 4.0% lost): SNR lpc=17.60 nn=17.78 sparse_ar=14.71 dB
+[89/200] zQSXvp-215-498788-407950-152419-25062-51581-3467 (1400 pkts, 17.6% lost): SNR lpc=10.77 nn=10.50 sparse_ar=8.61 dB
+[90/200] cqZnBp-237-143976-377902-462328-483339-384274-414547 (1322 pkts, 8.2% lost): SNR lpc=14.59 nn=13.79 sparse_ar=10.27 dB
+[91/200] f2JFMw-634-136860-113105-22031-310105-248646-32125 (824 pkts, 8.3% lost): SNR lpc=12.37 nn=12.06 sparse_ar=11.27 dB
+[92/200] qQ82Hw-614-91230-379354-379373-260428-324310-287427 (949 pkts, 5.2% lost): SNR lpc=16.99 nn=16.83 sparse_ar=16.62 dB
+[93/200] DmpOYi-525-91230-450251-209608-292323-92870-38506 (1140 pkts, 16.3% lost): SNR lpc=7.86 nn=6.34 sparse_ar=7.22 dB
+[94/200] nSu3Cp-366-41411-362672-285778-222370-421926-202035 (1118 pkts, 6.5% lost): SNR lpc=22.24 nn=23.32 sparse_ar=12.52 dB
+[95/200] nQsrxi-500-35788-354893-151331-437270-461984-276516 (861 pkts, 11.0% lost): SNR lpc=9.74 nn=9.92 sparse_ar=9.41 dB
+[96/200] tztd5w-640-23535-348077-410307-64116-151381-134118 (1176 pkts, 12.0% lost): SNR lpc=14.49 nn=14.29 sparse_ar=10.37 dB
+[97/200] ck2Uxp-081-495997-135873-82313-377039-373629-268363 (1026 pkts, 4.8% lost): SNR lpc=17.29 nn=16.14 sparse_ar=13.06 dB
+[98/200] BsVmke-591-419538-379538-386302-426805-469450-347380 (1550 pkts, 17.8% lost): SNR lpc=8.32 nn=8.57 sparse_ar=7.08 dB
+[99/200] SSYQ1w-650-275802-13671-144360-112336-104867-157595 (503 pkts, 5.4% lost): SNR lpc=22.24 nn=21.85 sparse_ar=15.73 dB
+[100/200] BcVzDs-560-352809-57514-418989-243067-209608-32726 (1636 pkts, 6.6% lost): SNR lpc=18.72 nn=17.52 sparse_ar=13.27 dB
+[101/200] N5kbFp-292-397909-407728-152140-117533-153980-62919 (1693 pkts, 21.2% lost): SNR lpc=10.95 nn=12.34 sparse_ar=7.62 dB
+[102/200] jgJdnp-100-135873-177809-247007-67455-332402-185152 (1404 pkts, 5.8% lost): SNR lpc=18.82 nn=19.06 sparse_ar=13.26 dB
+[103/200] BNXFqp-404-184495-450557-10737-129636-497448-379538 (712 pkts, 3.1% lost): SNR lpc=13.58 nn=12.36 sparse_ar=12.64 dB
+[104/200] U5aQJe-592-437270-129013-295308-406364-103913-497087 (1550 pkts, 4.5% lost): SNR lpc=15.73 nn=16.18 sparse_ar=13.78 dB
+[105/200] TypO9p-362-82313-390793-365346-50416-310105-275395 (1464 pkts, 23.4% lost): SNR lpc=8.48 nn=8.91 sparse_ar=6.86 dB
+[106/200] 3e1Tjp-199-462328-423751-38597-248646-74769-2009 (1395 pkts, 9.5% lost): SNR lpc=15.92 nn=15.74 sparse_ar=12.01 dB
+[107/200] ainjFp-098-145384-88756-289593-274542-488804-292564 (2208 pkts, 9.1% lost): SNR lpc=13.94 nn=13.21 sparse_ar=10.45 dB
+[108/200] pRaNDw-627-181149-276516-426805-281965-56896-235375 (1894 pkts, 4.8% lost): SNR lpc=15.34 nn=15.31 sparse_ar=13.85 dB
+[109/200] 7HBFIp-071-294604-416172-427818-181149-278609-175927 (1141 pkts, 7.9% lost): SNR lpc=20.01 nn=20.12 sparse_ar=12.71 dB
+[110/200] m8mjCs-533-485468-283456-486330-442126-2757-12865 (1636 pkts, 22.7% lost): SNR lpc=10.07 nn=9.21 sparse_ar=7.29 dB
+[111/200] MJEnPs-553-484336-261033-237079-274170-257745-343308 (1636 pkts, 6.0% lost): SNR lpc=12.25 nn=12.18 sparse_ar=11.00 dB
+[112/200] 9f3Qjw-657-129013-78427-348770-228203-60643-7188 (839 pkts, 7.9% lost): SNR lpc=15.37 nn=15.05 sparse_ar=14.72 dB
+[113/200] noHubp-343-163645-17243-410906-219243-161307-221798 (1638 pkts, 6.7% lost): SNR lpc=14.69 nn=14.26 sparse_ar=11.00 dB
+[114/200] aVIkMi-504-436373-35788-166684-274170-363774-493700 (826 pkts, 3.8% lost): SNR lpc=16.25 nn=15.23 sparse_ar=14.81 dB
+[115/200] fS0Vwp-324-274170-461984-129889-218396-366126-128329 (1773 pkts, 16.1% lost): SNR lpc=12.00 nn=10.44 sparse_ar=7.39 dB
+[116/200] 9hvMUf-482-498788-113105-17243-63022-21827-338584 (1318 pkts, 11.1% lost): SNR lpc=10.70 nn=10.52 sparse_ar=9.40 dB
+[117/200] IZG94w-666-98443-418034-470600-161118-288253-129889 (1707 pkts, 7.1% lost): SNR lpc=16.54 nn=15.69 sparse_ar=10.57 dB
+[118/200] TkK5fp-380-229618-476225-311495-339484-11995-7708 (1573 pkts, 6.0% lost): SNR lpc=14.33 nn=14.00 sparse_ar=10.01 dB
+[119/200] 4sBV1s-535-160927-255765-139119-167772-460359-377902 (1636 pkts, 12.0% lost): SNR lpc=12.77 nn=13.15 sparse_ar=8.71 dB
+[120/200] BThtKf-463-324456-428876-160668-329895-295308-99711 (1722 pkts, 31.4% lost): SNR lpc=5.72 nn=5.06 sparse_ar=5.30 dB
+[121/200] wD39yw-617-350336-91230-365075-384274-339484-27577 (918 pkts, 4.1% lost): SNR lpc=14.94 nn=14.95 sparse_ar=13.01 dB
+[122/200] 1Q0zzp-067-496080-227228-300626-311379-247007-1214 (1044 pkts, 3.4% lost): SNR lpc=32.91 nn=31.81 sparse_ar=16.59 dB
+[123/200] JCRPTw-618-129107-479691-343332-355104-157595-129013 (1894 pkts, 30.5% lost): SNR lpc=6.42 nn=5.52 sparse_ar=5.18 dB
+[124/200] WWYmkp-135-247007-450251-229950-249772-273892-186349 (1032 pkts, 18.8% lost): SNR lpc=12.36 nn=12.17 sparse_ar=7.21 dB
+[125/200] ui9aDp-122-292323-379538-386883-287427-306759-88721 (1070 pkts, 4.6% lost): SNR lpc=18.56 nn=18.50 sparse_ar=13.72 dB
+[126/200] DfzVIp-175-379354-103913-25062-384031-343308-295308 (1232 pkts, 6.7% lost): SNR lpc=17.51 nn=17.45 sparse_ar=12.37 dB
+[127/200] RkoxIi-499-395609-17243-276516-68344-191485-476225 (1053 pkts, 19.2% lost): SNR lpc=6.44 nn=5.55 sparse_ar=6.19 dB
+[128/200] YLEXwp-335-240298-183720-447487-129636-202035-44660 (1633 pkts, 4.8% lost): SNR lpc=17.67 nn=16.96 sparse_ar=15.08 dB
+[129/200] jM2z5p-212-362995-350336-202035-87506-239730-207508 (960 pkts, 3.1% lost): SNR lpc=27.63 nn=27.41 sparse_ar=18.62 dB
+[130/200] YuwChp-152-8651-147603-379354-29563-62919-345238 (1842 pkts, 8.4% lost): SNR lpc=22.89 nn=22.75 sparse_ar=13.90 dB
+[131/200] mZAhvp-320-51581-316080-475285-152880-108378-407790 (2240 pkts, 19.7% lost): SNR lpc=14.92 nn=17.45 sparse_ar=6.71 dB
+[132/200] RXuyap-339-457067-332402-329331-281965-472051-353502 (1386 pkts, 8.4% lost): SNR lpc=19.38 nn=19.83 sparse_ar=11.72 dB
+[133/200] 9Mkadp-302-273892-209608-109841-324591-494783-498752 (1917 pkts, 13.9% lost): SNR lpc=13.39 nn=13.14 sparse_ar=10.18 dB
+[134/200] 6TUCvp-352-108130-78807-55646-250174-386302-414547 (1874 pkts, 14.3% lost): SNR lpc=14.19 nn=14.64 sparse_ar=8.89 dB
+[135/200] avuTLe-585-474206-355130-317191-361413-333474-248785 (1550 pkts, 11.8% lost): SNR lpc=10.45 nn=10.74 sparse_ar=9.00 dB
+[136/200] HxFzMp-357-24999-343332-90733-489807-316694-345238 (1056 pkts, 12.7% lost): SNR lpc=18.23 nn=14.86 sparse_ar=10.81 dB
+[137/200] QpHWMp-383-149498-238364-156368-402653-484336-426805 (1642 pkts, 21.7% lost): SNR lpc=11.04 nn=12.70 sparse_ar=5.43 dB
+[138/200] cfSfbp-363-68221-13671-186349-322947-197606-339484 (1688 pkts, 12.9% lost): SNR lpc=20.76 nn=21.59 sparse_ar=11.63 dB
+[139/200] IJui6p-278-140209-424453-325632-318907-448869-125189 (879 pkts, 26.4% lost): SNR lpc=7.46 nn=7.15 sparse_ar=5.67 dB
+[140/200] vTx6Wp-073-38459-458554-472051-230200-332402-365346 (1099 pkts, 10.0% lost): SNR lpc=14.48 nn=14.47 sparse_ar=11.29 dB
+[141/200] 9OkIKp-409-379354-383479-166684-320846-480197-361413 (1633 pkts, 3.1% lost): SNR lpc=30.93 nn=31.21 sparse_ar=17.58 dB
+[142/200] rllgnp-282-21827-2985-183720-67455-409746-330730 (1398 pkts, 18.8% lost): SNR lpc=13.15 nn=12.67 sparse_ar=10.38 dB
+[143/200] riuiap-287-319764-286732-35325-55646-391852-1246 (1806 pkts, 5.0% lost): SNR lpc=17.07 nn=17.38 sparse_ar=13.38 dB
+[144/200] OI5Azp-257-60643-225888-294604-334833-14787-125459 (1203 pkts, 4.9% lost): SNR lpc=15.68 nn=15.05 sparse_ar=15.25 dB
+[145/200] 9aa0Fp-331-427818-479691-112336-420765-462193-379354 (1488 pkts, 11.5% lost): SNR lpc=16.12 nn=16.96 sparse_ar=12.86 dB
+[146/200] IJFPZp-340-90733-100179-99711-247588-402653-355130 (1491 pkts, 3.4% lost): SNR lpc=13.01 nn=10.85 sparse_ar=10.72 dB
+[147/200] sNYM9p-246-47619-361413-1214-155820-418901-176776 (965 pkts, 28.8% lost): SNR lpc=6.61 nn=7.56 sparse_ar=4.14 dB
+[148/200] Od9CNp-327-140209-326180-101992-35325-166792-451954 (1953 pkts, 10.4% lost): SNR lpc=14.59 nn=13.61 sparse_ar=11.25 dB
+[149/200] zVlcap-263-274542-472051-376372-248785-476225-35325 (1292 pkts, 4.1% lost): SNR lpc=16.40 nn=16.14 sparse_ar=14.67 dB
+[150/200] mCLt3p-410-320846-476924-422977-274323-99711-177809 (1085 pkts, 1.5% lost): SNR lpc=26.66 nn=26.74 sparse_ar=22.00 dB
+[151/200] rpdA0p-089-193291-347380-224170-426805-310105-489070 (1279 pkts, 8.9% lost): SNR lpc=12.89 nn=12.19 sparse_ar=11.92 dB
+[152/200] d4LtRw-656-379354-74769-192385-202921-93885-62534 (1673 pkts, 9.1% lost): SNR lpc=13.32 nn=13.07 sparse_ar=10.29 dB
+[153/200] vhQX3p-288-256377-386883-276335-177955-380077-80661 (2229 pkts, 2.4% lost): SNR lpc=16.02 nn=15.86 sparse_ar=15.36 dB
+[154/200] PSLbbp-359-11995-156368-348733-154883-123704-497426 (1430 pkts, 11.9% lost): SNR lpc=11.08 nn=9.76 sparse_ar=9.53 dB
+[155/200] dc4C1p-319-469130-53129-287943-116061-476924-448907 (1529 pkts, 17.7% lost): SNR lpc=18.63 nn=17.25 sparse_ar=12.90 dB
+[156/200] O7tsRw-671-38597-125620-126584-128202-343308-240298 (1734 pkts, 7.0% lost): SNR lpc=14.85 nn=14.81 sparse_ar=12.31 dB
+[157/200] 2TcsGp-297-152880-78575-467697-23535-316694-24999 (2415 pkts, 13.3% lost): SNR lpc=14.42 nn=14.41 sparse_ar=9.59 dB
+[158/200] hImnha-010-474206-125620-494783-410307-474929-314040 (1033 pkts, 9.4% lost): SNR lpc=13.28 nn=13.09 sparse_ar=10.05 dB
+[159/200] QzAg3p-413-374393-31166-163645-409369-10737-129013 (973 pkts, 10.4% lost): SNR lpc=24.53 nn=21.28 sparse_ar=16.34 dB
+[160/200] jFujMp-258-2985-422977-276516-270302-316694-390385 (1887 pkts, 7.8% lost): SNR lpc=18.60 nn=18.41 sparse_ar=10.31 dB
+[161/200] 2HNvip-384-377039-229618-315211-103130-162269-274323 (1838 pkts, 4.2% lost): SNR lpc=22.28 nn=22.03 sparse_ar=13.73 dB
+[162/200] JLBTXp-060-194617-60643-435517-420765-124439-152419 (1024 pkts, 10.4% lost): SNR lpc=15.31 nn=14.59 sparse_ar=10.54 dB
+[163/200] uIq5Cp-346-271293-199372-348733-164849-450557-397909 (1966 pkts, 2.9% lost): SNR lpc=17.10 nn=16.98 sparse_ar=15.44 dB
+[164/200] G50hup-092-363552-123056-229618-481410-299323-332402 (1114 pkts, 6.5% lost): SNR lpc=23.38 nn=24.10 sparse_ar=16.24 dB
+[165/200] fiBRvp-155-14754-379538-407950-108056-495971-270302 (1409 pkts, 17.0% lost): SNR lpc=9.13 nn=9.75 sparse_ar=7.10 dB
+[166/200] 8b8sWp-275-88756-348733-183720-134118-226233-129107 (1202 pkts, 3.6% lost): SNR lpc=21.06 nn=21.19 sparse_ar=14.79 dB
+[167/200] vOT8yp-371-205293-131237-111916-212842-29563-288077 (1254 pkts, 6.2% lost): SNR lpc=16.31 nn=17.24 sparse_ar=11.84 dB
+[168/200] k4Lvzp-329-270302-101992-248785-163995-27791-469130 (1701 pkts, 7.6% lost): SNR lpc=16.67 nn=16.58 sparse_ar=13.67 dB
+[169/200] qmNVhp-128-78575-68344-44660-128101-103130-334242 (1283 pkts, 4.8% lost): SNR lpc=24.00 nn=25.20 sparse_ar=13.11 dB
+[170/200] tXap2p-281-298969-9753-281965-457067-162269-329331 (1012 pkts, 6.8% lost): SNR lpc=16.03 nn=16.26 sparse_ar=13.13 dB
+[171/200] Aal0cp-183-209061-91230-492922-2757-317191-461984 (990 pkts, 4.5% lost): SNR lpc=18.07 nn=18.10 sparse_ar=12.91 dB
+[172/200] ZgJsyp-189-209061-292564-111916-92870-126584-280816 (1939 pkts, 5.0% lost): SNR lpc=18.88 nn=18.68 sparse_ar=16.02 dB
+[173/200] 8wAd8p-068-329159-165684-202035-119460-330730-447487 (1209 pkts, 11.4% lost): SNR lpc=16.61 nn=16.65 sparse_ar=9.24 dB
+[174/200] maM4mp-267-195572-141428-108130-299323-8651-456735 (1158 pkts, 7.5% lost): SNR lpc=27.29 nn=28.87 sparse_ar=21.22 dB
+[175/200] IIhdup-184-282845-322947-195637-315211-10737-386302 (986 pkts, 6.9% lost): SNR lpc=21.71 nn=21.72 sparse_ar=12.58 dB
+[176/200] Jpj5sp-423-369034-108056-487747-295308-1246-219243 (1468 pkts, 8.6% lost): SNR lpc=19.88 nn=18.19 sparse_ar=11.58 dB
+[177/200] fdXdMp-313-165684-111916-348770-380077-145384-347380 (1440 pkts, 12.8% lost): SNR lpc=17.15 nn=17.42 sparse_ar=11.43 dB
+[178/200] uYOkKp-107-143976-376902-185152-437215-90733-10048 (968 pkts, 4.3% lost): SNR lpc=22.39 nn=22.90 sparse_ar=13.92 dB
+[179/200] DWrC0a-013-57191-1214-242009-327883-379538-476225 (1033 pkts, 12.1% lost): SNR lpc=9.78 nn=10.02 sparse_ar=7.31 dB
+[180/200] m5rDOp-062-377273-156368-185152-188815-186260-486330 (1445 pkts, 11.0% lost): SNR lpc=17.37 nn=15.80 sparse_ar=10.47 dB
+[181/200] Q1VJ4p-396-67099-191485-442126-324310-384031-392966 (757 pkts, 0.5% lost): SNR lpc=50.98 nn=49.41 sparse_ar=47.28 dB
+[182/200] eiJpip-223-216978-247588-305230-165168-65123-203381 (1402 pkts, 10.6% lost): SNR lpc=16.81 nn=16.81 sparse_ar=11.65 dB
+[183/200] kDEiGp-268-254920-474864-52991-170820-165168-328121 (1029 pkts, 24.1% lost): SNR lpc=7.36 nn=6.68 sparse_ar=5.85 dB
+[184/200] fZg66p-070-68221-216978-377273-239730-53784-3467 (994 pkts, 29.6% lost): SNR lpc=18.27 nn=19.70 sparse_ar=5.28 dB
+[185/200] ie6iSp-097-407790-253414-334074-464643-167361-80351 (1395 pkts, 3.9% lost): SNR lpc=28.91 nn=29.03 sparse_ar=18.85 dB
+[186/200] 4fsgkp-253-311495-209061-229618-287427-276516-38459 (1013 pkts, 6.8% lost): SNR lpc=16.89 nn=17.00 sparse_ar=13.07 dB
+[187/200] rkSMcp-349-162269-339484-74769-12865-363552-41411 (1411 pkts, 14.4% lost): SNR lpc=17.18 nn=17.30 sparse_ar=10.78 dB
+[188/200] u3JmNp-105-377036-373629-177809-287789-419538-221798 (1057 pkts, 9.1% lost): SNR lpc=12.76 nn=11.92 sparse_ar=11.36 dB
+[189/200] FZwvbp-205-349816-138959-261033-383479-409369-152140 (1111 pkts, 28.3% lost): SNR lpc=12.97 nn=9.79 sparse_ar=6.40 dB
+[190/200] TaYTvp-415-63022-179855-481410-392966-38597-437270 (762 pkts, 4.6% lost): SNR lpc=21.20 nn=21.01 sparse_ar=15.73 dB
+[191/200] CF7Gnp-165-481033-25721-175927-209061-312468-108378 (1919 pkts, 17.5% lost): SNR lpc=13.45 nn=13.54 sparse_ar=9.34 dB
+[192/200] tTMeWp-326-264357-280816-2985-25721-189658-311379 (2359 pkts, 8.9% lost): SNR lpc=24.40 nn=25.51 sparse_ar=11.93 dB
+[193/200] BLAVyp-401-374393-353502-276516-464643-247007-280816 (1578 pkts, 17.7% lost): SNR lpc=10.92 nn=11.09 sparse_ar=8.26 dB
+[194/200] WYTgYp-403-306759-7708-254913-153980-163947-460359 (1450 pkts, 4.2% lost): SNR lpc=16.37 nn=15.61 sparse_ar=12.12 dB
+[195/200] 9kbanp-261-50416-108056-469001-231167-334074-209061 (1007 pkts, 6.0% lost): SNR lpc=13.59 nn=14.21 sparse_ar=12.22 dB
+[196/200] DLZvmp-426-78108-128329-469130-165684-261033-84004 (868 pkts, 7.7% lost): SNR lpc=21.99 nn=22.57 sparse_ar=12.03 dB
+[197/200] 7gnoMp-243-13140-469001-90733-352371-418901-62534 (1349 pkts, 14.4% lost): SNR lpc=12.15 nn=11.80 sparse_ar=8.89 dB
+[198/200] 6maFGp-305-129013-193291-68221-152880-38506-163335 (2424 pkts, 17.9% lost): SNR lpc=18.51 nn=20.68 sparse_ar=7.74 dB
+[199/200] zRlcSp-181-25062-53784-123056-333757-268363-211084 (1709 pkts, 6.1% lost): SNR lpc=17.47 nn=17.94 sparse_ar=12.12 dB
+[200/200] qx9MPf-447-243466-253414-78108-327883-41798-186349 (1722 pkts, 15.9% lost): SNR lpc=8.19 nn=8.06 sparse_ar=7.85 dB
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+
+===== Aggregate results over 200 files =====
+
+SNR (dB) (higher=better):
+  Mean  -- This LPC: 15.4486   This NN: 15.2139   This Sparse AR: 11.7310
+  Median-- This LPC: 14.9675   This NN: 14.7274   This Sparse AR: 11.5701
+  This NN beats This LPC on 81/200 files (40.5%)
+  This Sparse AR beats This LPC on 1/200 files (0.5%)
+
+MR-STFT dist. (lower=better):
+  Mean  -- This LPC: 0.4652   This NN: 0.3600   This Sparse AR: 0.6073
+  Median-- This LPC: 0.3688   This NN: 0.2987   This Sparse AR: 0.5037
+  This NN beats This LPC on 181/200 files (90.5%)
+  This Sparse AR beats This LPC on 0/200 files (0.0%)
+
+PLCMOS (higher=better):
+  Mean  -- This LPC: 2.3954   This NN: 2.4658   This Sparse AR: 2.0522
+  Median-- This LPC: 2.2603   This NN: 2.3263   This Sparse AR: 1.9075
+  This NN beats This LPC on 147/200 files (73.5%)
+  This Sparse AR beats This LPC on 15/200 files (7.5%)
+
+ViSQOL MOS-LQO (higher=better):
+  Mean  -- This LPC: 4.5071   This NN: 4.4971   This Sparse AR: 4.4665
+  Median-- This LPC: 4.5882   This NN: 4.5739   This Sparse AR: 4.5400
+  This NN beats This LPC on 92/200 files (46.0%)
+  This Sparse AR beats This LPC on 13/200 files (6.5%)
+
+Per-file results: /home/omaralielgabry/PLC/research/output/metrics_comparison/per_file_results.csv
+Per-burst results: /home/omaralielgabry/PLC/research/output/metrics_comparison/per_burst_results.csv
+Win-rate summary: /home/omaralielgabry/PLC/research/output/metrics_comparison/win_rate_summary.png
+Complexity grid:  /home/omaralielgabry/PLC/research/output/metrics_comparison/complexity_grid.png
+Sampled 30 files from example_test_set (seed=0), stratified by spectral flatness for genuine content diversity.
+
+  ar_order: resuming, 360 evaluations already saved, 0 to go
+
+AR order: saved sweep_ar_order.csv and sweep_ar_order.png
+  context_length_packets: resuming, 330 evaluations already saved, 0 to go
+
+Context length: saved sweep_context_length_packets.csv and sweep_context_length_packets.png
+  diagonal_load: resuming, 210 evaluations already saved, 0 to go
+
+AR diagonal loading: saved sweep_diagonal_load.csv and sweep_diagonal_load.png
+  extra_dim: resuming, 113 evaluations already saved, 187 to go
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+  extra_dim = 128: done (30 files, lpc, nn, sparse_ar)
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+  extra_dim = 192: done (30 files, lpc, nn, sparse_ar)
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+  extra_dim = 256: done (30 files, lpc, nn, sparse_ar)
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+  extra_dim = 384: done (30 files, lpc, nn, sparse_ar)
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+  extra_dim = 512: done (30 files, lpc, nn, sparse_ar)
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+  extra_dim = 768: done (30 files, lpc, nn, sparse_ar)
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+  extra_dim = 1024: done (30 files, lpc, nn, sparse_ar)
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+
+Extra/crossfade dim: saved sweep_extra_dim.csv and sweep_extra_dim.png
+  max_k_lags = 1: done (30 files, sparse_ar)
+  max_k_lags = 2: done (30 files, sparse_ar)
+  max_k_lags = 3: done (30 files, sparse_ar)
+  max_k_lags = 4: done (30 files, sparse_ar)
+  max_k_lags = 5: done (30 files, sparse_ar)
+  max_k_lags = 6: done (30 files, sparse_ar)
+
+Sparse AR: max lags (k): saved sweep_max_k_lags.csv and sweep_max_k_lags.png
+  max_lag_l = 128: done (30 files, sparse_ar)
+  max_lag_l = 256: done (30 files, sparse_ar)
+  max_lag_l = 512: done (30 files, sparse_ar)
+  max_lag_l = 1024: done (30 files, sparse_ar)
+  max_lag_l = 2048: done (30 files, sparse_ar)
+
+Sparse AR: max lag (L): saved sweep_max_lag_l.csv and sweep_max_lag_l.png
+  burg_order_pb = 2: done (30 files, sparse_ar)
+  burg_order_pb = 4: done (30 files, sparse_ar)
+  burg_order_pb = 8: done (30 files, sparse_ar)
+  burg_order_pb = 16: done (30 files, sparse_ar)
+  burg_order_pb = 32: done (30 files, sparse_ar)
+  burg_order_pb = 64: done (30 files, sparse_ar)
+  burg_order_pb = 128: done (30 files, sparse_ar)
+
+Sparse AR: Burg order: saved sweep_burg_order_pb.csv and sweep_burg_order_pb.png
+  lambda_reg = 0.0001: done (30 files, sparse_ar)
+  lambda_reg = 0.001: done (30 files, sparse_ar)
+  lambda_reg = 0.01: done (30 files, sparse_ar)
+  lambda_reg = 0.1: done (30 files, sparse_ar)
+  lambda_reg = 1.0: done (30 files, sparse_ar)
+
+Sparse AR: regularization: saved sweep_lambda_reg.csv and sweep_lambda_reg.png
+
+All sweeps saved to /home/omaralielgabry/PLC/research/output/hparam_sweeps
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Overall Packet Loss Rate (PLR): 10.57%
+Average Loss Burst Length     : 1.46 packets
+Saved /home/omaralielgabry/PLC/research/output/burst_comparisons/network_statistics.png
+
+burst_length=1: using 9f3Qjw-657-129013-78427-348770-228203-60643-7188 (packet 10)
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+burst_length=2: using 9f3Qjw-657-129013-78427-348770-228203-60643-7188 (packet 521)
+burst_length=4: using 9f3Qjw-657-129013-78427-348770-228203-60643-7188 (packet 719)
+burst_length=8: using YuwChp-152-8651-147603-379354-29563-62919-345238 (packet 901)
+burst_length=16: using bAzeFf-484-123704-325632-334833-140257-202179-230200 (packet 1608)
+
+Saved 5 burst comparison(s) to /home/omaralielgabry/PLC/research/output/burst_comparisons
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+
+===== 1. Significance tests (paired Wilcoxon, Holm-corrected over all 12 metric x pair tests) =====
+(a_advantage > 0 means the first-named method is better, for every metric)
+
+  This LPC vs This NN:
+    SNR (dB)         advantage +0.2347 [+0.1036, +0.3687]  p_holm=0.00371  r=+0.25 (small) -> This LPC better
+    MR-STFT dist.    advantage -0.1052 [-0.1257, -0.0867]  p_holm=4.1e-27  r=-0.89 (large) -> This NN better
+    PLCMOS           advantage -0.0705 [-0.0920, -0.0492]  p_holm=6.43e-12  r=-0.58 (large) -> This NN better
+    ViSQOL MOS-LQO   advantage +0.0100 [-0.0051, +0.0250]  p_holm=0.0766  r=+0.14 (small) -> no significant difference
+
+  This LPC vs This Sparse AR:
+    SNR (dB)         advantage +3.7176 [+3.3272, +4.1198]  p_holm=1.72e-33  r=+1.00 (large) -> This LPC better
+    MR-STFT dist.    advantage +0.1420 [+0.1303, +0.1547]  p_holm=1.72e-33  r=+1.00 (large) -> This LPC better
+    PLCMOS           advantage +0.3431 [+0.2877, +0.4006]  p_holm=6.23e-31  r=+0.96 (large) -> This LPC better
+    ViSQOL MOS-LQO   advantage +0.0406 [+0.0328, +0.0479]  p_holm=4.1e-27  r=+0.89 (large) -> This LPC better
+
+  This NN vs This Sparse AR:
+    SNR (dB)         advantage +3.4829 [+3.0500, +3.9309]  p_holm=6.23e-31  r=+0.96 (large) -> This NN better
+    MR-STFT dist.    advantage +0.2473 [+0.2200, +0.2773]  p_holm=9.33e-33  r=+0.99 (large) -> This NN better
+    PLCMOS           advantage +0.4136 [+0.3548, +0.4743]  p_holm=9.33e-33  r=+0.99 (large) -> This NN better
+    ViSQOL MOS-LQO   advantage +0.0306 [+0.0165, +0.0444]  p_holm=4.67e-10  r=+0.52 (large) -> This NN better
+
+===== 2. Saved metric_distributions.png and paired_differences.png =====
+
+===== 3. Quality vs. real burst length (gap SNR, dB) =====
+     1 pkts (n=12763): This LPC   7.54  This NN   7.38  This Sparse AR   1.16  |  This NN advantage -0.16 [-0.39, +0.07]  This Sparse AR advantage -6.38 [-7.17, -5.66]
+     2 pkts (n= 3254): This LPC   5.12  This NN   5.03  This Sparse AR   0.55  |  This NN advantage -0.08 [-0.42, +0.28]  This Sparse AR advantage -4.57 [-5.41, -3.82]
+     3 pkts (n=  887): This LPC   3.64  This NN   3.56  This Sparse AR   0.37  |  This NN advantage -0.08 [-0.43, +0.26]  This Sparse AR advantage -3.27 [-3.96, -2.66]
+   4-7 pkts (n=  568): This LPC   2.94  This NN   2.77  This Sparse AR   0.24  |  This NN advantage -0.18 [-0.54, +0.19]  This Sparse AR advantage -2.70 [-3.33, -2.13]
+    8+ pkts (n=   73): This LPC   0.82  This NN   0.17  This Sparse AR   0.08  |  This NN advantage -0.65 [-1.34, +0.11]  This Sparse AR advantage -0.74 [-1.52, -0.36]
+
+===== 4. Real-time feasibility =====
+  This LPC: median 1.36 ms per concealed packet = 0.117x real time (OK for live use)
+  This NN: median 36.33 ms per concealed packet = 3.13x real time (TOO SLOW for live use)
+  This Sparse AR: median 1.55 ms per concealed packet = 0.133x real time (OK for live use)
+
+===== 5. Hyperparameter sweep summary (best value per metric; gain > 0 = better than default) =====
+  ar_order                 This LPC SNR (dB): 768 (+1.42), MR-STFT dist.: 2048 (+0.0699), PLCMOS: 1536 (+0.13), ViSQOL MOS-LQO: 1024 (+0.0281)
+  ar_order                 This NN SNR (dB): 512 (+0.435), MR-STFT dist.: 768 (+0.00683), PLCMOS: 768 (+0.0695), ViSQOL MOS-LQO: 512 (+0.0143)
+  burg_order_pb            This Sparse AR SNR (dB): 128 (+3.04), MR-STFT dist.: 128 (+0.15), PLCMOS: 128 (+0.364), ViSQOL MOS-LQO: 128 (+0.0386)
+  context_length_packets   This LPC SNR (dB): 8 (+0), MR-STFT dist.: 16 (+0.00169), PLCMOS: 16 (+0.00651), ViSQOL MOS-LQO: 32 (+0.00124)
+  context_length_packets   This NN SNR (dB): 8 (+0), MR-STFT dist.: 8 (+0), PLCMOS: 8 (+0), ViSQOL MOS-LQO: 8 (+0)
+  diagonal_load            This LPC SNR (dB): 0.0001 (+0.00188), MR-STFT dist.: 1e-06 (+0.0124), PLCMOS: 1e-05 (+0.00848), ViSQOL MOS-LQO: 0.0001 (+0.00116)
+  diagonal_load            This NN SNR (dB): 1e-05 (+0.00386), MR-STFT dist.: 1e-05 (+0.000773), PLCMOS: 0.001 (+0), ViSQOL MOS-LQO: 1e-06 (+0.00108)
+  extra_dim                This LPC SNR (dB): 16 (+0.809), MR-STFT dist.: 32 (+0.0495), PLCMOS: 512 (+0.0363), ViSQOL MOS-LQO: 32 (+0.0479)
+  extra_dim                This NN SNR (dB): 16 (+0.834), MR-STFT dist.: 64 (+0.0209), PLCMOS: 384 (+0.0201), ViSQOL MOS-LQO: 64 (+0.0172)
+  extra_dim                This Sparse AR SNR (dB): 128 (+0.38), MR-STFT dist.: 192 (+0.0142), PLCMOS: 256 (+0), ViSQOL MOS-LQO: 128 (+0.118)
+  lambda_reg               This Sparse AR SNR (dB): 0.0001 (+0.0016), MR-STFT dist.: 0.0001 (+0.000235), PLCMOS: 0.001 (+0.0151), ViSQOL MOS-LQO: 0.0001 (+6.38e-05)
+  max_k_lags               This Sparse AR SNR (dB): 4 (+0.000101), MR-STFT dist.: 4 (+4.73e-06), PLCMOS: 6 (+0.0211), ViSQOL MOS-LQO: 4 (+9.55e-07)
+  max_lag_l                This Sparse AR SNR (dB): 1024 (+0), MR-STFT dist.: 1024 (+0), PLCMOS: 1024 (+0), ViSQOL MOS-LQO: 1024 (+0)
+
+===== 6. Failure cases: This NN vs This LPC (largest losses on SNR (dB)) =====
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+  case 1: HxFzMp-357-24999-343332-90733-489807-316694-345238  This NN advantage -3.363 -> plotted 1-packet burst at packet 480
+  case 2: Mtnx5i-515-495971-279778-348676-11995-306560-418034  This NN advantage -3.306 -> plotted 1-packet burst at packet 1
+  case 3: QzAg3p-413-374393-31166-163645-409369-10737-129013  This NN advantage -3.247 -> plotted 1-packet burst at packet 517
+
+===== 6. Failure cases: This Sparse AR vs This LPC (largest losses on SNR (dB)) =====
+  case 1: 1Q0zzp-067-496080-227228-300626-311379-247007-1214  This Sparse AR advantage -16.321 -> plotted 1-packet burst at packet 636
+  case 2: 9OkIKp-409-379354-383479-166684-320846-480197-361413  This Sparse AR advantage -13.348 -> plotted 1-packet burst at packet 673
+  case 3: fZg66p-070-68221-216978-377273-239730-53784-3467  This Sparse AR advantage -12.981 -> plotted 1-packet burst at packet 354
+
+All outputs saved to /home/omaralielgabry/PLC/research/output/statistical_analysis
+Report saved to /home/omaralielgabry/PLC/research/output/report/PLC_LPC_vs_PARCnet_Report.docx

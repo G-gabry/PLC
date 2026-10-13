@@ -272,6 +272,25 @@ class Report:
         run.italic = True
         return self.eq_n
 
+    def insight(self, text: str):
+        """A short, visually distinct 'what this means' note placed right
+        after a figure, so a reader does not have to work out the takeaway
+        themselves -- separate from the longer analytical prose elsewhere,
+        which may repeat the same point in more depth."""
+        p = self.doc.add_paragraph()
+        p.paragraph_format.space_after = Pt(10)
+        p.paragraph_format.left_indent = Cm(0.5)
+        label = p.add_run("Interpretation: ")
+        label.bold = True
+        label.italic = True
+        label.font.size = Pt(9.5)
+        label.font.color.rgb = RGBColor(0x1F, 0x29, 0x37)
+        body = p.add_run(text)
+        body.italic = True
+        body.font.size = Pt(9.5)
+        body.font.color.rgb = RGBColor(0x37, 0x41, 0x51)
+        return p
+
     def callout(self, title: str, text: str, fill="FFF4E5"):
         table = self.doc.add_table(rows=1, cols=1)
         table.alignment = WD_TABLE_ALIGNMENT.CENTER
@@ -324,6 +343,8 @@ class Report:
         cap.paragraph_format.keep_with_next = True
         cap.add_run(f"Table {self.tab_n}. ").bold = True
         cap.add_run(caption)
+        if notes:
+            cap.add_run(" " + notes).italic = True
 
         table = self.doc.add_table(rows=1 + len(rows), cols=len(header))
         table.style = "Table Grid"
@@ -342,11 +363,6 @@ class Report:
             for row in table.rows:
                 for cell, w in zip(row.cells, col_widths_cm):
                     cell.width = Cm(w)
-        if notes:
-            n = self.doc.add_paragraph()
-            r = n.add_run(notes)
-            r.italic = True
-            r.font.size = Pt(8)
         self.doc.add_paragraph().paragraph_format.space_after = Pt(2)
         return self.tab_n
 
@@ -404,6 +420,15 @@ def software_versions() -> list[list[str]]:
 def oriented(df: pd.DataFrame, key: str, lower_is_better: bool, method_a: str, method_b: str) -> pd.Series:
     d = df[f"{key}_{method_a}"] - df[f"{key}_{method_b}"]
     return -d if lower_is_better else d
+
+
+def pretty_pair_label(col: str) -> str:
+    """"this_lpc_vs_lpc_with_nn" -> "This LPC vs LPC with NN" -- gap_mse_summary.csv's
+    column names come from plot_burst_comparison.py's own method keys, not
+    this module's METHOD_LABEL, so acronyms are fixed up by word rather than
+    looked up."""
+    words = {"lpc": "LPC", "nn": "NN", "ar": "AR", "vs": "vs", "with": "with", "this": "This"}
+    return " ".join(words.get(w, w.capitalize()) for w in col.split("_"))
 
 
 def burst_figure_sets(directory: Path, prefix_filter: str = "") -> list[tuple[int, str, dict]]:
@@ -502,7 +527,9 @@ class Context:
 
 
 def significance_sentence(ctx: Context, method: str) -> str:
-    """One sentence summarizing `method` vs. the baseline (LPC) across all four metrics."""
+    """One sentence summarizing `method` vs. the baseline (LPC) across all four metrics,
+    phrased as "quality was shown to be statistically significantly better with X on
+    [metrics] and significantly better with AR alone on [metrics]"."""
     if ctx.tests is None:
         return ""
     groups = {"better": [], "worse": [], "no significant difference": []}
@@ -522,13 +549,14 @@ def significance_sentence(ctx: Context, method: str) -> str:
         return ""
     parts = []
     if groups["better"]:
-        parts.append(f"significantly better than {METHOD_LABEL[BASELINE_KEY]} on {join_words(groups['better'])}")
+        parts.append(f"significantly better with {METHOD_LABEL[method]} on {join_words(groups['better'])}")
     if groups["worse"]:
-        parts.append(f"significantly worse than {METHOD_LABEL[BASELINE_KEY]} on {join_words(groups['worse'])}")
+        parts.append(f"significantly better with {METHOD_LABEL[BASELINE_KEY]} alone on "
+                     f"{join_words(groups['worse'])}")
     if groups["no significant difference"]:
         parts.append(f"not significantly different on {join_words(groups['no significant difference'])}")
-    return (f"After Holm correction (α = 0.05, n = {ctx.n_files} files), {METHOD_LABEL[method]} was " +
-            "; ".join(parts) + ".")
+    return (f"After Holm correction (α = 0.05, n = {ctx.n_files} files), quality was shown to be statistically "
+            + " and ".join(parts) + ".")
 
 
 def realtime_sentence(ctx: Context) -> str:
@@ -544,16 +572,20 @@ def realtime_sentence(ctx: Context) -> str:
              if cannot else "every method can run in real time on this hardware") + ".")
 
 
-def burst_sentence(ctx: Context) -> str:
+def burst_sentence(ctx: Context, concise: bool = False) -> str:
+    """concise=True (for the abstract) drops the "(95% CI excluding zero)"
+    qualifier and splits into two short sentences, matching how the abstract
+    states this finding more tersely than the full Section 3.4 discussion.
+    """
     if ctx.burst_q is None or ctx.burst_q.empty:
         return ""
     first, last = ctx.burst_q.iloc[0], ctx.burst_q.iloc[-1]
-    means_first = ", ".join(f"{METHOD_LABEL[m]} {f(first.get(f'gap_snr_{m}_mean', np.nan))}"
-                            for m in ctx.methods_present if f"gap_snr_{m}_mean" in first)
-    means_last = ", ".join(f"{METHOD_LABEL[m]} {f(last.get(f'gap_snr_{m}_mean', np.nan))}"
-                           for m in ctx.methods_present if f"gap_snr_{m}_mean" in last)
-    s = (f"Gap SNR for single-packet losses was {means_first} dB, falling to {means_last} dB "
-         f"for bursts of {last['burst_length_bin']} packets")
+    means_first = " / ".join(f"{f(first.get(f'gap_snr_{m}_mean', np.nan))} ({METHOD_LABEL[m]})"
+                             for m in ctx.methods_present if f"gap_snr_{m}_mean" in first)
+    means_last = " / ".join(f"{f(last.get(f'gap_snr_{m}_mean', np.nan))} ({METHOD_LABEL[m]})"
+                            for m in ctx.methods_present if f"gap_snr_{m}_mean" in last)
+    s = (f"Gap SNR decreased from {means_first} dB for single-packet losses to {means_last} dB "
+         f"for bursts of {last['burst_length_bin']} packets.")
     bits = []
     for m in ctx.non_baseline_present:
         lo_col, hi_col = f"{m}_advantage_ci_low", f"{m}_advantage_ci_high"
@@ -562,15 +594,15 @@ def burst_sentence(ctx: Context) -> str:
         sig_pos = [r["burst_length_bin"] for _, r in ctx.burst_q.iterrows() if r[lo_col] > 0]
         sig_neg = [r["burst_length_bin"] for _, r in ctx.burst_q.iterrows() if r[hi_col] < 0]
         if sig_pos:
-            bits.append(f"{METHOD_LABEL[m]}'s advantage over {METHOD_LABEL[BASELINE_KEY]} was positive for "
-                       f"bursts of {join_words(sig_pos)} packets")
+            bits.append(f"{METHOD_LABEL[m]}'s gap-SNR advantage was positive for bursts of "
+                       f"{join_words(sig_pos)} packets")
         if sig_neg:
-            bits.append(f"{METHOD_LABEL[m]}'s advantage over {METHOD_LABEL[BASELINE_KEY]} was negative for "
-                       f"bursts of {join_words(sig_neg)} packets")
+            bits.append(f"{METHOD_LABEL[m]}'s gap-SNR advantage was negative for bursts of "
+                       f"{join_words(sig_neg)} packets")
     if bits:
-        s += f" (95% CI excluding zero: {join_words(bits)})."
+        s += " " + " and ".join(bits) + ("." if concise else " (95% CI excluding zero).")
     else:
-        s += ", with no method's advantage over the baseline distinguishable from zero at any burst length."
+        s += " No method's gap-SNR advantage over the baseline was distinguishable from zero at any burst length."
     return s
 
 
@@ -591,21 +623,20 @@ def section_front(r: Report, ctx: Context):
 
     r.para(("Abstract", "b"), size=11, space_after=2)
     abstract = (
-        f"Packet loss concealment (PLC) is indispensable in networked music performance, where retransmission "
+        f"Packet loss concealment (PLC) is necessary in networked music performance, where retransmission "
         f"is impossible within the latency budget and a lost {concealment.PACKET_SIZE}-sample packet must be "
-        f"replaced causally, from past audio only. This report compares three causal concealers: AR prediction "
-        f"alone (a dense autoregressive linear predictor); a hybrid model, PARCnet, that adds a convolutional "
-        f"neural network's estimate of the AR residual {cite('mezza2024')}; and Sparse AR, a from-scratch "
-        f"implementation of Severi (2025)'s orthogonal-matching-pursuit concealer {cite('severi2025')}, which "
-        f"replaces the dense AR fit with a short Burg model plus a handful of non-contiguous, periodicity-"
-        f"seeking lags. All three were evaluated on {ctx.n_files} music recordings from the IEEE-IS² 2024 Music "
-        f"PLC Challenge test set with their real packet-loss traces ({ctx.net['plr']:.1f}% of packets lost "
-        f"overall), using two physical metrics (SNR and multi-resolution STFT distance) and two perceptual "
-        f"metrics (PLCMOS and ViSQOL), paired non-parametric statistics corrected for testing every metric "
-        f"across every method pair at once, a per-burst analysis over every real loss event, one-at-a-time "
-        f"hyperparameter sweeps and a real-time cost analysis. ")
+        f"replaced causally from past audio only. This report compares three causal concealers: the first is "
+        f"AR prediction alone, the second is PARCnet, a hybrid model that adds a convolutional neural network's "
+        f"estimate of the AR residual, and the third is Sparse AR, a from-scratch implementation of Severi "
+        f"(2025)'s orthogonal-matching-pursuit concealer, which replaces the dense AR fit with a short Burg "
+        f"model plus a handful of non-contiguous, periodicity-seeking lags. All three were evaluated on "
+        f"{ctx.n_files} music recordings from the IEEE-IS² 2024 Music PLC Challenge test set with their real "
+        f"packet-loss traces ({ctx.net['plr']:.1f}% of packets lost overall) using two physical metrics (SNR and "
+        f"multi-resolution STFT distance) and two perceptual metrics (PLCMOS and ViSQOL), paired non-parametric "
+        f"statistics, a per-burst analysis over every real loss event, hyperparameter sweeps and a real-time "
+        f"cost analysis. ")
     sentences = [significance_sentence(ctx, m) for m in ctx.non_baseline_present]
-    sentences += [burst_sentence(ctx), realtime_sentence(ctx)]
+    sentences += [burst_sentence(ctx, concise=True)]
     abstract += " ".join(s for s in sentences if s)
     r.body(abstract)
     r.para(("Keywords: ", "b"), ("packet loss concealment; networked music performance; linear prediction; "
@@ -620,23 +651,22 @@ def section_front(r: Report, ctx: Context):
 def section_introduction(r: Report, ctx: Context):
     r.heading("1  Introduction", 1)
     r.body(f"In networked music performance (NMP), musicians at different locations play together over the "
-           f"internet. Audio is sent in small packets, and every network hop can drop or delay one. Unlike "
-           f"speech calls or streaming, NMP leaves no room for retransmission or large jitter buffers: the "
-           f"end-to-end latency must stay within a few tens of milliseconds for ensemble playing to remain "
-           f"possible. A lost packet must therefore be replaced, on the fly, by a plausible estimate computed "
-           f"only from audio that has already arrived. This task is packet loss concealment (PLC) "
-           f"{cite('perkins1998')}.")
-    r.body(f"A classic and computationally cheap approach is to fit an autoregressive (AR) model, i.e. a "
-           f"linear predictor, to the most recent audio and extrapolate it across the gap {cite('makhoul1975')}. "
-           f"Linear prediction captures the stationary, resonant part of a musical signal well, but it cannot "
-           f"anticipate changes such as note onsets, and its extrapolation decays during long gaps. Two different "
-           f"ways of improving on it are compared here. PARCnet {cite('mezza2024')} keeps the dense linear "
-           f"predictor and adds a lightweight convolutional network that is trained to estimate what the "
-           f"predictor gets wrong, its residual; a modified PARCnet is the official baseline of the IEEE-IS² "
-           f"2024 Music PLC Challenge {cite('challenge2024')}, whose settings ({concealment.PACKET_SIZE}-sample "
-           f"packets at 44.1 kHz, i.e. {ctx.packet_ms:.1f} ms, and strictly causal processing) are adopted here. "
-           f"Sparse AR {cite('severi2025')} instead replaces the dense AR fit itself with a short Burg model for "
-           f"local continuity plus a handful of non-contiguous lags, chosen by orthogonal matching pursuit "
+           f"internet. Audio is sent in small packets and every network can drop or delay one. Unlike speech "
+           f"calls or streaming, NMP leaves no room for retransmission, so the end-to-end latency must stay "
+           f"within a few tens of milliseconds for playing to remain possible. A lost packet must therefore be "
+           f"replaced on the fly, by an algorithm that estimates the samples using only audio that has already "
+           f"arrived. This task is packet loss concealment (PLC) {cite('perkins1998')}.")
+    r.body(f"A classic and computationally cheap approach is to fit an autoregressive (AR) model, i.e. a linear "
+           f"predictor, to the most recent audio and extrapolate it across the gap {cite('makhoul1975')}. Linear "
+           f"prediction captures the stationary part of a musical signal well, but it cannot capture changes "
+           f"such as note onsets, and its extrapolation decays during long gaps. Two different ways of "
+           f"improving on it are compared here. PARCnet {cite('mezza2024')} keeps the linear predictor and adds "
+           f"a lightweight convolutional network that is trained to estimate what the predictor gets wrong, its "
+           f"residual; a modified PARCnet is the official baseline of the IEEE-IS² 2025 Music PLC Challenge "
+           f"{cite('challenge2024')}, whose settings ({concealment.PACKET_SIZE}-sample packets at 44.1 kHz, i.e. "
+           f"{ctx.packet_ms:.1f} ms, and strictly causal processing) are adopted here. Sparse AR "
+           f"{cite('severi2025')} instead replaces the dense AR fit itself with a short Burg model for local "
+           f"continuity plus a handful of non-contiguous lags, chosen by orthogonal matching pursuit "
            f"{cite('pati1993')}, that specifically target musical periodicity rather than fitting every sample "
            f"of the context equally.")
     r.body("This gives three methods with a common baseline (AR alone) and two different strategies for "
@@ -648,15 +678,12 @@ def section_introduction(r: Report, ctx: Context):
                "and on the complexity of the music signal?")
     r.numbered(("RQ3 (sensitivity). ", "b"), "How sensitive is each method to its own main hyperparameters?")
     r.numbered(("RQ4 (cost). ", "b"), "Can each method run in real time on a general-purpose CPU?")
-    r.body("The main contributions are: (i) three independently implemented concealers, with the AR and hybrid "
-           "ones verified to be bit-identical at the AR level, so that every measured difference between them is "
-           "attributable to the neural network; (ii) a from-scratch implementation of the Sparse AR method from "
-           "its published equations, since no reference code was available -- Section 2.4 documents, with "
-           "measured evidence, two points where the paper's literal description had to be departed from to "
-           "behave sensibly on real audio; (iii) an evaluation on whole files with their real packet traces "
-           "rather than synthetic losses; (iv) paired statistical testing across every metric and every method "
-           "pair at once, with multiple-comparison correction and effect sizes; (v) a per-burst analysis over "
-           "every real loss event in the evaluated files; and (vi) hyperparameter sensitivity and real-time cost "
+    r.body("The main contributions are: (i) three independently implemented concealers; (ii) a from-scratch "
+           "implementation of the Sparse AR method, since no reference code was available, documented in "
+           "Section 2.4 with the measured evidence for where its published description had to be departed "
+           "from; (iii) an evaluation on whole files with their real packet traces; (iv) paired statistical "
+           "testing with multiple-comparison correction and effect sizes; (v) a per-burst analysis over every "
+           "real loss event in the evaluated files; and (vi) hyperparameter sensitivity and real-time cost "
            "analyses for all three methods.")
 
 
@@ -680,16 +707,17 @@ def section_methods(r: Report, ctx: Context):
            f"{hp['context_dim_packets']} packets ({C} samples, {C / ctx.sr * 1000:.0f} ms) of the output signal:")
     r.equation("x̂[n] = Σᵢ₌₁ᵖ aᵢ · x[n − i]")
     r.body("The coefficients a = (a₁, …, aₚ) are obtained with the autocorrelation method and solved with the "
-           "Levinson-Durbin recursion, after adding a diagonal loading term λ to the zero-lag autocorrelation "
+           "Levinson-Durbin recursion after adding a diagonal loading term λ to the zero-lag autocorrelation "
            "(white-noise compensation), which improves the conditioning of the system "
            f"{cite('makhoul1975')}:")
     r.equation("(R + λI) a = r,     Rᵢⱼ = rₓₓ(|i − j|)")
     r.body(f"The model is then run forward recursively, feeding each predicted sample back as input, to produce "
-           f"P + E = {P + E} samples: the lost packet plus E = {E} extra samples ({E / ctx.sr * 1000:.1f} ms). "
-           f"The extra samples are used for a linear crossfade: the tail of the prediction fades out while the "
-           f"next packet fades in, so that no discontinuity is heard where concealment hands back to real audio. "
-           f"Within a burst, the next prediction likewise fades in over the previous prediction's tail. The "
-           f"default hyperparameters (Table {r.next_tab()}) are those of the challenge baseline.")
+           f"P ({P} samples) + E = {P + E} samples the lost packet plus E = {E} extra samples "
+           f"({E / ctx.sr * 1000:.1f} ms). The extra samples are used for a linear crossfade which means the "
+           f"tail of the prediction fades out while the next packet fades in, so that no discontinuity is heard "
+           f"where concealment hands back to real audio. Within a burst, the next prediction likewise fades in "
+           f"over the previous prediction's tail. The default hyperparameters (Table {r.next_tab()}) are those "
+           f"of the challenge baseline.")
     r.table(["Hyperparameter", "Symbol", "Default", "Meaning"], [
         ["AR order", "p", hp["ar_order"], "number of past samples in the linear predictor"],
         ["Context length", "C", f"{hp['context_dim_packets']} packets ({C} samples)",
@@ -698,7 +726,7 @@ def section_methods(r: Report, ctx: Context):
         ["Crossfade length", "E", f"{E} samples ({E / ctx.sr * 1000:.1f} ms)",
          "extra predicted samples used for crossfading"],
         ["NN fade-in", "-", f"{concealment.NN_FADE_DIM} samples", "fade-in of the NN contribution (hybrid only)"],
-    ], "Default hyperparameters (IEEE-IS² 2024 challenge baseline configuration).",
+    ], "Default hyperparameters (IEEE-IS² 2025 challenge baseline configuration).",
         col_widths_cm=[3.3, 1.5, 4.2, 7.0])
 
     r.heading("2.3  Hybrid AR + neural concealment (PARCnet)", 2)
@@ -784,48 +812,48 @@ def section_methods(r: Report, ctx: Context):
 
     r.heading("2.6  Dataset and loss traces", 2)
     n = ctx.net
-    r.body(f"Experiments use the example test set released with the IEEE-IS² 2024 Music PLC Challenge "
-           f"{cite('challenge2024')}: {n['n_files']} single-channel recordings of solo instrumental music at "
-           f"44.1 kHz, each provided as a clean file, a lossy file and the packet trace that produced it. The "
-           f"traces are real network traces, repurposed by the challenge from the INTERSPEECH 2022 Audio Deep "
-           f"PLC Challenge {cite('diener2022')}, so no synthetic loss model is involved. Table {r.next_tab()} "
-           f"summarizes the loss statistics over all {n['n_files']} traces.")
+    r.body(f"Experiments use the example blind test set released with the IEEE-IS² 2025 Music PLC Challenge "
+           f"{cite('challenge2024')}, which is {n['n_files']} single-channel recordings of solo instrumental "
+           f"music at 44.1 kHz each provided as a clean file, a lossy file and the packet trace that produced "
+           f"it. The traces are real network traces repurposed by the challenge from the INTERSPEECH 2022 Audio "
+           f"Deep PLC Challenge {cite('diener2022')}.")
+    # Figure 1 (network_statistics.png) is always the first figure in the document --
+    # nothing before section_results's 3.1 creates one -- so this forward reference is
+    # safe to state directly rather than needing a two-pass number lookup.
+    r.body(f"Table {r.next_tab()} summarizes the loss statistics over all {n['n_files']} traces (plotted in "
+           f"Figure 1).")
     ctx.net_table = r.table(["Statistic", "Value"], [
         ["Recordings (clean / lossy / trace triplets)", n["n_files"]],
         ["Total packets", f"{n['total_packets']:,}"],
         ["Lost packets (overall packet loss rate)", f"{n['total_lost']:,} ({n['plr']:.2f}%)"],
         ["Per-file loss rate: median (min-max)", f"{n['plr_median']:.2f}% ({n['plr_min']:.2f}-{n['plr_max']:.2f}%)"],
         ["Files without any loss", n["n_zero_loss"]],
-        ["Loss bursts (runs of consecutive lost packets)", f"{n['n_bursts']:,}"],
+        ["Total loss bursts", f"{n['n_bursts']:,}"],
         ["Mean / maximum burst length", f"{n['mean_burst']:.2f} / {n['max_burst']} packets"],
         ["Bursts of 1 packet / of at most 2 packets", f"{n['pct_single']:.1f}% / {n['pct_le2']:.1f}%"],
         ["Bursts of 8 packets or more", n["n_ge8"]],
     ], "Packet-loss statistics of the real traces of the test set.", col_widths_cm=[9.5, 6.5])
-    seed = ctx.run_info.get("seed", "n/a")
-    r.body(f"The main comparison uses {ctx.n_files} of these files (random seed {seed}). Files are drawn by a "
-           f"seeded shuffle; when fewer files are requested than the candidate pool holds, the sample is "
-           f"stratified across five quantile bins of spectral flatness, so that tonal and noise-like material "
-           f"are both represented. Every file is concealed whole, against its own real trace.")
+    r.body(f"The main comparison uses {ctx.n_files} of these files. Every file is concealed whole against its "
+           f"own real trace.")
 
     r.heading("2.7  Objective quality metrics", 2)
     r.body("Two families of metrics are used, because a concealment can be close to the original waveform "
            "without sounding natural, and vice versa:")
     r.bullet(("SNR (dB, higher is better). ", "b"), "Time-domain signal-to-noise ratio between the clean and the "
-             "concealed signal. It rewards an exact waveform match, including phase.")
+             "concealed signal. It rewards an exact waveform match.")
     r.bullet(("Multi-resolution STFT distance (lower is better). ", "b"), "Spectral convergence plus mean "
              "absolute log-magnitude error, averaged over FFT sizes of 512, 1024 and 2048 "
              f"{cite('yamamoto2020')}. It compares magnitude spectra and ignores phase.")
     r.bullet(("PLCMOS (≈1-5, higher is better). ", "b"), f"A non-intrusive neural estimate of the mean opinion "
-             f"score, designed specifically for packet loss concealment {cite('diener2023')}; computed at 16 kHz.")
-    r.bullet(("ViSQOL MOS-LQO (≈1-5, higher is better). ", "b"), f"An intrusive perceptual similarity model, "
+             f"score designed specifically for packet loss concealment {cite('diener2023')}.")
+    r.bullet(("ViSQOL MOS-LQO (≈1-5, higher is better). ", "b"), f"An intrusive perceptual similarity model "
              f"used in its full-band audio mode at 48 kHz {cite('chinen2020')}.")
     r.body("PLCMOS and ViSQOL need seconds of audio and are therefore computed on whole files. To study individual "
-           "loss events, the SNR is also computed inside each gap G (the lost samples only):")
+           "loss events the SNR is also computed inside each gap (the lost samples only):")
     r.equation("SNR_gap = 10 · log₁₀( Σₙ∊G x[n]² / Σₙ∊G (x[n] − x̂[n])² )")
-    r.body("Gaps whose clean signal is quieter than −60 dBFS RMS are excluded from this analysis, because an SNR "
-           f"of near-silence is meaningless. Signal complexity is quantified by the mean spectral flatness of the "
-           f"clean file (ratio of geometric to arithmetic mean of the power spectrum; 0 = tonal, 1 = noise-like) "
-           f"{cite('gray1974')}.")
+    r.body("Gaps whose clean signal is quieter than −60 dBFS RMS are excluded from this analysis because an SNR "
+           f"of near-silence is meaningless. Signal complexity is quantified by the mean spectral flatness of "
+           f"the clean file (0 = tonal, 1 = noise) {cite('gray1974')}.")
 
     r.heading("2.8  Statistical analysis", 2)
     r.body(f"The design is paired: every method conceals the same files. For each metric and each pair of "
@@ -896,6 +924,10 @@ def section_results(r: Report, ctx: Context):
     r.figure(ctx.out / "burst_comparisons" / "network_statistics.png",
              "Loss statistics of the real packet traces. Left: number of loss bursts per burst length (log "
              "scale). Right: distribution of the packet loss rate across files; the dashed line marks the mean.")
+    r.insight(f"Basically, most real losses are short: {n['pct_le2']:.0f}% of bursts are only one or two "
+             f"packets. So what really decides a method's score is how it handles these small gaps, not the "
+             f"rare {n['max_burst']}-packet bursts. On the right, most files lose a similar, fairly small share "
+             f"of packets, but a few files are much worse than the rest.")
 
     # 3.2 ------------------------------------------------------------------
     r.heading("3.2  Overall concealment quality (RQ1)", 2)
@@ -930,13 +962,29 @@ def section_results(r: Report, ctx: Context):
         r.figure(ctx.out / "metrics_comparison" / "win_rate_summary.png",
                  "Percentage of files on which each non-baseline method scores better than AR alone, per metric. "
                  "The dashed line marks 50% (no systematic difference).", width_cm=14)
+        win_bits = []
+        for m in ctx.non_baseline_present:
+            per_metric = [(label, ctx.advantage(key, m, BASELINE_KEY)["a_win_rate_pct"])
+                         for key, label, _ in ALL_METRICS if ctx.advantage(key, m, BASELINE_KEY) is not None]
+            if per_metric:
+                best_label, best_pct = max(per_metric, key=lambda x: x[1])
+                win_bits.append(f"{METHOD_LABEL[m]} wins most often on {best_label} ({best_pct:.0f}% of files)")
+        r.insight(f"Bars above the dashed line mean that method beat AR more often than not. {'; '.join(win_bits)}. "
+                 f"But winning more often does not tell us by how much -- the next two figures show that part.")
         r.figure(ctx.out / "statistical_analysis" / "metric_distributions.png",
                  "Per-file metric values of all three methods (boxes: median and interquartile range; whiskers: "
                  "1.5 IQR). Gray lines connect the three results of the same file.")
+        r.insight("If the boxes overlap a lot, the three methods are not that different compared to how much "
+                 "results vary from file to file. What actually matters is whether the median line inside each "
+                 "box is shifted up or down, not just whether the boxes touch.")
         r.figure(ctx.out / "statistical_analysis" / "paired_differences.png",
                  "Per-file difference between every pair of methods, oriented so that values above zero favour "
                  "the first-named method. Black marker: mean with bootstrap 95% confidence interval. Panel "
                  "titles give the Holm-corrected Wilcoxon p-value and the rank-biserial effect size.")
+        r.insight("This is probably the clearest plot in this section, since it takes the same-file pairs and "
+                 "just shows the difference, so file-to-file noise cancels out. If the black dot and its error "
+                 "bar sit clearly above or below zero, that is a real difference. If the error bar crosses "
+                 "zero, we cannot say one method actually beat the other on this sample.")
 
     # 3.3 ------------------------------------------------------------------
     r.heading("3.3  Dependence on signal complexity (RQ2)", 2)
@@ -965,6 +1013,10 @@ def section_results(r: Report, ctx: Context):
         r.figure(ctx.out / "metrics_comparison" / "complexity_grid.png",
                  "Concealment quality versus signal complexity (mean spectral flatness of the clean file, log "
                  "scale). One dot per file and method; dashed lines are least-squares trends in log-flatness.")
+        r.insight("If a trend line goes up, that method does a bit better on noisier/complex audio; if it goes "
+                 "down, it does better on tonal/simple audio. If the lines for different methods look roughly "
+                 "parallel, complexity is pushing every method the same way and is not the reason one wins over "
+                 "another; if they cross or diverge, complexity does change which method wins.")
         r.table(["Method", "Metric", "Spearman ρ (flatness vs. advantage over AR)", "p (uncorrected)"], rows,
                 "Correlation between signal complexity and each non-baseline method's advantage over AR.",
                 col_widths_cm=[2.5, 2.5, 7, 4], font_size=8)
@@ -984,6 +1036,12 @@ def section_results(r: Report, ctx: Context):
                  "Gap SNR versus real burst length. Left: mean gap SNR of each method. Right: each non-baseline "
                  "method's mean advantage over AR. Error bars: 95% confidence intervals from a cluster bootstrap "
                  "over files; n is the number of bursts per bin.")
+        r.insight("The downward slope on the left is just what happens with recursion: quality keeps dropping "
+                 "as bursts get longer, since each packet is predicted off the previous (also fake) packet "
+                 "instead of real audio. The right panel is more useful for comparing methods -- if an error "
+                 "bar does not touch zero, that method's advantage (or disadvantage) at that burst length is "
+                 "real and not just noise. If it crosses zero, especially for the longer, rarer bursts, there "
+                 "is not enough data yet to say anything for sure.")
         snr_methods = [m for m in ctx.methods_present if f"gap_snr_{m}_mean" in ctx.burst_q.columns]
         adv_methods = [m for m in ctx.non_baseline_present if f"{m}_advantage_mean" in ctx.burst_q.columns]
         rows = []
@@ -1028,8 +1086,10 @@ def section_results(r: Report, ctx: Context):
                 comparisons = [m for m in methods_here if m != base]
                 bits = []
                 for m in comparisons:
-                    wins = int((by[f"snr_{m}"] > by[f"snr_{base}"]).sum())
-                    bits.append(f"{METHOD_LABEL[m]} had the higher mean SNR at {wins} of them")
+                    snr_wins = int((by[f"snr_{m}"] > by[f"snr_{base}"]).sum())
+                    mos_wins = int((by[f"plcmos_{m}"] > by[f"plcmos_{base}"]).sum())
+                    bits.append(f"{METHOD_LABEL[m]} had the higher mean SNR at {snr_wins} and the higher mean "
+                               f"PLCMOS at {mos_wins} of them")
                 r.body(f"Over the {len(by)} values tested ({files_txt}), {join_words(bits)}. Mean SNR ranged " +
                        "; ".join(f"from {f(by[f'snr_{m}'].min())} to {f(by[f'snr_{m}'].max())} dB for "
                                 f"{METHOD_LABEL[m]}" for m in methods_here) + ".")
@@ -1042,6 +1102,16 @@ def section_results(r: Report, ctx: Context):
                           f"{join_words([METHOD_LABEL[m] for m in methods_here])}). Panels: "
                           f"SNR, MR-STFT distance, PLCMOS and ViSQOL (mean ± 1 SD across files) and compute time "
                           f"per file (median and interquartile range).")
+            snr_spread = {m: by[f"snr_{m}"].max() - by[f"snr_{m}"].min() for m in methods_here}
+            steepest = max(snr_spread, key=snr_spread.get)
+            if snr_spread[steepest] < 0.5:
+                r.insight(f"SNR barely changes across this whole range (under 0.5 dB for every method), so "
+                         f"{label.lower()} does not seem to matter much here.")
+            else:
+                r.insight(f"{METHOD_LABEL[steepest]} is the most affected by this setting, swinging by "
+                         f"{snr_spread[steepest]:.2f} dB of SNR across the range tested. Worth checking the "
+                         f"compute-time panel too before picking a non-default value -- a quality gain here "
+                         f"might cost more compute.")
         if ctx.sweep_summary is not None:
             ss = ctx.sweep_summary
             rows = []
@@ -1058,8 +1128,8 @@ def section_results(r: Report, ctx: Context):
                 row = g.iloc[0]
                 cells.append(f"{f(row['median_time_ms_at_default'], 0)} → {f(row['median_time_ms_at_best'], 0)}")
                 rows.append(cells)
-            r.table(["Hyperparameter", "Method", "Best for SNR (gain)", "Best for PLCMOS (gain)",
-                     "Time/file (ms), default → best"], rows,
+            r.table(["Hyperparameter", "Method", "Best for SNR (gain vs. default)",
+                     "Best for PLCMOS (gain vs. default)", "Time/file (ms), default → best"], rows,
                     "Best value of each hyperparameter and gain over the default (positive = better than default).",
                     col_widths_cm=[4, 2.0, 3.2, 3.2, 3.6], font_size=7.5,
                     notes="Gains are differences of means across files and are not tested for significance. "
@@ -1096,6 +1166,13 @@ def section_results(r: Report, ctx: Context):
         r.figure(ctx.out / "statistical_analysis" / "realtime_feasibility.png",
                  "Real-time factor (time to conceal one packet divided by the packet duration) per file, log "
                  "scale. Below the red line a method keeps up with live audio on this machine.", width_cm=13)
+        over_budget = [METHOD_LABEL[m] for m in ctx.methods_present if np.median(ctx.rtf(m)) > 1]
+        r.insight(("Anything above the red line is too slow to use live on this machine, which rules out "
+                   f"{join_words(over_budget)} here." if over_budget else
+                   "Every method stays below the red line, so in principle all three could run live on this "
+                   "machine.") +
+                 " The taller a box is, the less consistent that method's timing is -- some files take much "
+                 "longer to process than others.")
 
     # 3.7 ------------------------------------------------------------------
     r.heading("3.7  Qualitative examples", 2)
@@ -1111,7 +1188,7 @@ def section_results(r: Report, ctx: Context):
                f"each gap.")
         if ctx.gap_mse is not None:
             pair_cols = [c for c in ctx.gap_mse.columns if "_vs_" in c]
-            r.table(["Burst (packets)", "File", "Start packet"] + [c.replace("_", " ").title() for c in pair_cols],
+            r.table(["Burst (packets)", "File", "Start packet"] + [pretty_pair_label(c) for c in pair_cols],
                     [[int(g["burst_length"]), g["file"][:20] + "…", int(g["start_packet"])] +
                      [f"{g[c]:.3e}" for c in pair_cols]
                      for _, g in ctx.gap_mse.sort_values("burst_length").iterrows()],
@@ -1121,11 +1198,31 @@ def section_results(r: Report, ctx: Context):
             r.heading(f"3.7.{i}  {length}-packet burst ({length * ctx.packet_ms:.1f} ms)", 3)
             r.figure(paths["compare"], f"{length}-packet burst in file {tag}: waveform (top) and spectrogram "
                                        f"(bottom) of all three methods. Shaded: lost samples.")
+            r.insight("Just eyeball how close the three waveforms and spectrograms stay to each other across "
+                     "the shaded gap. Whichever one looks most different from the other two is the one that "
+                     "changed the audio the most there.")
             r.figure(paths["diff"], f"{length}-packet burst: pairwise differences between all three methods; "
                                     f"the gap-MSE in each title quantifies that pair's divergence.", width_cm=15)
+            match = None
+            if ctx.gap_mse is not None:
+                found = ctx.gap_mse[(ctx.gap_mse["file"] == tag) & (ctx.gap_mse["burst_length"] == length)]
+                if len(found):
+                    match = found.iloc[0]
+            pair_cols_here = [c for c in ctx.gap_mse.columns if "_vs_" in c] if ctx.gap_mse is not None else []
+            if match is not None and pair_cols_here:
+                biggest = max(pair_cols_here, key=lambda c: match[c])
+                r.insight(f"A flat line at zero means those two methods agree almost exactly inside the gap. "
+                         f"The biggest disagreement here is {pretty_pair_label(biggest)} (gap MSE "
+                         f"{match[biggest]:.2e}) -- that is the panel with the most visible activity.")
+            else:
+                r.insight("A flat line at zero means those two methods agree almost exactly inside the gap -- "
+                         "whichever panel shows the most activity is where that pair disagrees the most.")
             r.figure(paths["crossfade"], f"{length}-packet burst: zoom on the hand-back point (dashed line) where "
                                          f"concealment ends; the shaded region is the {ctx.hparams['extra_dim']}-"
                                          f"sample crossfade into the received packet.")
+            r.insight("What to look for here is a jump or kink right at the dashed line -- that would be an "
+                     "audible click. If the line through the shaded region looks smooth, the handback to real "
+                     "audio is clean.")
 
     # 3.8 ------------------------------------------------------------------
     r.heading("3.8  Failure cases", 2)
@@ -1161,12 +1258,23 @@ def section_results(r: Report, ctx: Context):
             fail_dir = ctx.out / "statistical_analysis" / "failure_cases" / method
             for length, tag, paths in burst_figure_sets(fail_dir, "failure"):
                 case = tag.split("_", 1)[0].replace("failure", "")
+                case_row = failures[failures["case"] == int(case)]
+                adv_text = fs(case_row.iloc[0][f"{method}_advantage"]) if len(case_row) else "n/a"
                 r.heading(f"3.8.{sub_i}.{case}  {METHOD_LABEL[method]} failure case {case}", 3)
                 r.figure(paths["compare"], f"Failure case {case}: waveform and spectrogram around the plotted "
                                            f"{length}-packet burst, all three methods.")
+                r.insight(f"This is the actual burst behind this file's {label} advantage of {adv_text} -- "
+                         f"worth looking at what {METHOD_LABEL[method]} is doing differently from AR here, "
+                         f"since a single whole-file average cannot show that on its own.")
                 r.figure(paths["diff"], f"Failure case {case}: pairwise differences between all three methods.",
                          width_cm=15)
+                r.insight(f"The {METHOD_LABEL[method].lower()}-vs-AR panel is the one that matters here. If it "
+                         f"shows a lot more activity than the other two, this disagreement is specific to "
+                         f"{METHOD_LABEL[method]}, not something all three methods share.")
                 r.figure(paths["crossfade"], f"Failure case {case}: hand-back crossfade with the clean reference.")
+                r.insight("Even though this file counts as a loss, a clean splice here (no click or jump at "
+                         "the dashed line) would mean the problem is the quality inside the gap, not the "
+                         "handback back to real audio.")
 
 
 def section_discussion(r: Report, ctx: Context):
@@ -1346,8 +1454,8 @@ def section_appendix(r: Report, ctx: Context):
                  s["method"], s["metric"], fg(s["best_value"]),
                  f(s["metric_at_default"], 3), f(s["metric_at_best"], 3), fs(s["gain_over_default"], 3)]
                 for _, s in ss.iterrows()]
-        r.table(["Hyperparameter", "Method", "Metric", "Best value", "At default", "At best", "Gain"], rows,
-                "Best value per hyperparameter, method and metric.",
+        r.table(["Hyperparameter", "Method", "Metric", "Best value", "At default", "At best", "Gain vs. default"],
+                rows, "Best value per hyperparameter, method and metric.",
                 col_widths_cm=[3.6, 1.8, 2.6, 1.8, 2.0, 2.0, 2.0], font_size=7.5)
 
 

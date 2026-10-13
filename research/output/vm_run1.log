@@ -1,5 +1,6 @@
 nohup: ignoring input
-Sampled 200 files from example_test_set (seed=0), stratified by spectral flatness for genuine content diversity.
+Sampled 673 files from example_test_set (seed=0), stratified by spectral flatness for genuine content diversity.
+Resuming: 199 files already in checkpoint.jsonl, 474 to go (use --fresh to start over).
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
@@ -8,214 +9,480 @@ Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. 
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-[1/200] sF1D5f-429-45816-14754-487747-347380-61770-187519 (918 pkts, 1.4% lost): SNR lpc=24.44 nn=27.14 sparse_ar=24.45 dB
-[2/200] pMchYa-011-461984-248646-131237-259340-281965-474206 (1033 pkts, 3.3% lost): SNR lpc=17.47 nn=17.74 sparse_ar=14.73 dB
-[3/200] KWj8Li-521-358526-235375-78807-67455-237079-21827 (802 pkts, 14.6% lost): SNR lpc=8.79 nn=8.64 sparse_ar=8.46 dB
-[4/200] LIJKja-026-447487-148409-188815-38506-78427-479691 (1033 pkts, 5.5% lost): SNR lpc=13.07 nn=13.00 sparse_ar=12.28 dB
-[5/200] wH6bMa-009-144175-39168-315211-114587-333757-10048 (1033 pkts, 7.6% lost): SNR lpc=13.70 nn=14.04 sparse_ar=12.36 dB
-[6/200] 8lHaxa-001-437270-91230-96853-392966-377039-493700 (1033 pkts, 8.7% lost): SNR lpc=13.51 nn=13.83 sparse_ar=11.54 dB
-[7/200] l3Lvae-611-211084-218396-212842-198509-334833-311379 (1390 pkts, 4.2% lost): SNR lpc=20.58 nn=21.33 sparse_ar=15.82 dB
-[8/200] i0Ocoe-610-395609-211084-211212-108056-187519-202035 (1390 pkts, 9.8% lost): SNR lpc=11.91 nn=11.51 sparse_ar=9.94 dB
-[9/200] PBDVAf-465-366971-117533-197606-160943-60681-25579 (1722 pkts, 3.4% lost): SNR lpc=18.29 nn=17.95 sparse_ar=15.99 dB
-[10/200] rqqrUf-476-372299-90733-207508-318838-254913-53278 (1590 pkts, 15.8% lost): SNR lpc=10.38 nn=10.34 sparse_ar=9.57 dB
-[11/200] 9srcUf-448-162832-472051-219243-152140-401183-304828 (1722 pkts, 11.1% lost): SNR lpc=10.05 nn=9.47 sparse_ar=9.27 dB
-[12/200] cmHjrf-493-348077-309854-224170-458554-202179-472051 (1722 pkts, 16.1% lost): SNR lpc=8.47 nn=7.93 sparse_ar=7.46 dB
-[13/200] FPRIpe-578-474864-126584-425422-304828-148409-10737 (1550 pkts, 9.1% lost): SNR lpc=11.28 nn=12.78 sparse_ar=10.21 dB
-[14/200] SnJBwf-434-37928-376902-480197-51581-328121-350223 (1378 pkts, 5.7% lost): SNR lpc=15.26 nn=15.35 sparse_ar=13.33 dB
-[15/200] Th8NDe-613-23535-495997-395609-270487-329331-383770 (1390 pkts, 14.1% lost): SNR lpc=10.12 nn=10.60 sparse_ar=8.34 dB
-[16/200] mvvOnf-472-106-135410-148409-334242-45816-353502 (954 pkts, 4.5% lost): SNR lpc=14.59 nn=14.30 sparse_ar=13.24 dB
-[17/200] rn9v1e-583-369034-383770-175927-399756-390385-383479 (1550 pkts, 11.7% lost): SNR lpc=12.66 nn=12.70 sparse_ar=9.49 dB
-[18/200] zoFKbf-438-268009-220507-287943-286732-24538-454712 (1653 pkts, 12.6% lost): SNR lpc=10.96 nn=9.29 sparse_ar=9.07 dB
-[19/200] oRqMra-058-167772-480197-43889-36331-135873-265166 (1033 pkts, 2.9% lost): SNR lpc=23.07 nn=23.45 sparse_ar=20.37 dB
-[20/200] P4ZKje-597-228203-427818-407728-174918-211212-250174 (1550 pkts, 23.0% lost): SNR lpc=7.60 nn=7.92 sparse_ar=6.21 dB
-[21/200] amZyRf-444-7708-476924-468905-275802-405424-380077 (1722 pkts, 2.6% lost): SNR lpc=17.28 nn=17.14 sparse_ar=16.03 dB
-[22/200] 1rIrKa-023-409746-287789-276335-17243-340579-260428 (1033 pkts, 1.6% lost): SNR lpc=19.56 nn=20.90 sparse_ar=17.38 dB
-[23/200] a4WwUa-043-141142-113619-397909-469223-287427-421926 (1033 pkts, 26.4% lost): SNR lpc=6.39 nn=6.55 sparse_ar=5.53 dB
-[24/200] KFAl8f-427-406364-361413-456735-410307-286869-348733 (1722 pkts, 18.6% lost): SNR lpc=9.78 nn=9.62 sparse_ar=6.96 dB
-[25/200] 3hvoVa-051-2307-202921-218396-175927-14787-464643 (1033 pkts, 5.3% lost): SNR lpc=16.28 nn=16.73 sparse_ar=13.69 dB
-[26/200] 87hwjf-487-426805-60643-437215-160943-182650-407728 (1181 pkts, 5.1% lost): SNR lpc=13.39 nn=11.70 sparse_ar=12.03 dB
-[27/200] WVKBPa-017-469001-13769-309009-430207-5054-14754 (1033 pkts, 3.6% lost): SNR lpc=15.48 nn=15.65 sparse_ar=13.53 dB
-[28/200] xX6Wce-607-140209-262731-151331-7708-427818-497426 (1390 pkts, 3.7% lost): SNR lpc=19.30 nn=19.12 sparse_ar=15.12 dB
-[29/200] k2rvsa-021-181149-117176-94351-2985-340579-209061 (1033 pkts, 4.2% lost): SNR lpc=18.36 nn=15.67 sparse_ar=15.58 dB
-[30/200] GptLba-028-467697-29563-495971-437270-5575-211212 (1033 pkts, 2.3% lost): SNR lpc=18.57 nn=19.00 sparse_ar=16.11 dB
-[31/200] 9a98Kf-464-298969-472051-292323-179462-78575-496080 (1181 pkts, 7.3% lost): SNR lpc=13.94 nn=14.52 sparse_ar=11.56 dB
-[32/200] 98pQ7f-492-161118-44660-2985-495997-227228-191485 (1722 pkts, 3.9% lost): SNR lpc=20.07 nn=20.12 sparse_ar=13.51 dB
-[33/200] cedJli-522-192385-152140-262731-156368-123704-333757 (719 pkts, 5.3% lost): SNR lpc=12.68 nn=10.62 sparse_ar=11.81 dB
-[34/200] 3EBeof-459-212842-454791-192385-495971-180085-113105 (1033 pkts, 16.7% lost): SNR lpc=11.82 nn=11.85 sparse_ar=7.33 dB
-[35/200] 7j8l2a-034-50416-4800-287427-123375-143976-264357 (1033 pkts, 3.1% lost): SNR lpc=16.21 nn=16.72 sparse_ar=13.75 dB
-[36/200] 8C0b9f-461-182650-228203-8651-240298-176776-186349 (1704 pkts, 3.8% lost): SNR lpc=17.12 nn=17.09 sparse_ar=13.51 dB
-[37/200] f5sCDf-435-355130-41798-395609-377902-35325-116061 (1378 pkts, 11.9% lost): SNR lpc=13.93 nn=12.40 sparse_ar=10.78 dB
-[38/200] rxhq2p-211-212526-349828-67455-407790-412326-143976 (1183 pkts, 7.2% lost): SNR lpc=15.12 nn=13.90 sparse_ar=14.08 dB
-[39/200] uHCIZa-015-146882-87506-304828-333757-5054-62919 (1033 pkts, 8.6% lost): SNR lpc=12.05 nn=12.38 sparse_ar=10.34 dB
-[40/200] 5LZsPp-295-239730-414547-129636-470600-495997-1214 (1207 pkts, 22.5% lost): SNR lpc=10.35 nn=8.94 sparse_ar=6.24 dB
-[41/200] 5ALjRp-161-333766-240226-4800-482510-113619-84055 (1026 pkts, 26.8% lost): SNR lpc=6.95 nn=6.61 sparse_ar=5.17 dB
-[42/200] Paqf1p-119-254913-443221-90733-163645-32125-188815 (1450 pkts, 9.0% lost): SNR lpc=14.79 nn=15.04 sparse_ar=11.13 dB
-[43/200] bnEKPi-496-131237-487747-10048-112031-352809-171454 (719 pkts, 13.9% lost): SNR lpc=9.35 nn=7.62 sparse_ar=7.89 dB
-[44/200] cZ9D6w-670-134118-41411-423587-125189-84055-98443 (662 pkts, 5.0% lost): SNR lpc=16.92 nn=16.82 sparse_ar=13.68 dB
-[45/200] UKnMcp-124-361413-129636-57514-52991-68221-81956 (1381 pkts, 20.9% lost): SNR lpc=14.31 nn=13.61 sparse_ar=9.62 dB
-[46/200] 6UNJZa-025-136860-357104-38459-89725-366126-252054 (1033 pkts, 9.4% lost): SNR lpc=13.35 nn=13.28 sparse_ar=10.32 dB
-[47/200] wkCjvp-408-175927-2985-407790-280816-275802-343332 (1046 pkts, 16.0% lost): SNR lpc=15.41 nn=14.61 sparse_ar=9.05 dB
-[48/200] CrjLKf-468-374393-49022-14754-240504-316080-236920 (1722 pkts, 6.6% lost): SNR lpc=14.99 nn=14.85 sparse_ar=12.34 dB
-[49/200] FW6BFp-225-129636-418989-280816-386883-462467-306759 (1649 pkts, 6.2% lost): SNR lpc=15.46 nn=15.30 sparse_ar=12.62 dB
-[50/200] yc5Hmf-494-469130-474206-203381-91840-123056-149498 (1722 pkts, 13.5% lost): SNR lpc=8.84 nn=8.88 sparse_ar=7.45 dB
-[51/200] JRGxpf-495-78575-358526-483339-81956-229618-247007 (1722 pkts, 14.2% lost): SNR lpc=8.76 nn=7.10 sparse_ar=7.75 dB
-[52/200] FSyUys-545-306052-88756-228203-369609-91230-448907 (1240 pkts, 3.5% lost): SNR lpc=18.04 nn=17.28 sparse_ar=15.25 dB
-[53/200] Mtnx5i-515-495971-279778-348676-11995-306560-418034 (744 pkts, 3.2% lost): SNR lpc=16.14 nn=12.83 sparse_ar=14.64 dB
-[54/200] lDN6of-450-91840-427818-353502-327883-210172-489807 (1722 pkts, 25.0% lost): SNR lpc=5.99 nn=3.91 sparse_ar=5.94 dB
-[55/200] FiS63i-513-129107-287427-185152-454791-121010-285778 (918 pkts, 30.0% lost): SNR lpc=4.73 nn=2.53 sparse_ar=3.39 dB
-[56/200] xDMmqs-548-333766-165168-462328-336612-442126-284808 (1636 pkts, 9.8% lost): SNR lpc=11.33 nn=11.30 sparse_ar=9.28 dB
-[57/200] xlckps-555-489807-93885-138959-23535-14754-299323 (1636 pkts, 10.9% lost): SNR lpc=10.55 nn=10.49 sparse_ar=8.93 dB
-[58/200] KIklei-503-156368-5054-151331-161307-380077-177809 (898 pkts, 12.1% lost): SNR lpc=9.00 nn=7.02 sparse_ar=7.36 dB
-[59/200] 0Rve0i-524-469450-332402-376902-283921-64116-240504 (1140 pkts, 5.1% lost): SNR lpc=14.01 nn=12.99 sparse_ar=12.06 dB
-[60/200] vAlA7f-458-390385-16661-177809-112031-325632-365075 (954 pkts, 1.5% lost): SNR lpc=30.98 nn=32.80 sparse_ar=24.21 dB
-[61/200] IJqofi-526-68304-236920-183720-152419-94351-316080 (661 pkts, 34.5% lost): SNR lpc=4.57 nn=3.40 sparse_ar=2.96 dB
-[62/200] cUyODs-564-324456-286869-479691-123056-485468-274323 (1636 pkts, 14.6% lost): SNR lpc=9.64 nn=9.12 sparse_ar=7.12 dB
-[63/200] fiDqFe-589-306052-37928-421728-166792-414547-458302 (1550 pkts, 7.5% lost): SNR lpc=16.54 nn=17.34 sparse_ar=12.66 dB
-[64/200] WOhKts-537-450251-294604-27791-350223-235375-383770 (1636 pkts, 15.2% lost): SNR lpc=11.40 nn=11.65 sparse_ar=8.87 dB
-[65/200] AHwsQs-538-108297-304214-140209-237079-426805-448869 (1636 pkts, 26.5% lost): SNR lpc=7.07 nn=6.18 sparse_ar=6.43 dB
-[66/200] Q4PCSi-506-317415-237079-78108-78427-235375-285778 (1152 pkts, 8.1% lost): SNR lpc=12.44 nn=11.60 sparse_ar=10.81 dB
-[67/200] oK9Hxs-550-7708-104867-460359-299323-420765-264795 (1636 pkts, 3.9% lost): SNR lpc=16.87 nn=16.63 sparse_ar=13.87 dB
-[68/200] kxh9is-563-24999-276516-377039-462467-365075-67099 (1636 pkts, 6.4% lost): SNR lpc=17.25 nn=16.99 sparse_ar=13.15 dB
-[69/200] zKb4se-576-475285-202921-407950-32125-236920-469001 (1236 pkts, 14.6% lost): SNR lpc=11.23 nn=10.68 sparse_ar=9.86 dB
-[70/200] 9ImS8p-321-63022-306759-480197-355130-205293-103130 (1065 pkts, 1.4% lost): SNR lpc=29.76 nn=30.66 sparse_ar=21.65 dB
-[71/200] EZwkWp-195-116061-37928-384031-166684-14787-96948 (1442 pkts, 15.5% lost): SNR lpc=13.75 nn=12.77 sparse_ar=8.18 dB
-[72/200] 5Lu6ui-514-135410-151381-124082-173176-644-324310 (744 pkts, 9.9% lost): SNR lpc=11.68 nn=9.32 sparse_ar=10.35 dB
-[73/200] ItvEYp-187-347380-151331-160943-343502-92870-286732 (1222 pkts, 6.0% lost): SNR lpc=16.53 nn=16.17 sparse_ar=12.44 dB
-[74/200] rjyWTe-587-151723-247588-123704-129889-250174-123056 (1550 pkts, 12.1% lost): SNR lpc=11.53 nn=11.96 sparse_ar=8.92 dB
-[75/200] 44Zbvs-567-179462-358526-13671-355104-116061-343332 (1636 pkts, 7.4% lost): SNR lpc=12.26 nn=10.96 sparse_ar=10.53 dB
-[76/200] PiKSIp-112-109021-465867-125189-123174-211212-334242 (1021 pkts, 9.1% lost): SNR lpc=11.04 nn=9.05 sparse_ar=7.90 dB
-[77/200] caQa9p-079-134118-41798-311327-343332-125459-231167 (1139 pkts, 6.4% lost): SNR lpc=23.98 nn=24.05 sparse_ar=13.59 dB
-[78/200] ofs2Us-561-469223-161307-229618-187519-295308-129107 (1636 pkts, 15.8% lost): SNR lpc=10.91 nn=10.88 sparse_ar=7.87 dB
-[79/200] jhRr0p-088-489070-351855-386883-172725-333766-16976 (1661 pkts, 16.4% lost): SNR lpc=10.39 nn=10.23 sparse_ar=7.95 dB
-[80/200] 3Fszap-093-117533-332219-451954-336612-141428-265166 (1116 pkts, 6.5% lost): SNR lpc=16.36 nn=16.50 sparse_ar=13.90 dB
-[81/200] 69ZMRp-276-162832-2757-113105-349816-17243-289593 (1207 pkts, 16.2% lost): SNR lpc=12.84 nn=12.75 sparse_ar=10.17 dB
-[82/200] 5OQdwp-063-348077-460359-16661-112031-224170-197606 (1404 pkts, 2.8% lost): SNR lpc=18.17 nn=18.24 sparse_ar=14.37 dB
-[83/200] am1FVp-234-380077-145165-25579-145555-311495-324310 (1208 pkts, 5.4% lost): SNR lpc=16.80 nn=16.77 sparse_ar=13.16 dB
-[84/200] 0mk6rp-310-146145-90733-51581-27791-50416-437215 (1608 pkts, 1.7% lost): SNR lpc=24.85 nn=25.07 sparse_ar=20.21 dB
-[85/200] BBcZPi-501-456735-480197-495997-497448-326140-134118 (861 pkts, 0.8% lost): SNR lpc=22.53 nn=23.33 sparse_ar=22.41 dB
-[86/200] lzFhsp-134-377273-280816-60681-369034-268009-11995 (1625 pkts, 3.1% lost): SNR lpc=21.39 nn=21.34 sparse_ar=15.25 dB
-[87/200] 1zDUvp-298-108297-119460-56896-348770-68221-98443 (1510 pkts, 2.6% lost): SNR lpc=17.28 nn=17.47 sparse_ar=14.09 dB
-[88/200] oJJGwp-325-47619-442126-2985-182650-124082-457067 (1710 pkts, 4.0% lost): SNR lpc=17.60 nn=17.78 sparse_ar=14.71 dB
-[89/200] zQSXvp-215-498788-407950-152419-25062-51581-3467 (1400 pkts, 17.6% lost): SNR lpc=10.77 nn=10.50 sparse_ar=8.61 dB
-[90/200] cqZnBp-237-143976-377902-462328-483339-384274-414547 (1322 pkts, 8.2% lost): SNR lpc=14.59 nn=13.79 sparse_ar=10.27 dB
-[91/200] f2JFMw-634-136860-113105-22031-310105-248646-32125 (824 pkts, 8.3% lost): SNR lpc=12.37 nn=12.06 sparse_ar=11.27 dB
-[92/200] qQ82Hw-614-91230-379354-379373-260428-324310-287427 (949 pkts, 5.2% lost): SNR lpc=16.99 nn=16.83 sparse_ar=16.62 dB
-[93/200] DmpOYi-525-91230-450251-209608-292323-92870-38506 (1140 pkts, 16.3% lost): SNR lpc=7.86 nn=6.34 sparse_ar=7.22 dB
-[94/200] nSu3Cp-366-41411-362672-285778-222370-421926-202035 (1118 pkts, 6.5% lost): SNR lpc=22.24 nn=23.32 sparse_ar=12.52 dB
-[95/200] nQsrxi-500-35788-354893-151331-437270-461984-276516 (861 pkts, 11.0% lost): SNR lpc=9.74 nn=9.92 sparse_ar=9.41 dB
-[96/200] tztd5w-640-23535-348077-410307-64116-151381-134118 (1176 pkts, 12.0% lost): SNR lpc=14.49 nn=14.29 sparse_ar=10.37 dB
-[97/200] ck2Uxp-081-495997-135873-82313-377039-373629-268363 (1026 pkts, 4.8% lost): SNR lpc=17.29 nn=16.14 sparse_ar=13.06 dB
-[98/200] BsVmke-591-419538-379538-386302-426805-469450-347380 (1550 pkts, 17.8% lost): SNR lpc=8.32 nn=8.57 sparse_ar=7.08 dB
-[99/200] SSYQ1w-650-275802-13671-144360-112336-104867-157595 (503 pkts, 5.4% lost): SNR lpc=22.24 nn=21.85 sparse_ar=15.73 dB
-[100/200] BcVzDs-560-352809-57514-418989-243067-209608-32726 (1636 pkts, 6.6% lost): SNR lpc=18.72 nn=17.52 sparse_ar=13.27 dB
-[101/200] N5kbFp-292-397909-407728-152140-117533-153980-62919 (1693 pkts, 21.2% lost): SNR lpc=10.95 nn=12.34 sparse_ar=7.62 dB
-[102/200] jgJdnp-100-135873-177809-247007-67455-332402-185152 (1404 pkts, 5.8% lost): SNR lpc=18.82 nn=19.06 sparse_ar=13.26 dB
-[103/200] BNXFqp-404-184495-450557-10737-129636-497448-379538 (712 pkts, 3.1% lost): SNR lpc=13.58 nn=12.36 sparse_ar=12.64 dB
-[104/200] U5aQJe-592-437270-129013-295308-406364-103913-497087 (1550 pkts, 4.5% lost): SNR lpc=15.73 nn=16.18 sparse_ar=13.78 dB
-[105/200] TypO9p-362-82313-390793-365346-50416-310105-275395 (1464 pkts, 23.4% lost): SNR lpc=8.48 nn=8.91 sparse_ar=6.86 dB
-[106/200] 3e1Tjp-199-462328-423751-38597-248646-74769-2009 (1395 pkts, 9.5% lost): SNR lpc=15.92 nn=15.74 sparse_ar=12.01 dB
-[107/200] ainjFp-098-145384-88756-289593-274542-488804-292564 (2208 pkts, 9.1% lost): SNR lpc=13.94 nn=13.21 sparse_ar=10.45 dB
-[108/200] pRaNDw-627-181149-276516-426805-281965-56896-235375 (1894 pkts, 4.8% lost): SNR lpc=15.34 nn=15.31 sparse_ar=13.85 dB
-[109/200] 7HBFIp-071-294604-416172-427818-181149-278609-175927 (1141 pkts, 7.9% lost): SNR lpc=20.01 nn=20.12 sparse_ar=12.71 dB
-[110/200] m8mjCs-533-485468-283456-486330-442126-2757-12865 (1636 pkts, 22.7% lost): SNR lpc=10.07 nn=9.21 sparse_ar=7.29 dB
-[111/200] MJEnPs-553-484336-261033-237079-274170-257745-343308 (1636 pkts, 6.0% lost): SNR lpc=12.25 nn=12.18 sparse_ar=11.00 dB
-[112/200] 9f3Qjw-657-129013-78427-348770-228203-60643-7188 (839 pkts, 7.9% lost): SNR lpc=15.37 nn=15.05 sparse_ar=14.72 dB
-[113/200] noHubp-343-163645-17243-410906-219243-161307-221798 (1638 pkts, 6.7% lost): SNR lpc=14.69 nn=14.26 sparse_ar=11.00 dB
-[114/200] aVIkMi-504-436373-35788-166684-274170-363774-493700 (826 pkts, 3.8% lost): SNR lpc=16.25 nn=15.23 sparse_ar=14.81 dB
-[115/200] fS0Vwp-324-274170-461984-129889-218396-366126-128329 (1773 pkts, 16.1% lost): SNR lpc=12.00 nn=10.44 sparse_ar=7.39 dB
-[116/200] 9hvMUf-482-498788-113105-17243-63022-21827-338584 (1318 pkts, 11.1% lost): SNR lpc=10.70 nn=10.52 sparse_ar=9.40 dB
-[117/200] IZG94w-666-98443-418034-470600-161118-288253-129889 (1707 pkts, 7.1% lost): SNR lpc=16.54 nn=15.69 sparse_ar=10.57 dB
-[118/200] TkK5fp-380-229618-476225-311495-339484-11995-7708 (1573 pkts, 6.0% lost): SNR lpc=14.33 nn=14.00 sparse_ar=10.01 dB
-[119/200] 4sBV1s-535-160927-255765-139119-167772-460359-377902 (1636 pkts, 12.0% lost): SNR lpc=12.77 nn=13.15 sparse_ar=8.71 dB
-[120/200] BThtKf-463-324456-428876-160668-329895-295308-99711 (1722 pkts, 31.4% lost): SNR lpc=5.72 nn=5.06 sparse_ar=5.30 dB
-[121/200] wD39yw-617-350336-91230-365075-384274-339484-27577 (918 pkts, 4.1% lost): SNR lpc=14.94 nn=14.95 sparse_ar=13.01 dB
-[122/200] 1Q0zzp-067-496080-227228-300626-311379-247007-1214 (1044 pkts, 3.4% lost): SNR lpc=32.91 nn=31.81 sparse_ar=16.59 dB
-[123/200] JCRPTw-618-129107-479691-343332-355104-157595-129013 (1894 pkts, 30.5% lost): SNR lpc=6.42 nn=5.52 sparse_ar=5.18 dB
-[124/200] WWYmkp-135-247007-450251-229950-249772-273892-186349 (1032 pkts, 18.8% lost): SNR lpc=12.36 nn=12.17 sparse_ar=7.21 dB
-[125/200] ui9aDp-122-292323-379538-386883-287427-306759-88721 (1070 pkts, 4.6% lost): SNR lpc=18.56 nn=18.50 sparse_ar=13.72 dB
-[126/200] DfzVIp-175-379354-103913-25062-384031-343308-295308 (1232 pkts, 6.7% lost): SNR lpc=17.51 nn=17.45 sparse_ar=12.37 dB
-[127/200] RkoxIi-499-395609-17243-276516-68344-191485-476225 (1053 pkts, 19.2% lost): SNR lpc=6.44 nn=5.55 sparse_ar=6.19 dB
-[128/200] YLEXwp-335-240298-183720-447487-129636-202035-44660 (1633 pkts, 4.8% lost): SNR lpc=17.67 nn=16.96 sparse_ar=15.08 dB
-[129/200] jM2z5p-212-362995-350336-202035-87506-239730-207508 (960 pkts, 3.1% lost): SNR lpc=27.63 nn=27.41 sparse_ar=18.62 dB
-[130/200] YuwChp-152-8651-147603-379354-29563-62919-345238 (1842 pkts, 8.4% lost): SNR lpc=22.89 nn=22.75 sparse_ar=13.90 dB
-[131/200] mZAhvp-320-51581-316080-475285-152880-108378-407790 (2240 pkts, 19.7% lost): SNR lpc=14.92 nn=17.45 sparse_ar=6.71 dB
-[132/200] RXuyap-339-457067-332402-329331-281965-472051-353502 (1386 pkts, 8.4% lost): SNR lpc=19.38 nn=19.83 sparse_ar=11.72 dB
-[133/200] 9Mkadp-302-273892-209608-109841-324591-494783-498752 (1917 pkts, 13.9% lost): SNR lpc=13.39 nn=13.14 sparse_ar=10.18 dB
-[134/200] 6TUCvp-352-108130-78807-55646-250174-386302-414547 (1874 pkts, 14.3% lost): SNR lpc=14.19 nn=14.64 sparse_ar=8.89 dB
-[135/200] avuTLe-585-474206-355130-317191-361413-333474-248785 (1550 pkts, 11.8% lost): SNR lpc=10.45 nn=10.74 sparse_ar=9.00 dB
-[136/200] HxFzMp-357-24999-343332-90733-489807-316694-345238 (1056 pkts, 12.7% lost): SNR lpc=18.23 nn=14.86 sparse_ar=10.81 dB
-[137/200] QpHWMp-383-149498-238364-156368-402653-484336-426805 (1642 pkts, 21.7% lost): SNR lpc=11.04 nn=12.70 sparse_ar=5.43 dB
-[138/200] cfSfbp-363-68221-13671-186349-322947-197606-339484 (1688 pkts, 12.9% lost): SNR lpc=20.76 nn=21.59 sparse_ar=11.63 dB
-[139/200] IJui6p-278-140209-424453-325632-318907-448869-125189 (879 pkts, 26.4% lost): SNR lpc=7.46 nn=7.15 sparse_ar=5.67 dB
-[140/200] vTx6Wp-073-38459-458554-472051-230200-332402-365346 (1099 pkts, 10.0% lost): SNR lpc=14.48 nn=14.47 sparse_ar=11.29 dB
-[141/200] 9OkIKp-409-379354-383479-166684-320846-480197-361413 (1633 pkts, 3.1% lost): SNR lpc=30.93 nn=31.21 sparse_ar=17.58 dB
-[142/200] rllgnp-282-21827-2985-183720-67455-409746-330730 (1398 pkts, 18.8% lost): SNR lpc=13.15 nn=12.67 sparse_ar=10.38 dB
-[143/200] riuiap-287-319764-286732-35325-55646-391852-1246 (1806 pkts, 5.0% lost): SNR lpc=17.07 nn=17.38 sparse_ar=13.38 dB
-[144/200] OI5Azp-257-60643-225888-294604-334833-14787-125459 (1203 pkts, 4.9% lost): SNR lpc=15.68 nn=15.05 sparse_ar=15.25 dB
-[145/200] 9aa0Fp-331-427818-479691-112336-420765-462193-379354 (1488 pkts, 11.5% lost): SNR lpc=16.12 nn=16.96 sparse_ar=12.86 dB
-[146/200] IJFPZp-340-90733-100179-99711-247588-402653-355130 (1491 pkts, 3.4% lost): SNR lpc=13.01 nn=10.85 sparse_ar=10.72 dB
-[147/200] sNYM9p-246-47619-361413-1214-155820-418901-176776 (965 pkts, 28.8% lost): SNR lpc=6.61 nn=7.56 sparse_ar=4.14 dB
-[148/200] Od9CNp-327-140209-326180-101992-35325-166792-451954 (1953 pkts, 10.4% lost): SNR lpc=14.59 nn=13.61 sparse_ar=11.25 dB
-[149/200] zVlcap-263-274542-472051-376372-248785-476225-35325 (1292 pkts, 4.1% lost): SNR lpc=16.40 nn=16.14 sparse_ar=14.67 dB
-[150/200] mCLt3p-410-320846-476924-422977-274323-99711-177809 (1085 pkts, 1.5% lost): SNR lpc=26.66 nn=26.74 sparse_ar=22.00 dB
-[151/200] rpdA0p-089-193291-347380-224170-426805-310105-489070 (1279 pkts, 8.9% lost): SNR lpc=12.89 nn=12.19 sparse_ar=11.92 dB
-[152/200] d4LtRw-656-379354-74769-192385-202921-93885-62534 (1673 pkts, 9.1% lost): SNR lpc=13.32 nn=13.07 sparse_ar=10.29 dB
-[153/200] vhQX3p-288-256377-386883-276335-177955-380077-80661 (2229 pkts, 2.4% lost): SNR lpc=16.02 nn=15.86 sparse_ar=15.36 dB
-[154/200] PSLbbp-359-11995-156368-348733-154883-123704-497426 (1430 pkts, 11.9% lost): SNR lpc=11.08 nn=9.76 sparse_ar=9.53 dB
-[155/200] dc4C1p-319-469130-53129-287943-116061-476924-448907 (1529 pkts, 17.7% lost): SNR lpc=18.63 nn=17.25 sparse_ar=12.90 dB
-[156/200] O7tsRw-671-38597-125620-126584-128202-343308-240298 (1734 pkts, 7.0% lost): SNR lpc=14.85 nn=14.81 sparse_ar=12.31 dB
-[157/200] 2TcsGp-297-152880-78575-467697-23535-316694-24999 (2415 pkts, 13.3% lost): SNR lpc=14.42 nn=14.41 sparse_ar=9.59 dB
-[158/200] hImnha-010-474206-125620-494783-410307-474929-314040 (1033 pkts, 9.4% lost): SNR lpc=13.28 nn=13.09 sparse_ar=10.05 dB
-[159/200] QzAg3p-413-374393-31166-163645-409369-10737-129013 (973 pkts, 10.4% lost): SNR lpc=24.53 nn=21.28 sparse_ar=16.34 dB
-[160/200] jFujMp-258-2985-422977-276516-270302-316694-390385 (1887 pkts, 7.8% lost): SNR lpc=18.60 nn=18.41 sparse_ar=10.31 dB
-[161/200] 2HNvip-384-377039-229618-315211-103130-162269-274323 (1838 pkts, 4.2% lost): SNR lpc=22.28 nn=22.03 sparse_ar=13.73 dB
-[162/200] JLBTXp-060-194617-60643-435517-420765-124439-152419 (1024 pkts, 10.4% lost): SNR lpc=15.31 nn=14.59 sparse_ar=10.54 dB
-[163/200] uIq5Cp-346-271293-199372-348733-164849-450557-397909 (1966 pkts, 2.9% lost): SNR lpc=17.10 nn=16.98 sparse_ar=15.44 dB
-[164/200] G50hup-092-363552-123056-229618-481410-299323-332402 (1114 pkts, 6.5% lost): SNR lpc=23.38 nn=24.10 sparse_ar=16.24 dB
-[165/200] fiBRvp-155-14754-379538-407950-108056-495971-270302 (1409 pkts, 17.0% lost): SNR lpc=9.13 nn=9.75 sparse_ar=7.10 dB
-[166/200] 8b8sWp-275-88756-348733-183720-134118-226233-129107 (1202 pkts, 3.6% lost): SNR lpc=21.06 nn=21.19 sparse_ar=14.79 dB
-[167/200] vOT8yp-371-205293-131237-111916-212842-29563-288077 (1254 pkts, 6.2% lost): SNR lpc=16.31 nn=17.24 sparse_ar=11.84 dB
-[168/200] k4Lvzp-329-270302-101992-248785-163995-27791-469130 (1701 pkts, 7.6% lost): SNR lpc=16.67 nn=16.58 sparse_ar=13.67 dB
-[169/200] qmNVhp-128-78575-68344-44660-128101-103130-334242 (1283 pkts, 4.8% lost): SNR lpc=24.00 nn=25.20 sparse_ar=13.11 dB
-[170/200] tXap2p-281-298969-9753-281965-457067-162269-329331 (1012 pkts, 6.8% lost): SNR lpc=16.03 nn=16.26 sparse_ar=13.13 dB
-[171/200] Aal0cp-183-209061-91230-492922-2757-317191-461984 (990 pkts, 4.5% lost): SNR lpc=18.07 nn=18.10 sparse_ar=12.91 dB
-[172/200] ZgJsyp-189-209061-292564-111916-92870-126584-280816 (1939 pkts, 5.0% lost): SNR lpc=18.88 nn=18.68 sparse_ar=16.02 dB
-[173/200] 8wAd8p-068-329159-165684-202035-119460-330730-447487 (1209 pkts, 11.4% lost): SNR lpc=16.61 nn=16.65 sparse_ar=9.24 dB
-[174/200] maM4mp-267-195572-141428-108130-299323-8651-456735 (1158 pkts, 7.5% lost): SNR lpc=27.29 nn=28.87 sparse_ar=21.22 dB
-[175/200] IIhdup-184-282845-322947-195637-315211-10737-386302 (986 pkts, 6.9% lost): SNR lpc=21.71 nn=21.72 sparse_ar=12.58 dB
-[176/200] Jpj5sp-423-369034-108056-487747-295308-1246-219243 (1468 pkts, 8.6% lost): SNR lpc=19.88 nn=18.19 sparse_ar=11.58 dB
-[177/200] fdXdMp-313-165684-111916-348770-380077-145384-347380 (1440 pkts, 12.8% lost): SNR lpc=17.15 nn=17.42 sparse_ar=11.43 dB
-[178/200] uYOkKp-107-143976-376902-185152-437215-90733-10048 (968 pkts, 4.3% lost): SNR lpc=22.39 nn=22.90 sparse_ar=13.92 dB
-[179/200] DWrC0a-013-57191-1214-242009-327883-379538-476225 (1033 pkts, 12.1% lost): SNR lpc=9.78 nn=10.02 sparse_ar=7.31 dB
-[180/200] m5rDOp-062-377273-156368-185152-188815-186260-486330 (1445 pkts, 11.0% lost): SNR lpc=17.37 nn=15.80 sparse_ar=10.47 dB
-[181/200] Q1VJ4p-396-67099-191485-442126-324310-384031-392966 (757 pkts, 0.5% lost): SNR lpc=50.98 nn=49.41 sparse_ar=47.28 dB
-[182/200] eiJpip-223-216978-247588-305230-165168-65123-203381 (1402 pkts, 10.6% lost): SNR lpc=16.81 nn=16.81 sparse_ar=11.65 dB
-[183/200] kDEiGp-268-254920-474864-52991-170820-165168-328121 (1029 pkts, 24.1% lost): SNR lpc=7.36 nn=6.68 sparse_ar=5.85 dB
-[184/200] fZg66p-070-68221-216978-377273-239730-53784-3467 (994 pkts, 29.6% lost): SNR lpc=18.27 nn=19.70 sparse_ar=5.28 dB
-[185/200] ie6iSp-097-407790-253414-334074-464643-167361-80351 (1395 pkts, 3.9% lost): SNR lpc=28.91 nn=29.03 sparse_ar=18.85 dB
-[186/200] 4fsgkp-253-311495-209061-229618-287427-276516-38459 (1013 pkts, 6.8% lost): SNR lpc=16.89 nn=17.00 sparse_ar=13.07 dB
-[187/200] rkSMcp-349-162269-339484-74769-12865-363552-41411 (1411 pkts, 14.4% lost): SNR lpc=17.18 nn=17.30 sparse_ar=10.78 dB
-[188/200] u3JmNp-105-377036-373629-177809-287789-419538-221798 (1057 pkts, 9.1% lost): SNR lpc=12.76 nn=11.92 sparse_ar=11.36 dB
-[189/200] FZwvbp-205-349816-138959-261033-383479-409369-152140 (1111 pkts, 28.3% lost): SNR lpc=12.97 nn=9.79 sparse_ar=6.40 dB
-[190/200] TaYTvp-415-63022-179855-481410-392966-38597-437270 (762 pkts, 4.6% lost): SNR lpc=21.20 nn=21.01 sparse_ar=15.73 dB
-[191/200] CF7Gnp-165-481033-25721-175927-209061-312468-108378 (1919 pkts, 17.5% lost): SNR lpc=13.45 nn=13.54 sparse_ar=9.34 dB
-[192/200] tTMeWp-326-264357-280816-2985-25721-189658-311379 (2359 pkts, 8.9% lost): SNR lpc=24.40 nn=25.51 sparse_ar=11.93 dB
-[193/200] BLAVyp-401-374393-353502-276516-464643-247007-280816 (1578 pkts, 17.7% lost): SNR lpc=10.92 nn=11.09 sparse_ar=8.26 dB
-[194/200] WYTgYp-403-306759-7708-254913-153980-163947-460359 (1450 pkts, 4.2% lost): SNR lpc=16.37 nn=15.61 sparse_ar=12.12 dB
-[195/200] 9kbanp-261-50416-108056-469001-231167-334074-209061 (1007 pkts, 6.0% lost): SNR lpc=13.59 nn=14.21 sparse_ar=12.22 dB
-[196/200] DLZvmp-426-78108-128329-469130-165684-261033-84004 (868 pkts, 7.7% lost): SNR lpc=21.99 nn=22.57 sparse_ar=12.03 dB
-[197/200] 7gnoMp-243-13140-469001-90733-352371-418901-62534 (1349 pkts, 14.4% lost): SNR lpc=12.15 nn=11.80 sparse_ar=8.89 dB
-[198/200] 6maFGp-305-129013-193291-68221-152880-38506-163335 (2424 pkts, 17.9% lost): SNR lpc=18.51 nn=20.68 sparse_ar=7.74 dB
-[199/200] zRlcSp-181-25062-53784-123056-333757-268363-211084 (1709 pkts, 6.1% lost): SNR lpc=17.47 nn=17.94 sparse_ar=12.12 dB
-[200/200] qx9MPf-447-243466-253414-78108-327883-41798-186349 (1722 pkts, 15.9% lost): SNR lpc=8.19 nn=8.06 sparse_ar=7.85 dB
-Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
-Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
-Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
-Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+[200/673] R6iUOa-036-420765-385900-448869-53784-315211-91840 (1033 pkts, 7.6% lost): SNR lpc=14.00 nn=14.25 sparse_ar=11.55 dB
+[201/673] GOegla-053-151381-464643-480197-304845-488804-193857 (1033 pkts, 10.3% lost): SNR lpc=12.20 nn=11.44 sparse_ar=9.86 dB
+[202/673] eLIKzf-490-247007-51581-421959-84055-184495-147603 (1272 pkts, 6.4% lost): SNR lpc=19.75 nn=20.04 sparse_ar=12.98 dB
+[203/673] T5Hwxa-044-78427-163335-454712-240298-195637-462467 (1033 pkts, 15.5% lost): SNR lpc=13.19 nn=12.69 sparse_ar=8.31 dB
+[204/673] nEGADp-113-240504-57514-324456-73819-181149-32726 (1608 pkts, 5.7% lost): SNR lpc=16.92 nn=17.43 sparse_ar=15.25 dB
+[205/673] wAwxFs-551-53278-27577-50416-14754-423587-4800 (1636 pkts, 6.3% lost): SNR lpc=12.91 nn=13.39 sparse_ar=11.69 dB
+[206/673] bToY8a-007-372299-2757-312468-468709-260428-333658 (1033 pkts, 22.5% lost): SNR lpc=9.04 nn=9.41 sparse_ar=7.00 dB
+[207/673] 5pFQKp-286-416172-93808-24999-202179-55646-340579 (1473 pkts, 2.6% lost): SNR lpc=24.18 nn=24.01 sparse_ar=18.14 dB
+[208/673] UGziie-599-235229-239730-383479-437270-232015-348770 (1550 pkts, 25.2% lost): SNR lpc=11.40 nn=10.42 sparse_ar=5.17 dB
+[209/673] 9WjqGa-032-407790-99711-217246-333766-292323-108056 (1033 pkts, 8.7% lost): SNR lpc=15.59 nn=16.43 sparse_ar=13.51 dB
+[210/673] YyFDyf-445-280816-156368-334833-30386-443533-21632 (1272 pkts, 13.7% lost): SNR lpc=11.74 nn=9.99 sparse_ar=10.51 dB
+[211/673] p3aQwf-436-421959-224170-146882-409369-187519-167772 (1181 pkts, 11.0% lost): SNR lpc=9.74 nn=9.48 sparse_ar=8.61 dB
+[212/673] NPeAUe-600-10737-386302-55646-111916-171454-462328 (1550 pkts, 2.8% lost): SNR lpc=16.16 nn=15.82 sparse_ar=15.50 dB
+[213/673] RMlFZe-609-324310-141142-463054-479691-158592-212842 (1390 pkts, 16.8% lost): SNR lpc=9.22 nn=10.10 sparse_ar=7.79 dB
+[214/673] 6rzwif-477-305230-343332-240298-202035-418989-179462 (1722 pkts, 11.4% lost): SNR lpc=11.70 nn=12.76 sparse_ar=9.23 dB
+[215/673] uZTZ3a-041-458302-454712-409369-300470-469223-60681 (1033 pkts, 5.7% lost): SNR lpc=21.64 nn=21.39 sparse_ar=17.65 dB
+[216/673] ZDzSea-016-35788-22031-317191-488804-143976-68221 (1033 pkts, 5.7% lost): SNR lpc=14.35 nn=14.29 sparse_ar=12.38 dB
+[217/673] CIp6Ff-471-179418-355130-352809-450821-285778-345238 (1225 pkts, 0.7% lost): SNR lpc=23.09 nn=22.57 sparse_ar=21.55 dB
+[218/673] I9Bdte-594-365346-292323-418480-1246-249772-448907 (1550 pkts, 4.1% lost): SNR lpc=18.10 nn=19.09 sparse_ar=14.95 dB
+[219/673] mzUaoe-579-152140-160927-418901-302437-113105-365075 (1550 pkts, 2.8% lost): SNR lpc=17.76 nn=19.06 sparse_ar=15.45 dB
+[220/673] JfP1Ea-000-274542-81956-231167-261033-390385-90733 (1033 pkts, 20.8% lost): SNR lpc=7.55 nn=7.23 sparse_ar=6.15 dB
+[221/673] XYUXqp-315-157595-222370-374393-236920-423587-189658 (1753 pkts, 6.0% lost): SNR lpc=19.01 nn=18.51 sparse_ar=13.15 dB
+[222/673] EVN7nf-449-406364-481033-284808-64116-376372-236920 (1181 pkts, 4.9% lost): SNR lpc=17.71 nn=18.04 sparse_ar=12.57 dB
+[223/673] ABA31f-443-369609-21827-186260-365075-448301-398945 (1216 pkts, 40.6% lost): SNR lpc=6.68 nn=6.57 sparse_ar=4.01 dB
+[224/673] tiILhf-454-206567-372299-498752-376902-129636-357104 (1722 pkts, 15.2% lost): SNR lpc=13.65 nn=14.21 sparse_ar=9.26 dB
+[225/673] nygAda-004-246828-255765-192385-195572-247045-152419 (1033 pkts, 4.8% lost): SNR lpc=13.88 nn=12.98 sparse_ar=11.80 dB
+[226/673] Ety2Fi-497-468905-99711-243466-386302-398945-146882 (719 pkts, 2.5% lost): SNR lpc=16.64 nn=16.46 sparse_ar=15.11 dB
+[227/673] 6FHNAe-596-69221-397909-2985-433478-165168-406364 (1550 pkts, 13.1% lost): SNR lpc=9.55 nn=10.57 sparse_ar=8.48 dB
+[228/673] 5CCiei-510-151723-37260-425422-191485-89725-37928 (636 pkts, 6.6% lost): SNR lpc=11.92 nn=11.63 sparse_ar=11.60 dB
+[229/673] GjpQAa-040-437270-56896-248785-189658-286732-472051 (1033 pkts, 6.8% lost): SNR lpc=12.79 nn=13.50 sparse_ar=11.02 dB
+[230/673] 0yNkme-581-52991-361413-56896-334074-456735-163645 (1550 pkts, 25.4% lost): SNR lpc=7.35 nn=7.67 sparse_ar=5.85 dB
+[231/673] CGCEVf-455-64116-284808-348770-62534-35788-146882 (1312 pkts, 12.3% lost): SNR lpc=16.32 nn=15.11 sparse_ar=15.63 dB
+[232/673] O5jawa-024-318907-124439-63743-443533-406168-197606 (1033 pkts, 9.2% lost): SNR lpc=13.50 nn=13.64 sparse_ar=10.68 dB
+[233/673] bByeOi-523-475285-468905-202921-330008-358526-248646 (719 pkts, 2.9% lost): SNR lpc=14.48 nn=12.09 sparse_ar=13.79 dB
+[234/673] jS6nup-132-81956-489070-330008-43889-211084-474206 (1748 pkts, 14.6% lost): SNR lpc=11.11 nn=9.94 sparse_ar=8.50 dB
+[235/673] TtTtQe-612-338584-141428-293070-153980-167772-343308 (1390 pkts, 9.8% lost): SNR lpc=14.60 nn=14.23 sparse_ar=10.79 dB
+[236/673] qjQLne-593-355130-11995-206567-2009-99711-41798 (1550 pkts, 5.5% lost): SNR lpc=15.27 nn=14.61 sparse_ar=12.97 dB
+[237/673] p7FJof-440-447487-199372-79211-231167-435276-497426 (1722 pkts, 16.7% lost): SNR lpc=8.46 nn=7.56 sparse_ar=6.75 dB
+[238/673] XO9p9a-049-219243-271293-311379-172725-460359-481934 (1033 pkts, 4.6% lost): SNR lpc=15.51 nn=15.94 sparse_ar=11.46 dB
+[239/673] oIHMta-020-474864-5054-276516-475285-448907-260428 (1033 pkts, 7.0% lost): SNR lpc=17.89 nn=17.92 sparse_ar=13.76 dB
+[240/673] qw1YNa-054-406364-3467-320846-31166-247588-157595 (1033 pkts, 5.6% lost): SNR lpc=13.47 nn=14.05 sparse_ar=11.19 dB
+[241/673] RPLJoa-042-290731-108297-280816-485468-167772-475285 (1033 pkts, 28.9% lost): SNR lpc=7.04 nn=7.30 sparse_ar=6.12 dB
+[242/673] z5XM8f-441-152419-253414-350223-21827-333658-52991 (1722 pkts, 16.2% lost): SNR lpc=8.91 nn=8.91 sparse_ar=7.95 dB
+[243/673] uVxjza-037-108130-103130-379354-274170-334242-369034 (1033 pkts, 20.6% lost): SNR lpc=8.32 nn=8.41 sparse_ar=5.89 dB
+[244/673] HQ4Gtf-446-418989-207508-262731-378190-385900-37928 (1722 pkts, 6.9% lost): SNR lpc=16.82 nn=16.48 sparse_ar=12.36 dB
+[245/673] d20a7a-055-485468-128329-224170-458554-108056-421926 (1033 pkts, 13.6% lost): SNR lpc=10.83 nn=10.99 sparse_ar=8.78 dB
+[246/673] G5KARa-029-87506-324456-194617-474206-289593-427818 (1033 pkts, 12.7% lost): SNR lpc=19.10 nn=19.72 sparse_ar=11.94 dB
+[247/673] RpUuqa-035-202921-165168-454791-348077-141142-199372 (1033 pkts, 9.1% lost): SNR lpc=11.61 nn=11.72 sparse_ar=9.79 dB
+[248/673] NbJGea-005-68304-376902-217246-343308-644-53784 (1033 pkts, 27.3% lost): SNR lpc=4.63 nn=4.46 sparse_ar=4.00 dB
+[249/673] F3HLYe-575-138959-469450-487747-217246-98443-332402 (1550 pkts, 14.2% lost): SNR lpc=9.15 nn=8.88 sparse_ar=8.21 dB
+[250/673] HEuq9a-045-220507-202179-68344-175927-146882-91230 (1033 pkts, 1.5% lost): SNR lpc=20.41 nn=20.97 sparse_ar=18.67 dB
+[251/673] eKBIFf-430-256377-271293-162269-118598-300626-447046 (1202 pkts, 4.3% lost): SNR lpc=15.39 nn=14.91 sparse_ar=13.92 dB
+[252/673] 2N1pwa-019-385900-306759-197029-300626-408253-73819 (1033 pkts, 2.8% lost): SNR lpc=17.41 nn=17.62 sparse_ar=14.78 dB
+[253/673] HAh40f-439-259340-240504-479691-2757-361413-332219 (1722 pkts, 7.1% lost): SNR lpc=13.83 nn=13.45 sparse_ar=11.04 dB
+[254/673] GDNBNa-047-462467-197606-373629-229729-497087-108297 (1033 pkts, 5.0% lost): SNR lpc=13.46 nn=13.80 sparse_ar=11.08 dB
+[255/673] M9vWta-057-483339-217246-157595-8651-37928-146882 (1033 pkts, 32.0% lost): SNR lpc=4.65 nn=5.26 sparse_ar=3.84 dB
+[256/673] kzJXtf-431-253010-13769-379354-167238-18423-130799 (1722 pkts, 11.8% lost): SNR lpc=11.93 nn=11.98 sparse_ar=9.23 dB
+[257/673] e7jtUa-046-460359-163995-485468-327883-1246-287789 (1033 pkts, 10.1% lost): SNR lpc=11.64 nn=11.81 sparse_ar=9.66 dB
+[258/673] oicDrf-428-7188-163645-334074-252054-343502-423587 (1722 pkts, 10.1% lost): SNR lpc=11.49 nn=10.87 sparse_ar=10.60 dB
+[259/673] laSThe-608-82313-379538-98443-366509-237079-68221 (1390 pkts, 4.0% lost): SNR lpc=16.85 nn=17.15 sparse_ar=13.96 dB
+[260/673] ggBbLf-485-276335-53784-493700-271293-437270-147603 (1205 pkts, 3.0% lost): SNR lpc=20.30 nn=19.97 sparse_ar=15.55 dB
+[261/673] H675ep-123-414547-212842-13671-358526-357104-109841 (1767 pkts, 3.3% lost): SNR lpc=18.52 nn=16.42 sparse_ar=14.45 dB
+[262/673] ACErfp-407-10737-261033-186260-222370-4800-139119 (1612 pkts, 3.5% lost): SNR lpc=18.61 nn=18.13 sparse_ar=14.91 dB
+[263/673] WyVBde-577-155820-38506-488804-63743-442126-141428 (1550 pkts, 3.5% lost): SNR lpc=15.49 nn=16.18 sparse_ar=14.60 dB
+[264/673] bAzeFf-484-123704-325632-334833-140257-202179-230200 (1722 pkts, 29.2% lost): SNR lpc=6.67 nn=7.16 sparse_ar=5.16 dB
+[265/673] CYle7a-039-469450-134834-11995-407950-443533-487747 (1033 pkts, 8.4% lost): SNR lpc=12.66 nn=13.31 sparse_ar=11.37 dB
+[266/673] mbtDAf-453-14754-140209-136860-78807-252054-343332 (1225 pkts, 2.1% lost): SNR lpc=18.18 nn=18.98 sparse_ar=16.06 dB
+[267/673] Tf9sff-480-248646-316694-146882-1214-469450-125459 (1378 pkts, 2.0% lost): SNR lpc=17.74 nn=17.85 sparse_ar=16.61 dB
+[268/673] p0PRAf-475-299323-426805-45816-420765-47619-16661 (1722 pkts, 6.2% lost): SNR lpc=14.44 nn=13.10 sparse_ar=13.61 dB
+[269/673] YOz6Da-008-227228-41798-129107-484336-330730-54180 (1033 pkts, 9.6% lost): SNR lpc=15.15 nn=15.42 sparse_ar=10.13 dB
+[270/673] LhZRLa-056-128329-349816-474864-78575-41798-489070 (1033 pkts, 25.8% lost): SNR lpc=6.51 nn=6.72 sparse_ar=5.46 dB
+[271/673] X5mXma-006-345238-30386-265166-419538-306052-392966 (1033 pkts, 28.8% lost): SNR lpc=7.92 nn=8.26 sparse_ar=5.34 dB
+[272/673] zgchXa-003-222370-165168-220239-53784-300626-363774 (1033 pkts, 10.9% lost): SNR lpc=11.27 nn=11.23 sparse_ar=9.15 dB
+[273/673] zcm7Nf-452-283456-224170-163645-298969-181149-163947 (1722 pkts, 7.0% lost): SNR lpc=16.06 nn=15.95 sparse_ar=13.45 dB
+[274/673] agLBma-033-355104-2757-498752-259966-224170-5787 (1033 pkts, 21.5% lost): SNR lpc=6.53 nn=7.07 sparse_ar=5.22 dB
+[275/673] Rx3qyi-520-63022-103913-383479-69937-7708-199372 (802 pkts, 6.9% lost): SNR lpc=11.90 nn=11.57 sparse_ar=11.12 dB
+[276/673] zusqZe-574-49022-448869-298969-410307-348676-197606 (1550 pkts, 9.0% lost): SNR lpc=11.28 nn=10.88 sparse_ar=10.18 dB
+[277/673] iPeu8i-511-247007-138959-264357-166792-345238-376902 (636 pkts, 6.6% lost): SNR lpc=11.47 nn=11.43 sparse_ar=11.25 dB
+[278/673] X0uCip-115-448301-462328-80351-135873-476225-10447 (1153 pkts, 7.9% lost): SNR lpc=17.32 nn=17.91 sparse_ar=13.42 dB
+[279/673] yKoeya-002-35325-161118-166684-35788-407950-56896 (1033 pkts, 7.2% lost): SNR lpc=14.28 nn=14.60 sparse_ar=10.85 dB
+[280/673] cnnnna-030-230200-334074-330730-145384-491963-207404 (1033 pkts, 4.2% lost): SNR lpc=16.86 nn=18.30 sparse_ar=14.66 dB
+[281/673] 5LbWva-018-260428-377902-312468-324310-32125-247588 (1033 pkts, 6.1% lost): SNR lpc=12.81 nn=13.73 sparse_ar=10.92 dB
+[282/673] LOFC5f-483-457067-9753-409369-287943-489807-343332 (1722 pkts, 7.3% lost): SNR lpc=12.15 nn=11.74 sparse_ar=10.84 dB
+[283/673] v0Kodf-467-84055-485468-363552-436373-333658-333766 (1113 pkts, 11.0% lost): SNR lpc=10.43 nn=10.00 sparse_ar=8.45 dB
+[284/673] 0hwl6p-116-436373-50416-172725-211212-450251-10048 (1428 pkts, 12.9% lost): SNR lpc=15.17 nn=14.53 sparse_ar=12.14 dB
+[285/673] 35Mjqa-050-406168-130799-38459-121010-170787-348077 (1033 pkts, 7.9% lost): SNR lpc=14.25 nn=15.16 sparse_ar=11.50 dB
+[286/673] opFfXf-433-93808-247045-354893-332402-471623-156368 (861 pkts, 1.9% lost): SNR lpc=17.32 nn=15.98 sparse_ar=16.62 dB
+[287/673] CXLkHf-437-497426-57205-94351-229618-247045-41798 (1573 pkts, 11.1% lost): SNR lpc=11.79 nn=11.03 sparse_ar=10.17 dB
+[288/673] jOC2Ka-031-13671-166684-324591-135410-123375-103130 (1033 pkts, 3.3% lost): SNR lpc=18.72 nn=18.96 sparse_ar=15.50 dB
+[289/673] xc4bZf-491-363552-407728-177809-422977-84055-418745 (1378 pkts, 20.3% lost): SNR lpc=6.98 nn=5.76 sparse_ar=5.94 dB
+[290/673] 0xEVqf-474-226233-476134-265166-93885-87506-324456 (1242 pkts, 14.7% lost): SNR lpc=8.11 nn=7.93 sparse_ar=7.75 dB
+[291/673] 9lVsff-478-229950-476924-315211-270302-326140-470600 (919 pkts, 8.3% lost): SNR lpc=11.09 nn=10.65 sparse_ar=10.68 dB
+[292/673] naBPgp-207-306052-119460-418034-412326-383479-163645 (1411 pkts, 7.1% lost): SNR lpc=14.71 nn=14.66 sparse_ar=11.67 dB
+[293/673] x7eaJe-586-129107-57514-80661-50416-472051-136860 (1550 pkts, 14.7% lost): SNR lpc=12.41 nn=11.77 sparse_ar=8.49 dB
+[294/673] LLAges-570-497087-465867-475285-199372-260428-175927 (1240 pkts, 6.5% lost): SNR lpc=14.59 nn=13.12 sparse_ar=12.43 dB
+[295/673] k4QJVp-245-277271-78807-289593-469130-217246-426805 (1217 pkts, 17.8% lost): SNR lpc=12.48 nn=11.50 sparse_ar=8.62 dB
+[296/673] e31Vqf-432-121010-108056-219243-285778-360557-451954 (1722 pkts, 10.3% lost): SNR lpc=13.42 nn=14.45 sparse_ar=9.75 dB
+[297/673] vfmWyp-277-37928-24999-21827-167772-113619-437215 (1385 pkts, 18.8% lost): SNR lpc=10.61 nn=9.35 sparse_ar=8.41 dB
+[298/673] D9xBcp-108-210172-324456-103130-316080-489070-91840 (1017 pkts, 7.5% lost): SNR lpc=17.36 nn=17.61 sparse_ar=11.18 dB
+[299/673] DcM9Bs-534-101992-407950-226233-373629-36614-247007 (1636 pkts, 20.1% lost): SNR lpc=6.79 nn=5.67 sparse_ar=5.70 dB
+[300/673] J5o4fp-254-471623-377039-332402-32125-330730-276516 (970 pkts, 3.7% lost): SNR lpc=23.59 nn=22.89 sparse_ar=15.04 dB
+[301/673] MpY0Oe-590-497448-333658-189658-316080-179418-91840 (1550 pkts, 5.4% lost): SNR lpc=17.15 nn=17.82 sparse_ar=13.99 dB
+[302/673] P8BMRp-164-211084-421926-125189-418989-383770-430580 (1312 pkts, 1.4% lost): SNR lpc=24.83 nn=26.26 sparse_ar=20.40 dB
+[303/673] IaE5cp-232-249772-407950-185152-139119-121010-162832 (1486 pkts, 21.7% lost): SNR lpc=9.00 nn=8.58 sparse_ar=7.38 dB
+[304/673] lVGB1p-133-481410-208701-334074-160943-135873-366971 (1397 pkts, 8.9% lost): SNR lpc=17.50 nn=16.65 sparse_ar=10.97 dB
+[305/673] vPiITp-125-317415-61770-306560-103130-124082-123056 (1805 pkts, 15.6% lost): SNR lpc=8.57 nn=7.16 sparse_ar=5.55 dB
+[306/673] Sjr8fi-519-170820-283456-421959-497426-293070-249772 (1053 pkts, 15.2% lost): SNR lpc=10.00 nn=9.47 sparse_ar=7.51 dB
+[307/673] OxiuKp-103-140257-482510-128329-476924-24680-349816 (1122 pkts, 28.8% lost): SNR lpc=7.00 nn=4.63 sparse_ar=4.18 dB
+[308/673] EQATZi-529-407728-311379-230200-369034-330730-7188 (1272 pkts, 20.8% lost): SNR lpc=7.02 nn=5.69 sparse_ar=6.73 dB
+[309/673] UKUi4i-527-25062-38597-489070-418034-25721-276516 (661 pkts, 2.3% lost): SNR lpc=19.71 nn=20.09 sparse_ar=18.17 dB
+[310/673] MEMwFp-419-7708-247045-384031-53278-447487-160927 (1450 pkts, 7.7% lost): SNR lpc=14.37 nn=15.09 sparse_ar=11.32 dB
+[311/673] ucl6Lp-185-330008-390385-256377-377273-84055-117533 (1356 pkts, 2.7% lost): SNR lpc=20.96 nn=20.77 sparse_ar=18.19 dB
+[312/673] F3OtTf-451-163645-318907-7188-276335-348770-495997 (1439 pkts, 6.5% lost): SNR lpc=17.82 nn=17.09 sparse_ar=15.74 dB
+[313/673] QOUMgs-559-25579-468709-166792-350223-210172-287427 (1636 pkts, 4.5% lost): SNR lpc=21.06 nn=19.91 sparse_ar=14.48 dB
+[314/673] hw4DBs-557-487563-283456-21544-37928-36614-427818 (1636 pkts, 10.3% lost): SNR lpc=12.33 nn=12.12 sparse_ar=10.59 dB
+[315/673] YXMfAi-509-68344-5054-116061-253414-29563-228203 (826 pkts, 1.0% lost): SNR lpc=20.91 nn=19.93 sparse_ar=20.66 dB
+[316/673] mxLFAp-176-384274-430580-164849-38506-418480-207508 (1382 pkts, 12.3% lost): SNR lpc=10.41 nn=11.20 sparse_ar=8.68 dB
+[317/673] zABFis-540-109841-30386-165168-231167-128329-487747 (1636 pkts, 21.9% lost): SNR lpc=9.07 nn=9.11 sparse_ar=6.39 dB
+[318/673] SDnRIs-539-83988-35788-254913-124439-211084-210172 (1636 pkts, 8.8% lost): SNR lpc=14.05 nn=13.79 sparse_ar=11.36 dB
+[319/673] 1nz9Bs-543-414547-141142-180085-353502-116061-179418 (1636 pkts, 19.7% lost): SNR lpc=6.85 nn=6.90 sparse_ar=6.40 dB
+[320/673] LShW0p-228-498752-123704-10737-32125-418989-108029 (1487 pkts, 5.2% lost): SNR lpc=19.30 nn=18.34 sparse_ar=14.25 dB
+[321/673] NAvvha-048-421926-281965-476924-211212-474206-212526 (1033 pkts, 2.9% lost): SNR lpc=15.98 nn=17.22 sparse_ar=14.87 dB
+[322/673] s0YOap-096-180085-163335-112336-316480-38506-347380 (1036 pkts, 12.2% lost): SNR lpc=12.64 nn=10.95 sparse_ar=9.11 dB
+[323/673] TxGTrs-573-311327-435517-484336-448907-153980-126584 (1636 pkts, 8.1% lost): SNR lpc=11.52 nn=11.37 sparse_ar=10.41 dB
+[324/673] GCYZhs-542-211084-276335-138959-152419-167772-222370 (1636 pkts, 4.4% lost): SNR lpc=19.50 nn=19.49 sparse_ar=15.82 dB
+[325/673] 3VjpDs-541-125620-38597-152419-141428-129013-262731 (1636 pkts, 3.6% lost): SNR lpc=18.37 nn=17.12 sparse_ar=12.14 dB
+[326/673] cvWF1s-572-160943-153980-293070-409369-228203-3467 (1636 pkts, 9.4% lost): SNR lpc=14.40 nn=14.26 sparse_ar=10.54 dB
+[327/673] vr1omi-502-450427-343308-151723-405424-354893-401183 (898 pkts, 0.9% lost): SNR lpc=21.85 nn=20.54 sparse_ar=20.99 dB
+[328/673] Hb01ip-074-93808-175927-406364-193953-87506-270419 (1058 pkts, 15.1% lost): SNR lpc=14.63 nn=14.08 sparse_ar=8.48 dB
+[329/673] sJrQup-061-467144-163995-481410-176776-474206-13671 (1167 pkts, 28.4% lost): SNR lpc=9.70 nn=8.74 sparse_ar=7.73 dB
+[330/673] RoG1Ow-638-317191-13769-429309-339484-60681-495971 (663 pkts, 9.5% lost): SNR lpc=13.45 nn=12.71 sparse_ar=9.31 dB
+[331/673] QoJlbi-518-410906-350223-330008-131237-235375-78427 (1053 pkts, 12.3% lost): SNR lpc=9.71 nn=9.75 sparse_ar=7.82 dB
+[332/673] heXunp-102-409369-318907-183720-457067-160927-146145 (1010 pkts, 3.4% lost): SNR lpc=25.25 nn=23.40 sparse_ar=16.60 dB
+[333/673] kkpEFs-552-330730-167772-377273-226233-450427-287427 (1636 pkts, 5.4% lost): SNR lpc=14.14 nn=12.37 sparse_ar=12.66 dB
+[334/673] aUbS7w-631-239730-270487-123174-163645-426805-377039 (801 pkts, 60.8% lost): SNR lpc=3.51 nn=2.11 sparse_ar=2.18 dB
+[335/673] HY3lep-304-222370-16661-299966-362672-443578-325632 (1063 pkts, 2.1% lost): SNR lpc=21.01 nn=21.29 sparse_ar=16.45 dB
+[336/673] WCkNyp-182-10737-363774-229618-416349-35325-183689 (1488 pkts, 17.1% lost): SNR lpc=11.05 nn=10.99 sparse_ar=8.08 dB
+[337/673] jFPlSa-052-21632-458302-63022-302437-343332-483339 (1033 pkts, 10.0% lost): SNR lpc=13.07 nn=13.50 sparse_ar=10.97 dB
+[338/673] 7aGzgp-160-456735-63022-155820-9753-197606-44660 (1211 pkts, 1.7% lost): SNR lpc=20.50 nn=20.14 sparse_ar=17.40 dB
+[339/673] G6y0va-027-287427-53784-428876-355130-285778-383479 (1033 pkts, 11.4% lost): SNR lpc=12.45 nn=13.24 sparse_ar=10.12 dB
+[340/673] rr9d4s-562-355130-226233-2009-384274-265166-125620 (1636 pkts, 10.8% lost): SNR lpc=11.78 nn=11.66 sparse_ar=9.26 dB
+[341/673] RisIVp-332-287789-376902-398945-149498-181149-447487 (1531 pkts, 4.0% lost): SNR lpc=20.80 nn=21.20 sparse_ar=14.24 dB
+[342/673] I8tpop-336-422977-495997-16661-379373-305230-276335 (1360 pkts, 1.8% lost): SNR lpc=29.65 nn=29.76 sparse_ar=21.29 dB
+[343/673] 4a0FXs-568-481033-38597-363552-67455-283456-318838 (1636 pkts, 4.6% lost): SNR lpc=16.69 nn=16.32 sparse_ar=12.37 dB
+[344/673] JC7M9p-210-88721-56896-112031-94351-338584-341721 (1624 pkts, 1.5% lost): SNR lpc=22.18 nn=21.66 sparse_ar=16.31 dB
+[345/673] TAWiqi-508-192385-151331-443533-384274-202179-187519 (826 pkts, 5.2% lost): SNR lpc=14.72 nn=13.98 sparse_ar=13.72 dB
+[346/673] otIntp-106-89725-230200-420765-7188-161118-145165 (1206 pkts, 2.5% lost): SNR lpc=21.33 nn=21.53 sparse_ar=17.14 dB
+[347/673] f9DxWs-546-460359-386883-497426-32125-21632-468905 (1636 pkts, 3.4% lost): SNR lpc=20.59 nn=19.21 sparse_ar=16.09 dB
+[348/673] mzdRhe-582-390385-286869-32125-68221-3467-21544 (1428 pkts, 8.3% lost): SNR lpc=13.45 nn=13.52 sparse_ar=12.18 dB
+[349/673] 859Dyi-517-347380-165684-248646-353502-171454-136860 (870 pkts, 14.9% lost): SNR lpc=8.44 nn=5.07 sparse_ar=7.25 dB
+[350/673] 8Kl0Ua-014-38506-495997-179418-464643-476924-496080 (1033 pkts, 2.1% lost): SNR lpc=20.08 nn=20.06 sparse_ar=17.89 dB
+[351/673] NFfQSs-554-4800-165684-497426-465867-67455-89725 (1636 pkts, 9.6% lost): SNR lpc=12.18 nn=12.16 sparse_ar=10.58 dB
+[352/673] 1Pr9Ap-300-247045-379373-287943-304845-407728-125459 (1353 pkts, 10.9% lost): SNR lpc=15.46 nn=15.06 sparse_ar=11.09 dB
+[353/673] eWui6w-637-427818-94351-474864-189658-27851-498752 (791 pkts, 12.4% lost): SNR lpc=13.85 nn=13.07 sparse_ar=7.52 dB
+[354/673] n8rgyp-291-151331-9753-235864-265166-281965-286732 (1486 pkts, 15.3% lost): SNR lpc=15.14 nn=14.15 sparse_ar=9.41 dB
+[355/673] LdVHtp-130-340579-299966-320846-112031-462328-235229 (952 pkts, 3.6% lost): SNR lpc=21.70 nn=23.41 sparse_ar=18.56 dB
+[356/673] nBdmUs-544-10737-265166-56896-495997-90094-381489 (1636 pkts, 4.2% lost): SNR lpc=14.13 nn=13.76 sparse_ar=12.65 dB
+[357/673] d0vt5p-111-290731-37260-373629-358526-485468-56725 (1515 pkts, 24.7% lost): SNR lpc=12.08 nn=11.50 sparse_ar=8.80 dB
+[358/673] jxoD7f-488-24680-234502-261033-250174-334074-410307 (1722 pkts, 28.0% lost): SNR lpc=6.75 nn=7.27 sparse_ar=5.56 dB
+[359/673] 9NOhzp-114-332219-333766-443533-240298-63022-257745 (1623 pkts, 6.0% lost): SNR lpc=13.40 nn=13.26 sparse_ar=11.39 dB
+[360/673] HLK0hp-156-248785-27577-148409-242009-328121-63743 (1397 pkts, 5.8% lost): SNR lpc=16.09 nn=15.13 sparse_ar=12.02 dB
+[361/673] jHKbUi-512-287789-304845-381489-265166-247045-103913 (918 pkts, 5.7% lost): SNR lpc=13.47 nn=11.58 sparse_ar=12.70 dB
+[362/673] GeMV9s-532-264357-5054-227228-276335-299323-390385 (1240 pkts, 2.6% lost): SNR lpc=19.02 nn=19.01 sparse_ar=16.38 dB
+[363/673] nvZnRe-580-128202-32726-81956-320846-103768-268009 (1550 pkts, 24.9% lost): SNR lpc=8.95 nn=8.97 sparse_ar=6.70 dB
+[364/673] 3ZPZgp-131-363774-450251-402653-247588-209061-98443 (2244 pkts, 21.8% lost): SNR lpc=8.23 nn=8.92 sparse_ar=6.10 dB
+[365/673] xeJjQa-022-114001-12865-427818-306052-369609-458302 (1033 pkts, 8.4% lost): SNR lpc=13.04 nn=12.77 sparse_ar=11.39 dB
+[366/673] 50F8Sp-272-358526-124082-324591-100179-317191-498752 (974 pkts, 3.8% lost): SNR lpc=30.24 nn=30.76 sparse_ar=15.87 dB
+[367/673] WOY30p-226-35788-316694-25721-18423-121010-236920 (1573 pkts, 12.8% lost): SNR lpc=13.08 nn=13.00 sparse_ar=10.87 dB
+[368/673] ke5eef-442-465867-443578-224170-407790-211212-348770 (1722 pkts, 8.4% lost): SNR lpc=13.43 nn=11.88 sparse_ar=10.33 dB
+[369/673] tgXyts-571-442126-288253-252054-41411-17243-488804 (1636 pkts, 17.1% lost): SNR lpc=9.10 nn=9.03 sparse_ar=7.54 dB
+[370/673] x5ikNw-644-487747-418901-479691-60643-162269-231167 (724 pkts, 9.5% lost): SNR lpc=13.13 nn=12.97 sparse_ar=9.60 dB
+[371/673] 3Lgh0e-603-13769-230200-377273-333658-320846-264357 (1488 pkts, 0.9% lost): SNR lpc=20.11 nn=19.46 sparse_ar=19.59 dB
+[372/673] uVuZks-536-94351-151381-306759-78807-347380-152419 (1636 pkts, 9.6% lost): SNR lpc=12.76 nn=12.53 sparse_ar=10.21 dB
+[373/673] gAWFLp-139-162832-238364-47619-427818-235229-385900 (1508 pkts, 22.1% lost): SNR lpc=9.75 nn=10.50 sparse_ar=7.38 dB
+[374/673] oqikOp-248-287427-473483-348770-240504-212842-364985 (1197 pkts, 15.2% lost): SNR lpc=13.49 nn=11.79 sparse_ar=9.39 dB
+[375/673] HfsUbp-314-12865-185152-32125-334074-340579-450427 (1216 pkts, 4.5% lost): SNR lpc=17.91 nn=18.01 sparse_ar=14.20 dB
+[376/673] DwEmFe-588-287943-81956-108297-62534-329331-113105 (1550 pkts, 23.5% lost): SNR lpc=8.53 nn=8.51 sparse_ar=6.07 dB
+[377/673] XPMGqw-619-265166-497426-151381-144175-355104-306759 (745 pkts, 3.9% lost): SNR lpc=19.41 nn=18.83 sparse_ar=19.20 dB
+[378/673] p1F6Kw-625-82313-38506-253414-202921-347380-179855 (440 pkts, 2.7% lost): SNR lpc=17.10 nn=16.88 sparse_ar=15.75 dB
+[379/673] XO4GLw-664-164849-249772-96948-18423-480197-160943 (717 pkts, 4.2% lost): SNR lpc=33.28 nn=32.60 sparse_ar=20.76 dB
+[380/673] jZoSms-566-311379-418989-383770-369034-450557-253414 (1636 pkts, 5.6% lost): SNR lpc=13.30 nn=13.28 sparse_ar=11.01 dB
+[381/673] i6iO7e-602-380077-326180-160943-151331-280816-395699 (1550 pkts, 8.5% lost): SNR lpc=12.42 nn=12.05 sparse_ar=10.63 dB
+[382/673] BEGiYp-140-173176-461984-108056-14754-302437-57191 (1698 pkts, 4.2% lost): SNR lpc=23.87 nn=23.22 sparse_ar=13.31 dB
+[383/673] GddPfi-528-290731-123056-250174-209061-260428-47619 (1272 pkts, 29.6% lost): SNR lpc=6.85 nn=5.23 sparse_ar=6.13 dB
+[384/673] b4fGew-660-128329-333658-381489-153980-334074-195637 (1304 pkts, 1.2% lost): SNR lpc=21.48 nn=20.98 sparse_ar=18.81 dB
+[385/673] XP0FHp-153-345238-123375-476225-386883-280816-63022 (1199 pkts, 8.7% lost): SNR lpc=18.38 nn=17.66 sparse_ar=10.06 dB
+[386/673] 14De9e-595-339484-462718-270487-374393-112031-476924 (1550 pkts, 34.5% lost): SNR lpc=4.79 nn=4.87 sparse_ar=4.09 dB
+[387/673] SqGBNw-665-343502-31166-450427-108378-165684-386883 (1807 pkts, 10.6% lost): SNR lpc=11.54 nn=11.25 sparse_ar=9.49 dB
+[388/673] Ne4wep-194-235229-145555-326140-35325-343332-123174 (1463 pkts, 20.5% lost): SNR lpc=14.96 nn=15.53 sparse_ar=7.96 dB
+[389/673] o1cx8p-229-253414-174918-195637-299323-117533-469223 (1354 pkts, 8.3% lost): SNR lpc=16.94 nn=15.71 sparse_ar=11.01 dB
+[390/673] zPWd4w-632-180085-157595-408253-401183-78108-5054 (543 pkts, 8.3% lost): SNR lpc=12.06 nn=11.12 sparse_ar=10.26 dB
+[391/673] d0niFf-473-108378-331881-376372-458554-68681-101992 (1252 pkts, 15.7% lost): SNR lpc=7.96 nn=6.96 sparse_ar=7.98 dB
+[392/673] SndKCf-457-52991-476225-412326-462887-343332-280816 (1722 pkts, 12.5% lost): SNR lpc=10.93 nn=11.23 sparse_ar=8.43 dB
+[393/673] 4vKBlw-633-23535-338584-292564-355130-418034-348770 (617 pkts, 11.8% lost): SNR lpc=12.35 nn=12.29 sparse_ar=10.15 dB
+[394/673] OqG0hp-266-233998-163335-16661-155820-184495-398945 (989 pkts, 7.9% lost): SNR lpc=18.55 nn=18.75 sparse_ar=9.50 dB
+[395/673] VHXkrp-311-61770-205916-328121-294604-410906-231167 (1616 pkts, 7.1% lost): SNR lpc=16.93 nn=18.32 sparse_ar=12.15 dB
+[396/673] ab3Dks-565-73819-383770-193291-193953-155820-12865 (1636 pkts, 5.9% lost): SNR lpc=14.43 nn=14.67 sparse_ar=11.74 dB
+[397/673] 0nsV5e-598-426805-123056-90733-469223-306759-380077 (1550 pkts, 7.0% lost): SNR lpc=15.78 nn=14.70 sparse_ar=11.67 dB
+[398/673] QXKQef-466-270302-311495-421926-207508-211084-17243 (1366 pkts, 8.0% lost): SNR lpc=14.57 nn=13.49 sparse_ar=10.94 dB
+[399/673] WriYQw-669-300626-383479-259340-92870-271293-182650 (514 pkts, 1.0% lost): SNR lpc=18.39 nn=18.20 sparse_ar=17.85 dB
+[400/673] Z44upw-645-480197-2985-410948-188815-11995-37928 (1894 pkts, 6.9% lost): SNR lpc=13.08 nn=13.07 sparse_ar=13.20 dB
+[401/673] taScXp-247-300626-379538-211084-84004-270487-165168 (877 pkts, 2.7% lost): SNR lpc=16.35 nn=16.20 sparse_ar=15.13 dB
+[402/673] PdEzPw-624-386883-320846-467697-44660-224170-157595 (785 pkts, 2.4% lost): SNR lpc=17.11 nn=16.85 sparse_ar=14.78 dB
+[403/673] HBdLcw-635-247588-410906-235375-87506-275802-406364 (783 pkts, 9.6% lost): SNR lpc=16.15 nn=15.81 sparse_ar=11.12 dB
+[404/673] NJGNlp-240-474206-106-113105-405424-108056-177809 (1425 pkts, 11.2% lost): SNR lpc=14.19 nn=13.21 sparse_ar=10.46 dB
+[405/673] ersvnp-379-418034-98443-12865-365075-235375-175927 (1110 pkts, 8.6% lost): SNR lpc=12.99 nn=14.45 sparse_ar=9.92 dB
+[406/673] VdGYLw-643-170820-461984-332219-35325-117176-226233 (1894 pkts, 11.2% lost): SNR lpc=13.04 nn=12.62 sparse_ar=10.75 dB
+[407/673] uahaJp-201-202035-489070-392966-198509-226233-280816 (2167 pkts, 11.3% lost): SNR lpc=12.53 nn=12.31 sparse_ar=9.86 dB
+[408/673] n3IwDw-616-188815-418034-292323-286869-329159-458554 (695 pkts, 6.3% lost): SNR lpc=20.88 nn=20.86 sparse_ar=17.05 dB
+[409/673] lBtpFp-192-176776-217246-330008-88982-329159-304828 (1195 pkts, 23.8% lost): SNR lpc=6.81 nn=6.76 sparse_ar=5.45 dB
+[410/673] 3UtRUp-120-176776-25721-497087-458554-376902-185996 (1074 pkts, 12.5% lost): SNR lpc=13.86 nn=14.44 sparse_ar=10.38 dB
+[411/673] N0pqbp-084-442118-38506-2757-57874-205293-366509 (1210 pkts, 10.0% lost): SNR lpc=15.26 nn=15.92 sparse_ar=9.40 dB
+[412/673] Ek5Nnw-673-180085-177955-192385-274323-293070-309009 (708 pkts, 6.4% lost): SNR lpc=12.93 nn=12.83 sparse_ar=11.36 dB
+[413/673] YdzOzs-558-123174-141428-51581-344982-202179-456735 (1240 pkts, 4.8% lost): SNR lpc=14.27 nn=14.70 sparse_ar=12.88 dB
+[414/673] JpReqi-507-108130-271293-333766-226233-108056-270487 (1152 pkts, 16.9% lost): SNR lpc=10.27 nn=9.81 sparse_ar=9.15 dB
+[415/673] iOtjhp-138-162832-412326-163947-329331-339484-202035 (1669 pkts, 13.8% lost): SNR lpc=17.41 nn=17.97 sparse_ar=8.71 dB
+[416/673] izpizp-173-489070-247588-14787-299966-35325-63743 (1356 pkts, 11.1% lost): SNR lpc=20.65 nn=20.20 sparse_ar=9.06 dB
+[417/673] OTnncp-091-358526-156368-362760-129889-334242-185646 (1120 pkts, 10.7% lost): SNR lpc=12.15 nn=10.26 sparse_ar=8.80 dB
+[418/673] 84oMWa-038-644-292564-476225-420765-116061-188815 (1033 pkts, 6.5% lost): SNR lpc=14.28 nn=14.91 sparse_ar=12.51 dB
+[419/673] 1WqSNp-317-285778-51581-25721-156368-491168-123704 (1825 pkts, 16.0% lost): SNR lpc=15.77 nn=17.29 sparse_ar=8.06 dB
+[420/673] OLvdqw-653-99711-145384-172725-465867-410307-340579 (1078 pkts, 20.2% lost): SNR lpc=6.84 nn=6.29 sparse_ar=6.64 dB
+[421/673] TLDJjp-065-328121-355130-287427-496080-260428-219243 (1338 pkts, 7.8% lost): SNR lpc=15.80 nn=13.88 sparse_ar=9.21 dB
+[422/673] WJGpyp-178-30386-24296-173176-162269-78807-442126 (2407 pkts, 15.6% lost): SNR lpc=16.52 nn=16.29 sparse_ar=10.53 dB
+[423/673] iXMMfs-530-10737-2009-644-151723-55646-113619 (1636 pkts, 3.2% lost): SNR lpc=19.34 nn=18.84 sparse_ar=13.95 dB
+[424/673] v8JmYs-531-192385-380077-78575-348770-324456-334242 (1636 pkts, 5.6% lost): SNR lpc=13.53 nn=12.99 sparse_ar=11.13 dB
+[425/673] UttQBp-080-211084-116061-497448-420765-353502-300626 (1195 pkts, 8.3% lost): SNR lpc=17.88 nn=18.12 sparse_ar=10.51 dB
+[426/673] 1nZGVw-659-108297-153980-315211-93808-369034-129013 (792 pkts, 2.7% lost): SNR lpc=17.66 nn=17.83 sparse_ar=17.19 dB
+[427/673] Kfw1tp-143-353502-294604-463054-64116-265166-292323 (1613 pkts, 13.6% lost): SNR lpc=13.76 nn=12.41 sparse_ar=10.24 dB
+[428/673] 0XeqPp-350-89725-311379-207508-129636-384309-141428 (2450 pkts, 20.5% lost): SNR lpc=13.06 nn=13.31 sparse_ar=10.59 dB
+[429/673] 5L9lMp-369-22031-141428-462467-474864-249896-383479 (1637 pkts, 6.5% lost): SNR lpc=14.57 nn=15.44 sparse_ar=11.80 dB
+[430/673] IV1zbp-217-193953-62534-294604-141428-248696-124439 (1578 pkts, 6.0% lost): SNR lpc=14.62 nn=14.15 sparse_ar=12.30 dB
+[431/673] S4TOgp-066-94351-82313-345319-462328-218396-212526 (1729 pkts, 5.3% lost): SNR lpc=18.43 nn=18.59 sparse_ar=11.61 dB
+[432/673] x5fqhp-072-426805-135410-145165-83965-2009-9753 (1241 pkts, 6.2% lost): SNR lpc=13.53 nn=12.71 sparse_ar=9.67 dB
+[433/673] 3wnhCw-647-304828-91840-152880-233998-414547-212526 (820 pkts, 24.0% lost): SNR lpc=10.46 nn=9.41 sparse_ar=8.75 dB
+[434/673] XMqwEw-642-212842-69937-63022-78108-279778-236920 (703 pkts, 9.7% lost): SNR lpc=12.67 nn=12.21 sparse_ar=9.98 dB
+[435/673] b8iDLw-651-336507-3467-410906-38506-497087-197606 (1527 pkts, 35.9% lost): SNR lpc=3.32 nn=3.31 sparse_ar=3.03 dB
+[436/673] ef0c8s-547-406364-483339-386883-340579-487747-315211 (1636 pkts, 5.8% lost): SNR lpc=13.42 nn=12.50 sparse_ar=12.01 dB
+[437/673] jS4pCw-630-348077-4800-222370-17243-334074-279778 (931 pkts, 3.0% lost): SNR lpc=15.57 nn=15.10 sparse_ar=14.19 dB
+[438/673] zKqZhp-283-140209-427818-87506-341721-274542-145165 (1306 pkts, 13.6% lost): SNR lpc=11.51 nn=11.04 sparse_ar=8.19 dB
+[439/673] iMKBkp-216-151381-90733-326140-173176-211212-222370 (1684 pkts, 11.0% lost): SNR lpc=13.75 nn=12.79 sparse_ar=8.99 dB
+[440/673] 72Ek8w-655-448301-57191-329331-311495-27577-11995 (1894 pkts, 8.3% lost): SNR lpc=20.03 nn=19.27 sparse_ar=14.60 dB
+[441/673] Tc08xp-303-324310-146145-82313-161307-281798-211084 (1516 pkts, 5.4% lost): SNR lpc=20.54 nn=19.75 sparse_ar=16.36 dB
+[442/673] kgLnyp-202-27577-237079-99711-352809-384705-281965 (1437 pkts, 7.0% lost): SNR lpc=15.00 nn=14.65 sparse_ar=12.08 dB
+[443/673] LvgLbp-118-1246-240504-480197-284808-326180-644 (1230 pkts, 5.9% lost): SNR lpc=18.20 nn=18.31 sparse_ar=13.12 dB
+[444/673] Uxu8pw-646-81956-130799-211084-348733-386302-334074 (814 pkts, 29.4% lost): SNR lpc=10.63 nn=10.36 sparse_ar=9.41 dB
+[445/673] u6IcAw-668-197606-2757-324591-163645-12865-282504 (832 pkts, 2.6% lost): SNR lpc=26.07 nn=24.22 sparse_ar=20.47 dB
+[446/673] BkVhPw-654-62534-300626-163947-11836-101992-377273 (833 pkts, 5.2% lost): SNR lpc=16.96 nn=17.16 sparse_ar=13.30 dB
+[447/673] BK47gp-370-131237-443533-136860-338584-109841-18423 (1410 pkts, 7.9% lost): SNR lpc=23.79 nn=24.53 sparse_ar=13.55 dB
+[448/673] AzsHxs-549-171043-426805-166792-41798-376372-197606 (1636 pkts, 4.0% lost): SNR lpc=15.34 nn=15.99 sparse_ar=13.90 dB
+[449/673] R7IQcp-180-62919-418901-224176-173176-124082-29563 (1457 pkts, 5.4% lost): SNR lpc=16.42 nn=16.90 sparse_ar=13.84 dB
+[450/673] oXJT3p-255-443533-405424-249896-1214-447487-265166 (1186 pkts, 5.7% lost): SNR lpc=18.55 nn=18.87 sparse_ar=13.79 dB
+[451/673] 7ZDURp-172-90094-139119-479691-179462-109841-262731 (1209 pkts, 33.1% lost): SNR lpc=6.21 nn=5.68 sparse_ar=4.98 dB
+[452/673] mRkrcp-147-261033-426805-486330-177809-339484-379354 (1385 pkts, 18.5% lost): SNR lpc=14.98 nn=14.43 sparse_ar=7.67 dB
+[453/673] vqoUws-556-145384-194617-162269-121010-103130-108378 (1636 pkts, 19.2% lost): SNR lpc=7.71 nn=7.67 sparse_ar=6.83 dB
+[454/673] OCTZPw-672-448907-384274-80661-57191-430580-450427 (1894 pkts, 8.6% lost): SNR lpc=15.79 nn=15.09 sparse_ar=12.27 dB
+[455/673] TAI9Dw-636-25062-152419-260428-369609-482510-79211 (793 pkts, 2.3% lost): SNR lpc=18.89 nn=18.52 sparse_ar=17.02 dB
+[456/673] DfKQip-233-203381-53784-202179-402653-101992-211212 (1164 pkts, 3.5% lost): SNR lpc=19.10 nn=18.19 sparse_ar=16.54 dB
+[457/673] TcJKtw-620-81956-350336-261033-156368-94351-262731 (705 pkts, 30.5% lost): SNR lpc=5.45 nn=4.95 sparse_ar=4.21 dB
+[458/673] 3zvfDw-623-336612-61770-231167-202035-405424-91230 (1222 pkts, 6.7% lost): SNR lpc=17.20 nn=16.53 sparse_ar=16.24 dB
+[459/673] nxxZap-206-24538-437215-88756-63743-202179-409746 (1453 pkts, 13.3% lost): SNR lpc=13.62 nn=13.98 sparse_ar=11.17 dB
+[460/673] BnzMxp-244-21827-53784-376600-489807-10737-325632 (970 pkts, 26.4% lost): SNR lpc=9.51 nn=7.83 sparse_ar=7.38 dB
+[461/673] HO8Ryw-629-290731-442118-358526-386302-167772-369609 (690 pkts, 50.4% lost): SNR lpc=3.07 nn=2.24 sparse_ar=1.99 dB
+[462/673] gAU6rp-087-117533-366509-8651-185152-141428-16184 (1130 pkts, 4.3% lost): SNR lpc=17.07 nn=18.15 sparse_ar=13.06 dB
+[463/673] iHn9Bp-269-422977-81956-35325-198509-330008-270954 (1530 pkts, 19.5% lost): SNR lpc=9.92 nn=9.79 sparse_ar=6.96 dB
+[464/673] 3P9y4p-351-68304-103913-63169-166684-41411-99711 (1069 pkts, 31.9% lost): SNR lpc=8.47 nn=9.92 sparse_ar=4.96 dB
+[465/673] xJF7Bp-374-479691-216978-55646-124439-306759-329331 (2240 pkts, 10.4% lost): SNR lpc=20.47 nn=20.98 sparse_ar=11.23 dB
+[466/673] OgUSUp-264-57514-78575-154883-492922-421959-68221 (1459 pkts, 5.6% lost): SNR lpc=17.36 nn=17.25 sparse_ar=14.44 dB
+[467/673] 7CKsMp-308-435276-117176-38506-225967-68221-470600 (1847 pkts, 4.5% lost): SNR lpc=16.45 nn=16.31 sparse_ar=12.09 dB
+[468/673] OFUPPp-251-418901-191485-443533-287427-135873-273892 (1319 pkts, 3.1% lost): SNR lpc=17.64 nn=16.37 sparse_ar=13.86 dB
+[469/673] ndEpHp-204-146882-418034-151331-218990-256377-479691 (1215 pkts, 6.8% lost): SNR lpc=20.75 nn=20.21 sparse_ar=15.41 dB
+[470/673] VFLcEp-218-100179-274542-162832-329159-53278-309854 (1387 pkts, 9.4% lost): SNR lpc=11.22 nn=11.30 sparse_ar=8.64 dB
+[471/673] 3Tnndw-626-118312-493700-108029-108056-125620-451759 (1853 pkts, 14.8% lost): SNR lpc=10.99 nn=10.49 sparse_ar=9.49 dB
+[472/673] hwqqhp-076-108378-448907-29563-443578-93808-306759 (1913 pkts, 6.0% lost): SNR lpc=18.69 nn=18.62 sparse_ar=13.02 dB
+[473/673] GyVYNw-648-472051-268009-60681-7708-276335-302437 (1894 pkts, 5.8% lost): SNR lpc=18.56 nn=17.67 sparse_ar=14.78 dB
+[474/673] 07iwWp-196-31166-163930-163947-437215-68304-254913 (1201 pkts, 7.7% lost): SNR lpc=14.91 nn=13.94 sparse_ar=12.38 dB
+[475/673] m3yxKi-516-262731-494783-164849-152140-248646-306052 (870 pkts, 17.8% lost): SNR lpc=7.45 nn=5.12 sparse_ar=6.94 dB
+[476/673] MzvO2w-667-379354-230200-109021-81956-67455-487563 (691 pkts, 3.0% lost): SNR lpc=26.66 nn=27.32 sparse_ar=14.31 dB
+[477/673] Ha9dDp-167-324456-247045-62534-191485-283456-162269 (1224 pkts, 6.0% lost): SNR lpc=17.52 nn=17.12 sparse_ar=12.27 dB
+[478/673] vcNkTp-256-474206-104867-450427-366126-369034-228203 (1056 pkts, 5.9% lost): SNR lpc=21.97 nn=19.36 sparse_ar=17.65 dB
+[479/673] qzmBEp-179-47619-322947-325632-443533-264357-2757 (1424 pkts, 14.1% lost): SNR lpc=13.23 nn=13.00 sparse_ar=8.77 dB
+[480/673] NIqopw-658-295308-428876-112031-424453-365075-334074 (1112 pkts, 10.2% lost): SNR lpc=8.60 nn=8.05 sparse_ar=7.48 dB
+[481/673] u1I0nw-621-221798-61770-469001-295308-480197-55646 (1894 pkts, 3.1% lost): SNR lpc=20.28 nn=20.04 sparse_ar=14.69 dB
+[482/673] 6MTLHi-505-476225-456735-462467-192385-100179-336612 (826 pkts, 2.1% lost): SNR lpc=14.06 nn=12.62 sparse_ar=13.92 dB
+[483/673] r0t2Op-151-481033-82313-138959-231167-162832-348770 (1174 pkts, 7.3% lost): SNR lpc=17.81 nn=17.61 sparse_ar=12.52 dB
+[484/673] NHIWze-601-139119-315211-276516-54180-13671-362672 (1550 pkts, 12.8% lost): SNR lpc=12.05 nn=12.02 sparse_ar=9.17 dB
+[485/673] iJxfLa-012-311495-348770-60681-464643-156368-355130 (1033 pkts, 13.1% lost): SNR lpc=10.93 nn=11.13 sparse_ar=9.19 dB
+[486/673] EhfpWp-236-318838-104867-183720-176008-13140-248785 (1237 pkts, 8.1% lost): SNR lpc=7.33 nn=7.09 sparse_ar=6.05 dB
+[487/673] pQOa7p-421-324310-358526-134118-406364-339484-32125 (947 pkts, 4.5% lost): SNR lpc=22.35 nn=22.35 sparse_ar=13.89 dB
+[488/673] a8p99w-652-29563-74769-320846-317191-104867-464643 (1377 pkts, 7.9% lost): SNR lpc=16.01 nn=15.69 sparse_ar=13.00 dB
+[489/673] NQ9g0e-605-14754-83988-157595-123704-3467-88756 (1550 pkts, 4.1% lost): SNR lpc=13.70 nn=14.01 sparse_ar=12.72 dB
+[490/673] Y6EDCp-249-406364-131237-112031-108056-135873-53784 (995 pkts, 7.8% lost): SNR lpc=15.01 nn=14.94 sparse_ar=12.88 dB
+[491/673] 8X17yp-163-193953-315525-456735-188815-334833-78427 (983 pkts, 4.3% lost): SNR lpc=24.56 nn=24.69 sparse_ar=14.44 dB
+[492/673] O1gy1w-641-407790-365346-442118-407950-333757-108297 (887 pkts, 1.8% lost): SNR lpc=21.33 nn=21.30 sparse_ar=16.09 dB
+[493/673] glITCp-214-217246-91230-310105-155508-125189-182650 (613 pkts, 46.2% lost): SNR lpc=4.29 nn=4.44 sparse_ar=3.80 dB
+[494/673] 5IvMwp-082-161118-343502-408253-29563-348770-369034 (740 pkts, 12.6% lost): SNR lpc=11.69 nn=11.59 sparse_ar=9.84 dB
+[495/673] P8SL2p-301-5054-343332-454712-481033-334833-229618 (1305 pkts, 9.5% lost): SNR lpc=14.89 nn=15.61 sparse_ar=10.26 dB
+[496/673] k9AOap-238-410906-61457-99711-53784-38506-25579 (1715 pkts, 11.0% lost): SNR lpc=11.85 nn=11.27 sparse_ar=9.04 dB
+[497/673] lYfy3p-241-369034-51581-363774-418901-377902-443533 (1174 pkts, 10.9% lost): SNR lpc=13.87 nn=12.93 sparse_ar=11.09 dB
+[498/673] TAFpkp-104-140209-9753-27791-146145-170820-406364 (1545 pkts, 3.2% lost): SNR lpc=25.24 nn=24.91 sparse_ar=17.52 dB
+[499/673] jCfx8p-279-192385-380077-315525-218396-253414-125459 (1336 pkts, 4.0% lost): SNR lpc=21.95 nn=22.94 sparse_ar=15.31 dB
+[500/673] M9aH0p-354-189658-261033-117533-498788-355130-305230 (1608 pkts, 4.5% lost): SNR lpc=16.68 nn=17.76 sparse_ar=14.12 dB
+[501/673] 1CwoEw-622-365075-129107-113105-247045-252054-274542 (1228 pkts, 28.3% lost): SNR lpc=4.21 nn=2.74 sparse_ar=3.36 dB
+[502/673] 3r6qcp-148-435276-96948-406364-276335-326140-80351 (1607 pkts, 8.8% lost): SNR lpc=21.56 nn=21.93 sparse_ar=12.60 dB
+[503/673] NThSYp-375-123375-116061-167772-369034-160943-10737 (1784 pkts, 7.2% lost): SNR lpc=20.42 nn=21.72 sparse_ar=11.66 dB
+[504/673] zN1tup-344-377273-129013-319764-448301-350336-409369 (1653 pkts, 1.5% lost): SNR lpc=22.97 nn=23.01 sparse_ar=22.13 dB
+[505/673] DgBXCp-378-305230-392966-68344-497087-252054-52991 (1569 pkts, 6.3% lost): SNR lpc=15.31 nn=14.77 sparse_ar=12.56 dB
+[506/673] 9ictgp-150-226233-80351-495971-418989-160927-123704 (1366 pkts, 8.9% lost): SNR lpc=14.82 nn=14.88 sparse_ar=10.50 dB
+[507/673] Hw4QOp-126-99711-218396-149498-447487-313569-354893 (1372 pkts, 6.0% lost): SNR lpc=17.84 nn=17.96 sparse_ar=14.06 dB
+[508/673] mL4OPp-136-13671-418034-3467-310105-469223-325632 (1297 pkts, 9.3% lost): SNR lpc=18.12 nn=18.83 sparse_ar=9.98 dB
+[509/673] MYRmYp-316-495997-227228-472051-54180-59109-322947 (1735 pkts, 3.3% lost): SNR lpc=33.53 nn=35.22 sparse_ar=19.13 dB
+[510/673] 6jWCtp-330-480197-421728-448301-24680-284808-61483 (2515 pkts, 3.9% lost): SNR lpc=25.22 nn=24.31 sparse_ar=13.68 dB
+[511/673] 4bMxUp-367-418989-16258-286869-391852-305230-481033 (1331 pkts, 11.9% lost): SNR lpc=13.62 nn=15.81 sparse_ar=9.51 dB
+[512/673] rAoHdp-213-327883-450557-73819-377039-461984-341721 (1589 pkts, 5.2% lost): SNR lpc=20.36 nn=18.99 sparse_ar=14.54 dB
+[513/673] TUBLWp-322-333658-274323-126584-21827-14787-644 (2267 pkts, 15.6% lost): SNR lpc=11.46 nn=11.38 sparse_ar=6.13 dB
+[514/673] Jxvfop-381-423587-209608-363774-173176-341721-348770 (1335 pkts, 18.4% lost): SNR lpc=14.47 nn=14.87 sparse_ar=11.61 dB
+[515/673] Pi2ijp-083-279778-348077-448869-395699-442126-312468 (1235 pkts, 5.4% lost): SNR lpc=18.29 nn=18.11 sparse_ar=13.33 dB
+[516/673] Y1hOPp-117-264357-287427-11995-32125-235375-317191 (1270 pkts, 8.3% lost): SNR lpc=19.96 nn=19.68 sparse_ar=13.40 dB
+[517/673] dBc5Tp-137-428876-141428-68221-416172-56896-111916 (864 pkts, 14.0% lost): SNR lpc=9.76 nn=10.20 sparse_ar=8.53 dB
+[518/673] 6CA0nw-615-350223-221798-481033-414547-68221-38506 (1219 pkts, 10.1% lost): SNR lpc=16.52 nn=15.95 sparse_ar=13.65 dB
+[519/673] sqBm3p-418-349816-336612-418034-222370-381489-55646 (1176 pkts, 26.5% lost): SNR lpc=9.40 nn=7.82 sparse_ar=5.20 dB
+[520/673] h42oep-169-25579-361413-374393-422977-328121-397909 (1746 pkts, 20.4% lost): SNR lpc=14.26 nn=14.68 sparse_ar=7.59 dB
+[521/673] 64E2hw-663-191485-134118-305230-333757-135873-99711 (1894 pkts, 2.2% lost): SNR lpc=19.61 nn=19.81 sparse_ar=18.45 dB
+[522/673] IRVsNp-323-162832-151331-367124-154883-376902-302437 (2394 pkts, 19.8% lost): SNR lpc=9.32 nn=8.53 sparse_ar=7.02 dB
+[523/673] FWRrxp-318-333766-299323-300626-195637-143976-108130 (1204 pkts, 6.6% lost): SNR lpc=22.25 nn=22.46 sparse_ar=14.84 dB
+[524/673] sDhXsp-252-497426-220507-54180-78108-129889-469223 (1731 pkts, 5.0% lost): SNR lpc=19.92 nn=19.45 sparse_ar=13.40 dB
+[525/673] ODyd6w-662-397909-224176-443533-163335-334833-225888 (1894 pkts, 13.3% lost): SNR lpc=14.62 nn=14.06 sparse_ar=8.92 dB
+[526/673] U8nSFp-259-300626-414547-165684-406364-152880-61770 (958 pkts, 0.6% lost): SNR lpc=36.92 nn=38.48 sparse_ar=24.67 dB
+[527/673] OkWbNp-337-474206-161118-274170-164849-299323-182650 (1835 pkts, 5.8% lost): SNR lpc=24.25 nn=25.82 sparse_ar=12.20 dB
+[528/673] u2RRmp-345-347380-2757-409369-32726-255765-448907 (1540 pkts, 7.2% lost): SNR lpc=18.51 nn=18.55 sparse_ar=14.92 dB
+[529/673] Uspe2p-260-202921-329159-166792-105394-380077-129107 (881 pkts, 3.2% lost): SNR lpc=18.24 nn=20.35 sparse_ar=16.11 dB
+[530/673] A90Nbi-498-128329-318907-306759-249896-384274-287789 (1053 pkts, 3.0% lost): SNR lpc=15.67 nn=14.48 sparse_ar=15.16 dB
+[531/673] yt319p-222-121010-203381-222370-92870-487747-192385 (1332 pkts, 5.7% lost): SNR lpc=22.72 nn=22.95 sparse_ar=16.15 dB
+[532/673] Lxlx2p-158-124082-111916-402653-57205-377273-314891 (994 pkts, 4.0% lost): SNR lpc=16.89 nn=16.32 sparse_ar=13.67 dB
+[533/673] HJiyPp-090-129013-143740-91840-239730-468709-175927 (1209 pkts, 19.4% lost): SNR lpc=7.19 nn=6.89 sparse_ar=6.41 dB
+[534/673] frUdgp-402-205293-129636-31166-497087-181149-230200 (1347 pkts, 3.9% lost): SNR lpc=24.14 nn=24.17 sparse_ar=16.97 dB
+[535/673] 1UaHCp-394-87506-140741-186260-68344-3434-1214 (694 pkts, 15.4% lost): SNR lpc=17.23 nn=17.99 sparse_ar=10.11 dB
+[536/673] Z7k8zw-649-498788-111916-316080-249772-151381-108297 (1023 pkts, 6.0% lost): SNR lpc=19.93 nn=19.67 sparse_ar=15.82 dB
+[537/673] quFXWp-306-339484-27851-237079-87508-170787-111916 (1880 pkts, 7.9% lost): SNR lpc=16.04 nn=15.91 sparse_ar=12.06 dB
+[538/673] uzAAap-388-221798-87508-219243-327883-384274-317191 (1016 pkts, 1.9% lost): SNR lpc=28.96 nn=28.62 sparse_ar=20.44 dB
+[539/673] 2IVhzp-424-89725-326140-329331-422977-451954-265166 (1215 pkts, 10.7% lost): SNR lpc=21.45 nn=21.38 sparse_ar=10.19 dB
+[540/673] sXVeEe-604-384031-88982-92870-353502-276335-27577 (1550 pkts, 19.9% lost): SNR lpc=8.38 nn=8.42 sparse_ar=7.15 dB
+[541/673] XFnjaf-460-166684-17243-352809-408253-339484-448907 (1722 pkts, 3.9% lost): SNR lpc=15.54 nn=15.93 sparse_ar=16.20 dB
+[542/673] 5Cl9Bp-203-104264-428876-462467-376902-54180-392966 (2299 pkts, 10.7% lost): SNR lpc=14.30 nn=14.04 sparse_ar=10.25 dB
+[543/673] 72MTdp-348-134118-349816-84055-332402-248646-212842 (1694 pkts, 17.7% lost): SNR lpc=17.05 nn=16.29 sparse_ar=12.80 dB
+[544/673] 62hJkp-389-430580-141142-278609-57874-333757-51581 (1030 pkts, 22.6% lost): SNR lpc=9.95 nn=8.04 sparse_ar=6.09 dB
+[545/673] zjqXgp-342-198509-248785-314891-412326-63743-207508 (1668 pkts, 4.4% lost): SNR lpc=21.15 nn=21.66 sparse_ar=15.47 dB
+[546/673] WNENvp-355-377039-454791-103130-405639-89725-140209 (2165 pkts, 9.2% lost): SNR lpc=17.86 nn=18.25 sparse_ar=15.28 dB
+[547/673] NWc2Op-294-343332-259340-186349-69937-416172-88756 (1838 pkts, 13.8% lost): SNR lpc=20.78 nn=22.17 sparse_ar=9.54 dB
+[548/673] LoRfXe-606-479691-249772-29563-355104-300626-10737 (1550 pkts, 8.9% lost): SNR lpc=14.65 nn=15.14 sparse_ar=10.65 dB
+[549/673] MRO9vp-190-326140-285778-350223-189658-155820-408253 (1704 pkts, 13.3% lost): SNR lpc=11.22 nn=10.95 sparse_ar=8.89 dB
+[550/673] CHFx5p-386-442126-14754-397909-406364-493700-35788 (1202 pkts, 5.2% lost): SNR lpc=27.75 nn=28.78 sparse_ar=14.95 dB
+[551/673] mXhZqp-271-113105-390385-188815-211084-21544-51581 (1695 pkts, 5.9% lost): SNR lpc=16.93 nn=15.46 sparse_ar=13.18 dB
+[552/673] bWIV0p-064-129636-442118-350336-304828-274542-94351 (1246 pkts, 10.0% lost): SNR lpc=13.07 nn=12.91 sparse_ar=10.42 dB
+[553/673] LeZKWe-584-173176-217246-498752-195572-193953-434157 (1550 pkts, 19.1% lost): SNR lpc=8.93 nn=8.55 sparse_ar=7.64 dB
+[554/673] DKgh8p-309-80351-385900-268009-300626-5054-362760 (1039 pkts, 3.0% lost): SNR lpc=19.90 nn=20.46 sparse_ar=14.36 dB
+[555/673] gyOatf-470-113619-481033-90324-275802-336612-315211 (1272 pkts, 24.4% lost): SNR lpc=10.04 nn=8.84 sparse_ar=9.51 dB
+[556/673] AhpCcw-628-189293-369609-14787-383770-418901-78427 (1894 pkts, 23.4% lost): SNR lpc=10.73 nn=8.30 sparse_ar=6.95 dB
+[557/673] gq1HNp-242-134118-457067-101992-1246-146882-175927 (976 pkts, 2.2% lost): SNR lpc=24.38 nn=22.53 sparse_ar=20.41 dB
+[558/673] M9Qtws-569-334242-93885-12865-644-336612-348077 (1636 pkts, 12.1% lost): SNR lpc=12.81 nn=11.84 sparse_ar=9.35 dB
+[559/673] raZFfp-382-48746-489070-163947-25062-175927-497426 (2012 pkts, 6.6% lost): SNR lpc=17.84 nn=17.80 sparse_ar=15.54 dB
+[560/673] oKb3Kp-299-247045-274542-475285-264795-479691-80351 (2250 pkts, 4.1% lost): SNR lpc=26.31 nn=27.87 sparse_ar=14.74 dB
+[561/673] 5N1aBp-412-465867-271293-160927-299966-192385-222370 (526 pkts, 13.7% lost): SNR lpc=16.91 nn=16.91 sparse_ar=8.92 dB
+[562/673] pCCsJp-144-480197-2985-184495-278609-316694-481033 (1473 pkts, 2.4% lost): SNR lpc=26.09 nn=25.86 sparse_ar=19.16 dB
+[563/673] PB2jSw-661-423587-29563-326140-78807-311327-343308 (1088 pkts, 10.1% lost): SNR lpc=16.87 nn=14.98 sparse_ar=11.49 dB
+[564/673] 6KOYdf-456-175927-497448-109841-644-226233-57191 (1722 pkts, 15.3% lost): SNR lpc=10.11 nn=8.92 sparse_ar=7.26 dB
+[565/673] ujq9lp-250-47619-343332-472051-130799-363552-235375 (1304 pkts, 11.3% lost): SNR lpc=12.16 nn=11.76 sparse_ar=9.66 dB
+[566/673] L4gSnp-328-54180-345238-372299-207508-52991-451954 (1829 pkts, 16.6% lost): SNR lpc=12.66 nn=12.64 sparse_ar=9.09 dB
+[567/673] ORa3mp-290-398945-87506-304845-418989-60170-358526 (2465 pkts, 9.0% lost): SNR lpc=23.99 nn=26.71 sparse_ar=11.66 dB
+[568/673] q7mAIp-174-235550-249772-240298-456735-192385-163335 (1274 pkts, 11.3% lost): SNR lpc=15.51 nn=15.32 sparse_ar=10.30 dB
+[569/673] DoZwRp-159-68344-469223-369609-111916-38506-166684 (1867 pkts, 20.5% lost): SNR lpc=13.92 nn=13.43 sparse_ar=4.82 dB
+[570/673] ppmkqf-486-487563-9753-487747-90733-82313-113619 (1378 pkts, 12.7% lost): SNR lpc=11.60 nn=11.71 sparse_ar=8.83 dB
+[571/673] ZPntAp-149-138959-125189-43889-233998-304845-140741 (865 pkts, 6.6% lost): SNR lpc=18.93 nn=19.51 sparse_ar=13.13 dB
+[572/673] NbHgwp-356-480197-67455-392966-316694-418034-463054 (1273 pkts, 4.9% lost): SNR lpc=16.84 nn=17.13 sparse_ar=13.33 dB
+[573/673] Iqv55p-170-195572-300626-193291-379373-2757-418745 (1153 pkts, 1.0% lost): SNR lpc=33.31 nn=33.11 sparse_ar=29.19 dB
+[574/673] JQLHtp-406-384309-365346-302437-111520-87506-53784 (1251 pkts, 34.5% lost): SNR lpc=4.56 nn=4.24 sparse_ar=4.45 dB
+[575/673] Nkorrp-365-290731-333658-357104-82951-481410-412326 (1201 pkts, 28.6% lost): SNR lpc=10.15 nn=10.27 sparse_ar=4.06 dB
+[576/673] ZMVuxp-209-401183-454712-324456-498752-414547-38459 (1237 pkts, 2.8% lost): SNR lpc=19.98 nn=20.06 sparse_ar=14.55 dB
+[577/673] b6inup-293-219243-165168-79211-60643-211212-189293 (1763 pkts, 16.5% lost): SNR lpc=20.71 nn=23.68 sparse_ar=8.10 dB
+[578/673] P6v6Jp-127-421926-24296-332219-139119-480197-197606 (927 pkts, 4.3% lost): SNR lpc=19.80 nn=19.72 sparse_ar=19.35 dB
+[579/673] FLbNrp-422-188815-124082-435517-464643-160943-112031 (538 pkts, 2.6% lost): SNR lpc=27.18 nn=33.59 sparse_ar=20.07 dB
+[580/673] CHOoRp-358-381489-157595-299323-336612-108056-338584 (2090 pkts, 5.1% lost): SNR lpc=20.41 nn=20.93 sparse_ar=15.15 dB
+[581/673] dfhhop-364-103913-224170-469450-407950-384031-160943 (1362 pkts, 10.1% lost): SNR lpc=18.50 nn=18.01 sparse_ar=14.03 dB
+[582/673] cFtLep-353-448907-333766-179418-329159-47619-644 (2271 pkts, 2.9% lost): SNR lpc=27.44 nn=28.56 sparse_ar=19.06 dB
+[583/673] xqlKDp-390-271293-1214-463054-275802-126584-386883 (1021 pkts, 12.6% lost): SNR lpc=15.70 nn=15.53 sparse_ar=10.97 dB
+[584/673] kpExkp-270-2985-487747-298969-57205-80661-153980 (1685 pkts, 14.1% lost): SNR lpc=8.20 nn=7.38 sparse_ar=6.71 dB
+[585/673] d5tibp-094-108029-334074-197606-31166-247045-343332 (1120 pkts, 6.2% lost): SNR lpc=22.38 nn=20.60 sparse_ar=16.20 dB
+[586/673] jimdaw-639-287943-333766-350336-152419-73819-93885 (1643 pkts, 11.2% lost): SNR lpc=17.52 nn=17.53 sparse_ar=16.10 dB
+[587/673] DOAvTp-387-287789-288077-149498-329159-286732-130799 (1165 pkts, 17.0% lost): SNR lpc=7.19 nn=6.89 sparse_ar=6.67 dB
+[588/673] QQHrNp-333-88756-21544-372299-81956-306995-343502 (1640 pkts, 21.5% lost): SNR lpc=13.15 nn=13.51 sparse_ar=5.75 dB
+[589/673] coB4zp-400-199372-406168-399756-384031-161307-41411 (913 pkts, 4.2% lost): SNR lpc=22.62 nn=23.28 sparse_ar=16.85 dB
+[590/673] X7R5qp-221-21544-166792-401183-151381-198509-1214 (1227 pkts, 2.5% lost): SNR lpc=20.64 nn=22.48 sparse_ar=14.81 dB
+[591/673] HkExBp-154-435517-219243-458554-396384-311495-12865 (982 pkts, 12.9% lost): SNR lpc=16.74 nn=17.20 sparse_ar=10.25 dB
+[592/673] JINejp-219-177809-407728-460359-448301-56896-60643 (1454 pkts, 19.6% lost): SNR lpc=11.26 nn=12.93 sparse_ar=8.66 dB
+[593/673] QF4EEp-085-129636-96948-62919-238364-273892-488804 (1648 pkts, 9.6% lost): SNR lpc=12.55 nn=12.33 sparse_ar=9.87 dB
+[594/673] 07vi6p-208-131237-8651-103130-242009-94351-426805 (1413 pkts, 9.3% lost): SNR lpc=13.21 nn=13.17 sparse_ar=11.90 dB
+[595/673] zFHMjp-235-248785-412326-125459-465867-407790-450427 (1687 pkts, 6.5% lost): SNR lpc=21.04 nn=21.44 sparse_ar=15.30 dB
+[596/673] PAMnJp-198-88756-381489-255765-138959-300626-422977 (1457 pkts, 3.0% lost): SNR lpc=21.62 nn=21.40 sparse_ar=18.04 dB
+[597/673] YCAQqp-397-261033-289594-456735-53784-497426-2757 (903 pkts, 5.9% lost): SNR lpc=23.32 nn=23.31 sparse_ar=22.27 dB
+[598/673] ynP2Cf-462-374393-474929-144175-191485-88721-173207 (1306 pkts, 29.0% lost): SNR lpc=5.88 nn=4.73 sparse_ar=5.52 dB
+[599/673] TKDcop-265-492922-271293-145165-436373-129636-99711 (884 pkts, 17.0% lost): SNR lpc=19.30 nn=19.70 sparse_ar=9.14 dB
+[600/673] tWnO0p-399-228203-414547-197606-458302-298969-443533 (1088 pkts, 1.7% lost): SNR lpc=25.38 nn=25.14 sparse_ar=22.37 dB
+[601/673] 3sMrHp-188-362672-418034-143740-390793-108056-353502 (1945 pkts, 29.7% lost): SNR lpc=6.15 nn=6.30 sparse_ar=4.52 dB
+[602/673] B3jtyf-469-418480-463054-339484-253414-2009-230200 (1377 pkts, 5.4% lost): SNR lpc=13.89 nn=13.37 sparse_ar=12.50 dB
+[603/673] kCivvp-280-369034-334074-163335-109841-129636-458554 (1226 pkts, 7.3% lost): SNR lpc=18.15 nn=18.11 sparse_ar=12.97 dB
+[604/673] SMTs2p-377-124439-103913-242009-348077-41798-131237 (1401 pkts, 9.4% lost): SNR lpc=19.69 nn=19.43 sparse_ar=20.06 dB
+[605/673] AUTt3p-230-644-63022-271293-326180-123704-12865 (1189 pkts, 1.5% lost): SNR lpc=26.88 nn=26.28 sparse_ar=15.55 dB
+[606/673] qKH6pp-177-183720-259340-38597-471623-343308-156368 (1008 pkts, 5.7% lost): SNR lpc=23.50 nn=24.75 sparse_ar=13.98 dB
+[607/673] htltXp-220-202921-231167-202035-376902-467697-430580 (996 pkts, 15.5% lost): SNR lpc=9.69 nn=10.73 sparse_ar=8.91 dB
+[608/673] eaofDp-227-482510-334833-310105-437215-332219-13769 (1003 pkts, 7.1% lost): SNR lpc=17.50 nn=17.24 sparse_ar=13.18 dB
+[609/673] tSG5mp-186-98443-414547-103913-224170-23535-179462 (1076 pkts, 4.6% lost): SNR lpc=13.64 nn=13.34 sparse_ar=13.61 dB
+[610/673] hE6bQf-481-236920-3467-295308-129890-326180-374393 (1333 pkts, 4.5% lost): SNR lpc=14.55 nn=12.06 sparse_ar=13.52 dB
+[611/673] hOm8Wp-110-98443-112031-366126-18423-227228-60643 (1171 pkts, 8.7% lost): SNR lpc=22.14 nn=21.94 sparse_ar=19.24 dB
+[612/673] RFaUNp-077-253414-4800-395699-9753-221798-198509 (1165 pkts, 1.3% lost): SNR lpc=25.58 nn=26.01 sparse_ar=19.37 dB
+[613/673] 4WQ0sp-121-239730-152880-243067-173176-260428-468709 (927 pkts, 48.9% lost): SNR lpc=7.46 nn=6.39 sparse_ar=3.23 dB
+[614/673] zObnap-391-386883-146882-399756-408253-421728-235375 (1545 pkts, 1.6% lost): SNR lpc=23.07 nn=23.10 sparse_ar=19.56 dB
+[615/673] Lti7Bp-191-311379-13769-384031-126584-88756-24999 (1245 pkts, 6.7% lost): SNR lpc=17.60 nn=17.65 sparse_ar=10.42 dB
+[616/673] UMu3lp-262-172725-451954-220507-38459-380077-372299 (1350 pkts, 17.3% lost): SNR lpc=13.35 nn=13.56 sparse_ar=8.88 dB
+[617/673] 5cZ6Xp-296-177809-24999-92870-495997-287427-475285 (1741 pkts, 3.0% lost): SNR lpc=22.81 nn=22.24 sparse_ar=18.60 dB
+[618/673] OlQi7p-109-362672-333766-104867-462467-255765-87508 (803 pkts, 4.0% lost): SNR lpc=18.60 nn=18.92 sparse_ar=14.92 dB
+[619/673] ZRRvDp-193-234706-476924-276335-475285-125459-343502 (1084 pkts, 1.9% lost): SNR lpc=17.69 nn=17.79 sparse_ar=16.34 dB
+[620/673] yezdsp-239-216978-450557-161118-294604-469001-467697 (883 pkts, 14.0% lost): SNR lpc=20.20 nn=20.42 sparse_ar=11.85 dB
+[621/673] Iq0QTp-398-256377-324456-87506-276516-340579-129013 (1048 pkts, 7.3% lost): SNR lpc=19.03 nn=18.99 sparse_ar=14.54 dB
+[622/673] Lx6Iup-417-265166-481410-450251-166684-124082-423587 (1820 pkts, 11.8% lost): SNR lpc=14.48 nn=15.03 sparse_ar=9.71 dB
+[623/673] EEcYwp-171-421728-80661-68344-139119-285778-317415 (1447 pkts, 5.3% lost): SNR lpc=15.03 nn=14.69 sparse_ar=13.24 dB
+[624/673] MB0hPp-411-268009-73819-338584-495971-256377-164849 (965 pkts, 10.5% lost): SNR lpc=12.75 nn=12.77 sparse_ar=10.32 dB
+[625/673] mOdPzp-059-167772-12865-253414-239730-162832-271293 (1364 pkts, 3.0% lost): SNR lpc=23.50 nn=23.35 sparse_ar=17.86 dB
+[626/673] L6e8op-197-175927-495971-443533-298969-139119-108378 (997 pkts, 15.9% lost): SNR lpc=15.80 nn=16.77 sparse_ar=9.54 dB
+[627/673] lN0S1p-285-304845-318907-27851-339484-88721-229618 (1736 pkts, 7.7% lost): SNR lpc=15.07 nn=15.29 sparse_ar=12.43 dB
+[628/673] 8ahrxp-341-465867-242009-149498-353502-352809-262731 (1264 pkts, 7.5% lost): SNR lpc=18.38 nn=18.30 sparse_ar=14.63 dB
+[629/673] xPVcyp-284-96948-469450-380077-160927-235229-457067 (2359 pkts, 9.9% lost): SNR lpc=22.38 nn=23.83 sparse_ar=10.87 dB
+[630/673] ISD6tp-075-13671-180141-67099-44660-181149-186349 (796 pkts, 3.8% lost): SNR lpc=15.24 nn=14.39 sparse_ar=12.49 dB
+[631/673] QaZdEp-231-495971-41798-37928-91840-450251-484336 (981 pkts, 6.5% lost): SNR lpc=19.06 nn=18.93 sparse_ar=12.15 dB
+[632/673] uyTh2p-368-80661-25062-54180-141428-496080-468709 (2033 pkts, 2.1% lost): SNR lpc=20.76 nn=21.40 sparse_ar=16.34 dB
+[633/673] DL6Bup-307-380077-117533-332219-422977-314891-2985 (1381 pkts, 3.5% lost): SNR lpc=21.75 nn=21.93 sparse_ar=15.72 dB
+[634/673] CY6pQp-146-401183-82313-497426-49022-250174-350336 (1194 pkts, 2.1% lost): SNR lpc=35.82 nn=37.16 sparse_ar=23.22 dB
+[635/673] f42Xsp-069-316694-332219-333658-343332-470600-399756 (1169 pkts, 1.8% lost): SNR lpc=28.03 nn=29.12 sparse_ar=19.03 dB
+[636/673] 3Ciskp-405-316080-63022-162269-209608-188815-271293 (1070 pkts, 14.8% lost): SNR lpc=13.16 nn=13.23 sparse_ar=9.01 dB
+[637/673] AiCt9p-420-379373-462328-498788-125189-447487-430580 (918 pkts, 11.3% lost): SNR lpc=13.44 nn=14.57 sparse_ar=9.13 dB
+[638/673] HKyrfp-360-1214-25721-62534-242009-22031-463054 (1688 pkts, 16.7% lost): SNR lpc=16.77 nn=16.68 sparse_ar=11.95 dB
+[639/673] Rs8AJp-157-320846-361413-310105-240298-350336-202179 (1159 pkts, 23.6% lost): SNR lpc=8.39 nn=8.00 sparse_ar=7.02 dB
+[640/673] WQJjRp-101-421926-379354-483339-458554-436373-62919 (1054 pkts, 5.2% lost): SNR lpc=29.02 nn=28.64 sparse_ar=15.46 dB
+[641/673] rdRMHp-142-341749-109021-333658-222370-336612-253414 (1414 pkts, 11.7% lost): SNR lpc=13.77 nn=13.76 sparse_ar=10.41 dB
+[642/673] GhdhMp-200-419538-87506-153980-255428-117533-1214 (1438 pkts, 23.2% lost): SNR lpc=15.20 nn=15.13 sparse_ar=12.12 dB
+[643/673] tsk9xp-141-285778-41411-343502-113105-373348-143976 (1117 pkts, 14.9% lost): SNR lpc=14.55 nn=15.08 sparse_ar=7.40 dB
+[644/673] nQbtrp-273-152880-324310-13671-146145-78427-62919 (870 pkts, 26.8% lost): SNR lpc=7.09 nn=6.85 sparse_ar=6.76 dB
+[645/673] dzTuNp-162-172725-495971-108130-408253-340579-228203 (596 pkts, 29.4% lost): SNR lpc=6.31 nn=6.23 sparse_ar=5.27 dB
+[646/673] lmpNYp-086-377273-421959-218396-5054-316694-161307 (1972 pkts, 4.5% lost): SNR lpc=16.37 nn=16.17 sparse_ar=13.45 dB
+[647/673] cuQJcp-385-317191-145165-202921-193291-24999-474206 (1382 pkts, 10.1% lost): SNR lpc=19.22 nn=19.07 sparse_ar=14.62 dB
+[648/673] MM67Rp-373-162269-141142-409023-481033-11995-193291 (1298 pkts, 32.0% lost): SNR lpc=11.29 nn=10.90 sparse_ar=9.62 dB
+[649/673] 7GI8Uf-489-141142-170820-414547-474206-113619-205293 (1181 pkts, 27.1% lost): SNR lpc=5.36 nn=4.61 sparse_ar=6.29 dB
+[650/673] AdMeDp-361-284808-442118-421926-450069-450427-253414 (1926 pkts, 7.7% lost): SNR lpc=13.83 nn=14.30 sparse_ar=11.28 dB
+[651/673] CKnExp-338-136860-67455-316080-421959-50416-96948 (1457 pkts, 10.7% lost): SNR lpc=14.93 nn=14.58 sparse_ar=12.83 dB
+[652/673] 3cJqpp-166-318907-249896-465867-12865-304845-177809 (1237 pkts, 5.6% lost): SNR lpc=19.03 nn=18.83 sparse_ar=13.82 dB
+[653/673] pJonBp-393-138959-458554-151381-135410-412326-270302 (668 pkts, 12.6% lost): SNR lpc=11.27 nn=11.14 sparse_ar=10.09 dB
+[654/673] nw4jrp-095-287789-428876-111916-112336-287943-458302 (1031 pkts, 11.3% lost): SNR lpc=17.44 nn=17.01 sparse_ar=10.61 dB
+[655/673] Mxtyhp-392-295308-302437-273892-410906-11995-254913 (909 pkts, 1.9% lost): SNR lpc=18.44 nn=18.92 sparse_ar=16.47 dB
+[656/673] 1VQKcp-168-88756-317191-96948-217246-18423-105394 (1262 pkts, 11.6% lost): SNR lpc=14.24 nn=13.82 sparse_ar=9.16 dB
+[657/673] lLtyIf-479-275802-443578-385900-231167-4800-333658 (1323 pkts, 3.3% lost): SNR lpc=14.07 nn=13.51 sparse_ar=13.14 dB
+[658/673] h8DTlp-129-180085-319764-343308-170820-101992-461984 (1295 pkts, 4.9% lost): SNR lpc=18.74 nn=18.85 sparse_ar=16.56 dB
+[659/673] Ro4k1p-145-464643-64116-340579-129107-462467-224170 (1297 pkts, 7.8% lost): SNR lpc=30.72 nn=30.11 sparse_ar=15.32 dB
+[660/673] WutPqp-078-23535-472051-87506-240504-2757-298969 (2054 pkts, 8.6% lost): SNR lpc=16.99 nn=17.42 sparse_ar=12.52 dB
+[661/673] GAZmlp-414-376902-68221-365075-83988-343502-348733 (750 pkts, 17.6% lost): SNR lpc=15.17 nn=18.08 sparse_ar=7.56 dB
+[662/673] W2Uo9p-416-471623-248785-289593-151381-165168-10048 (1035 pkts, 4.3% lost): SNR lpc=17.34 nn=17.35 sparse_ar=14.95 dB
+[663/673] M1W9zp-395-17243-14754-324456-32726-138959-125620 (857 pkts, 5.6% lost): SNR lpc=14.42 nn=14.41 sparse_ar=12.90 dB
+[664/673] HZOw5p-312-53278-379354-177809-369609-330008-381489 (2253 pkts, 17.9% lost): SNR lpc=21.58 nn=22.12 sparse_ar=7.21 dB
+[665/673] p0tLnp-372-268009-329331-129107-479691-287943-112031 (1397 pkts, 23.6% lost): SNR lpc=7.28 nn=6.24 sparse_ar=6.69 dB
+[666/673] tN1zIp-334-32125-329331-442126-138959-126584-254913 (2225 pkts, 8.6% lost): SNR lpc=24.88 nn=25.17 sparse_ar=12.25 dB
+[667/673] UHkSlp-425-44660-299966-119460-492922-130799-332402 (1147 pkts, 5.8% lost): SNR lpc=24.11 nn=24.02 sparse_ar=12.43 dB
+[668/673] ev2JAp-274-80351-248646-412326-143976-193953-381489 (1008 pkts, 2.9% lost): SNR lpc=30.56 nn=31.45 sparse_ar=17.77 dB
+[669/673] W5NL8p-099-462467-125189-57514-32125-468905-67099 (751 pkts, 7.1% lost): SNR lpc=18.22 nn=18.81 sparse_ar=12.79 dB
+[670/673] dTJqpp-347-27577-152140-165684-38597-462328-427818 (1617 pkts, 8.5% lost): SNR lpc=25.17 nn=25.59 sparse_ar=16.60 dB
+[671/673] RrrSQp-376-37102-290704-99711-423587-38597-94351 (1693 pkts, 18.3% lost): SNR lpc=9.98 nn=10.04 sparse_ar=7.82 dB
+[672/673] wEfP2p-224-63022-108056-170820-406364-78575-11995 (1274 pkts, 12.0% lost): SNR lpc=17.38 nn=17.39 sparse_ar=10.58 dB
+[673/673] XVeVPp-289-311327-324310-280816-248646-329331-497448 (2228 pkts, 8.3% lost): SNR lpc=20.77 nn=20.83 sparse_ar=12.31 dB
 Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
 Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
 Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
@@ -225,48 +492,135 @@ Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
 Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
 Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
 
-===== Aggregate results over 200 files =====
+===== Aggregate results over 673 files =====
 
 SNR (dB) (higher=better):
-  Mean  -- This LPC: 15.4486   This NN: 15.2139   This Sparse AR: 11.7310
-  Median-- This LPC: 14.9675   This NN: 14.7274   This Sparse AR: 11.5701
-  This NN beats This LPC on 81/200 files (40.5%)
-  This Sparse AR beats This LPC on 1/200 files (0.5%)
+  Mean  -- This LPC: 15.5724   This NN: 15.4158   This Sparse AR: 11.7897
+  Median-- This LPC: 15.0710   This NN: 14.9143   This Sparse AR: 11.5588
+  This NN beats This LPC on 272/673 files (40.4%)
+  This Sparse AR beats This LPC on 6/673 files (0.9%)
 
 MR-STFT dist. (lower=better):
-  Mean  -- This LPC: 0.4652   This NN: 0.3600   This Sparse AR: 0.6073
-  Median-- This LPC: 0.3688   This NN: 0.2987   This Sparse AR: 0.5037
-  This NN beats This LPC on 181/200 files (90.5%)
-  This Sparse AR beats This LPC on 0/200 files (0.0%)
+  Mean  -- This LPC: 0.4772   This NN: 0.3600   This Sparse AR: 0.6211
+  Median-- This LPC: 0.3549   This NN: 0.2900   This Sparse AR: 0.4910
+  This NN beats This LPC on 621/673 files (92.3%)
+  This Sparse AR beats This LPC on 8/673 files (1.2%)
 
 PLCMOS (higher=better):
-  Mean  -- This LPC: 2.3954   This NN: 2.4658   This Sparse AR: 2.0522
-  Median-- This LPC: 2.2603   This NN: 2.3263   This Sparse AR: 1.9075
-  This NN beats This LPC on 147/200 files (73.5%)
-  This Sparse AR beats This LPC on 15/200 files (7.5%)
+  Mean  -- This LPC: 2.4442   This NN: 2.5055   This Sparse AR: 2.0938
+  Median-- This LPC: 2.2376   This NN: 2.3045   This Sparse AR: 1.9132
+  This NN beats This LPC on 468/673 files (69.5%)
+  This Sparse AR beats This LPC on 42/673 files (6.2%)
 
 ViSQOL MOS-LQO (higher=better):
-  Mean  -- This LPC: 4.5071   This NN: 4.4971   This Sparse AR: 4.4665
-  Median-- This LPC: 4.5882   This NN: 4.5739   This Sparse AR: 4.5400
-  This NN beats This LPC on 92/200 files (46.0%)
-  This Sparse AR beats This LPC on 13/200 files (6.5%)
+  Mean  -- This LPC: 4.5204   This NN: 4.4981   This Sparse AR: 4.4774
+  Median-- This LPC: 4.5947   This NN: 4.5716   This Sparse AR: 4.5483
+  This NN beats This LPC on 308/673 files (45.8%)
+  This Sparse AR beats This LPC on 40/673 files (5.9%)
 
 Per-file results: /home/omaralielgabry/PLC/research/output/metrics_comparison/per_file_results.csv
 Per-burst results: /home/omaralielgabry/PLC/research/output/metrics_comparison/per_burst_results.csv
 Win-rate summary: /home/omaralielgabry/PLC/research/output/metrics_comparison/win_rate_summary.png
 Complexity grid:  /home/omaralielgabry/PLC/research/output/metrics_comparison/complexity_grid.png
-Sampled 30 files from example_test_set (seed=0), stratified by spectral flatness for genuine content diversity.
+Sampled 300 files from example_test_set (seed=0), stratified by spectral flatness for genuine content diversity.
 
-  ar_order: resuming, 360 evaluations already saved, 0 to go
+  ar_order: resuming, 3588 evaluations already saved, 12 to go
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+  ar_order = 64: done (300 files, lpc, nn)
+  ar_order = 32: done (300 files, lpc, nn)
+  ar_order = 128: done (300 files, lpc, nn)
+  ar_order = 256: done (300 files, lpc, nn)
+  ar_order = 384: done (300 files, lpc, nn)
+  ar_order = 512: done (300 files, lpc, nn)
+  ar_order = 768: done (300 files, lpc, nn)
+  ar_order = 1024: done (300 files, lpc, nn)
+  ar_order = 1536: done (300 files, lpc, nn)
+  ar_order = 2048: done (300 files, lpc, nn)
+  ar_order = 3072: done (300 files, lpc, nn)
+  ar_order = 3840: done (300 files, lpc, nn)
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
 
 AR order: saved sweep_ar_order.csv and sweep_ar_order.png
-  context_length_packets: resuming, 330 evaluations already saved, 0 to go
+  context_length_packets: resuming, 3289 evaluations already saved, 11 to go
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+  context_length_packets = 1: done (300 files, lpc, nn, sparse_ar)
+  context_length_packets = 2: done (300 files, lpc, nn, sparse_ar)
+  context_length_packets = 4: done (300 files, lpc, nn, sparse_ar)
+  context_length_packets = 8: done (300 files, lpc, nn, sparse_ar)
+  context_length_packets = 16: done (300 files, lpc, nn, sparse_ar)
+  context_length_packets = 32: done (300 files, lpc, nn, sparse_ar)
+  context_length_packets = 64: done (300 files, lpc, nn, sparse_ar)
+  context_length_packets = 96: done (300 files, lpc, nn, sparse_ar)
+  context_length_packets = 128: done (300 files, lpc, nn, sparse_ar)
+  context_length_packets = 192: done (300 files, lpc, nn, sparse_ar)
+  context_length_packets = 256: done (300 files, lpc, nn, sparse_ar)
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
 
 Context length: saved sweep_context_length_packets.csv and sweep_context_length_packets.png
-  diagonal_load: resuming, 210 evaluations already saved, 0 to go
+  diagonal_load: resuming, 2093 evaluations already saved, 7 to go
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+  diagonal_load = 1.0: done (300 files, lpc, nn)
+  diagonal_load = 1e-06: done (300 files, lpc, nn)
+  diagonal_load = 0.0001: done (300 files, lpc, nn)
+  diagonal_load = 1e-05: done (300 files, lpc, nn)
+  diagonal_load = 0.001: done (300 files, lpc, nn)
+  diagonal_load = 0.01: done (300 files, lpc, nn)
+  diagonal_load = 0.1: done (300 files, lpc, nn)
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
 
 AR diagonal loading: saved sweep_diagonal_load.csv and sweep_diagonal_load.png
-  extra_dim: resuming, 113 evaluations already saved, 187 to go
+  extra_dim: resuming, 1317 evaluations already saved, 1683 to go
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+  extra_dim = 64: done (300 files, lpc, nn, sparse_ar)
+  extra_dim = 16: done (300 files, lpc, nn, sparse_ar)
+  extra_dim = 32: done (300 files, lpc, nn, sparse_ar)
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
@@ -277,11 +631,7 @@ Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. 
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-  extra_dim = 128: done (30 files, lpc, nn, sparse_ar)
-Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+  extra_dim = 128: done (300 files, lpc, nn, sparse_ar)
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
@@ -289,7 +639,7 @@ Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. 
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-  extra_dim = 192: done (30 files, lpc, nn, sparse_ar)
+  extra_dim = 192: done (300 files, lpc, nn, sparse_ar)
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
@@ -298,7 +648,16 @@ Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. 
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-  extra_dim = 256: done (30 files, lpc, nn, sparse_ar)
+  extra_dim = 256: done (300 files, lpc, nn, sparse_ar)
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
+  extra_dim = 384: done (300 files, lpc, nn, sparse_ar)
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
@@ -308,7 +667,7 @@ Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. 
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-  extra_dim = 384: done (30 files, lpc, nn, sparse_ar)
+  extra_dim = 512: done (300 files, lpc, nn, sparse_ar)
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
@@ -316,19 +675,14 @@ Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. 
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-  extra_dim = 512: done (30 files, lpc, nn, sparse_ar)
+  extra_dim = 768: done (300 files, lpc, nn, sparse_ar)
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
 Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-  extra_dim = 768: done (30 files, lpc, nn, sparse_ar)
-Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. To apply the upgrade to your files permanently, run `python -m pytorch_lightning.utilities.upgrade_checkpoint parcnet-is2/pretrained_models/parcnet-is2_baseline_checkpoint.ckpt`
-  extra_dim = 1024: done (30 files, lpc, nn, sparse_ar)
+  extra_dim = 1024: done (300 files, lpc, nn, sparse_ar)
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
+Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
 Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
 Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
 Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
@@ -386,35 +740,39 @@ Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
 Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
 
 Extra/crossfade dim: saved sweep_extra_dim.csv and sweep_extra_dim.png
-  max_k_lags = 1: done (30 files, sparse_ar)
-  max_k_lags = 2: done (30 files, sparse_ar)
-  max_k_lags = 3: done (30 files, sparse_ar)
-  max_k_lags = 4: done (30 files, sparse_ar)
-  max_k_lags = 5: done (30 files, sparse_ar)
-  max_k_lags = 6: done (30 files, sparse_ar)
+  max_k_lags: resuming, 180 evaluations already saved, 1620 to go
+  max_k_lags = 1: done (300 files, sparse_ar)
+  max_k_lags = 2: done (300 files, sparse_ar)
+  max_k_lags = 3: done (300 files, sparse_ar)
+  max_k_lags = 4: done (300 files, sparse_ar)
+  max_k_lags = 5: done (300 files, sparse_ar)
+  max_k_lags = 6: done (300 files, sparse_ar)
 
 Sparse AR: max lags (k): saved sweep_max_k_lags.csv and sweep_max_k_lags.png
-  max_lag_l = 128: done (30 files, sparse_ar)
-  max_lag_l = 256: done (30 files, sparse_ar)
-  max_lag_l = 512: done (30 files, sparse_ar)
-  max_lag_l = 1024: done (30 files, sparse_ar)
-  max_lag_l = 2048: done (30 files, sparse_ar)
+  max_lag_l: resuming, 150 evaluations already saved, 1350 to go
+  max_lag_l = 128: done (300 files, sparse_ar)
+  max_lag_l = 256: done (300 files, sparse_ar)
+  max_lag_l = 512: done (300 files, sparse_ar)
+  max_lag_l = 1024: done (300 files, sparse_ar)
+  max_lag_l = 2048: done (300 files, sparse_ar)
 
 Sparse AR: max lag (L): saved sweep_max_lag_l.csv and sweep_max_lag_l.png
-  burg_order_pb = 2: done (30 files, sparse_ar)
-  burg_order_pb = 4: done (30 files, sparse_ar)
-  burg_order_pb = 8: done (30 files, sparse_ar)
-  burg_order_pb = 16: done (30 files, sparse_ar)
-  burg_order_pb = 32: done (30 files, sparse_ar)
-  burg_order_pb = 64: done (30 files, sparse_ar)
-  burg_order_pb = 128: done (30 files, sparse_ar)
+  burg_order_pb: resuming, 210 evaluations already saved, 1890 to go
+  burg_order_pb = 2: done (300 files, sparse_ar)
+  burg_order_pb = 4: done (300 files, sparse_ar)
+  burg_order_pb = 8: done (300 files, sparse_ar)
+  burg_order_pb = 16: done (300 files, sparse_ar)
+  burg_order_pb = 32: done (300 files, sparse_ar)
+  burg_order_pb = 64: done (300 files, sparse_ar)
+  burg_order_pb = 128: done (300 files, sparse_ar)
 
 Sparse AR: Burg order: saved sweep_burg_order_pb.csv and sweep_burg_order_pb.png
-  lambda_reg = 0.0001: done (30 files, sparse_ar)
-  lambda_reg = 0.001: done (30 files, sparse_ar)
-  lambda_reg = 0.01: done (30 files, sparse_ar)
-  lambda_reg = 0.1: done (30 files, sparse_ar)
-  lambda_reg = 1.0: done (30 files, sparse_ar)
+  lambda_reg: resuming, 150 evaluations already saved, 1350 to go
+  lambda_reg = 0.0001: done (300 files, sparse_ar)
+  lambda_reg = 0.001: done (300 files, sparse_ar)
+  lambda_reg = 0.01: done (300 files, sparse_ar)
+  lambda_reg = 0.1: done (300 files, sparse_ar)
+  lambda_reg = 1.0: done (300 files, sparse_ar)
 
 Sparse AR: regularization: saved sweep_lambda_reg.csv and sweep_lambda_reg.png
 
@@ -438,62 +796,63 @@ Lightning automatically upgraded your loaded checkpoint from v1.5.10 to v2.6.5. 
 (a_advantage > 0 means the first-named method is better, for every metric)
 
   This LPC vs This NN:
-    SNR (dB)         advantage +0.2347 [+0.1036, +0.3687]  p_holm=0.00371  r=+0.25 (small) -> This LPC better
-    MR-STFT dist.    advantage -0.1052 [-0.1257, -0.0867]  p_holm=4.1e-27  r=-0.89 (large) -> This NN better
-    PLCMOS           advantage -0.0705 [-0.0920, -0.0492]  p_holm=6.43e-12  r=-0.58 (large) -> This NN better
-    ViSQOL MOS-LQO   advantage +0.0100 [-0.0051, +0.0250]  p_holm=0.0766  r=+0.14 (small) -> no significant difference
+    SNR (dB)         advantage +0.1566 [+0.0885, +0.2240]  p_holm=2.11e-06  r=+0.22 (small) -> This LPC better
+    MR-STFT dist.    advantage -0.1172 [-0.1329, -0.1033]  p_holm=4.58e-95  r=-0.92 (large) -> This NN better
+    PLCMOS           advantage -0.0613 [-0.0731, -0.0493]  p_holm=8e-28  r=-0.49 (medium) -> This NN better
+    ViSQOL MOS-LQO   advantage +0.0223 [+0.0133, +0.0322]  p_holm=1.94e-05  r=+0.19 (small) -> This LPC better
 
   This LPC vs This Sparse AR:
-    SNR (dB)         advantage +3.7176 [+3.3272, +4.1198]  p_holm=1.72e-33  r=+1.00 (large) -> This LPC better
-    MR-STFT dist.    advantage +0.1420 [+0.1303, +0.1547]  p_holm=1.72e-33  r=+1.00 (large) -> This LPC better
-    PLCMOS           advantage +0.3431 [+0.2877, +0.4006]  p_holm=6.23e-31  r=+0.96 (large) -> This LPC better
-    ViSQOL MOS-LQO   advantage +0.0406 [+0.0328, +0.0479]  p_holm=4.1e-27  r=+0.89 (large) -> This LPC better
+    SNR (dB)         advantage +3.7827 [+3.5663, +4.0107]  p_holm=1.65e-110  r=+1.00 (large) -> This LPC better
+    MR-STFT dist.    advantage +0.1439 [+0.1359, +0.1524]  p_holm=8.64e-108  r=+0.99 (large) -> This LPC better
+    PLCMOS           advantage +0.3504 [+0.3211, +0.3812]  p_holm=1.25e-104  r=+0.97 (large) -> This LPC better
+    ViSQOL MOS-LQO   advantage +0.0430 [+0.0391, +0.0469]  p_holm=8.29e-93  r=+0.91 (large) -> This LPC better
 
   This NN vs This Sparse AR:
-    SNR (dB)         advantage +3.4829 [+3.0500, +3.9309]  p_holm=6.23e-31  r=+0.96 (large) -> This NN better
-    MR-STFT dist.    advantage +0.2473 [+0.2200, +0.2773]  p_holm=9.33e-33  r=+0.99 (large) -> This NN better
-    PLCMOS           advantage +0.4136 [+0.3548, +0.4743]  p_holm=9.33e-33  r=+0.99 (large) -> This NN better
-    ViSQOL MOS-LQO   advantage +0.0306 [+0.0165, +0.0444]  p_holm=4.67e-10  r=+0.52 (large) -> This NN better
+    SNR (dB)         advantage +3.6262 [+3.3862, +3.8803]  p_holm=1.04e-103  r=+0.97 (large) -> This NN better
+    MR-STFT dist.    advantage +0.2611 [+0.2412, +0.2829]  p_holm=7.52e-109  r=+0.99 (large) -> This NN better
+    PLCMOS           advantage +0.4117 [+0.3808, +0.4438]  p_holm=2.81e-107  r=+0.98 (large) -> This NN better
+    ViSQOL MOS-LQO   advantage +0.0207 [+0.0109, +0.0296]  p_holm=2.03e-27  r=+0.49 (medium) -> This NN better
 
 ===== 2. Saved metric_distributions.png and paired_differences.png =====
 
 ===== 3. Quality vs. real burst length (gap SNR, dB) =====
-     1 pkts (n=12763): This LPC   7.54  This NN   7.38  This Sparse AR   1.16  |  This NN advantage -0.16 [-0.39, +0.07]  This Sparse AR advantage -6.38 [-7.17, -5.66]
-     2 pkts (n= 3254): This LPC   5.12  This NN   5.03  This Sparse AR   0.55  |  This NN advantage -0.08 [-0.42, +0.28]  This Sparse AR advantage -4.57 [-5.41, -3.82]
-     3 pkts (n=  887): This LPC   3.64  This NN   3.56  This Sparse AR   0.37  |  This NN advantage -0.08 [-0.43, +0.26]  This Sparse AR advantage -3.27 [-3.96, -2.66]
-   4-7 pkts (n=  568): This LPC   2.94  This NN   2.77  This Sparse AR   0.24  |  This NN advantage -0.18 [-0.54, +0.19]  This Sparse AR advantage -2.70 [-3.33, -2.13]
-    8+ pkts (n=   73): This LPC   0.82  This NN   0.17  This Sparse AR   0.08  |  This NN advantage -0.65 [-1.34, +0.11]  This Sparse AR advantage -0.74 [-1.52, -0.36]
+     1 pkts (n=41815): This LPC   7.86  This NN   7.75  This Sparse AR   1.35  |  This NN advantage -0.11 [-0.22, -0.01]  This Sparse AR advantage -6.51 [-6.92, -6.12]
+     2 pkts (n=10985): This LPC   4.85  This NN   4.80  This Sparse AR   0.65  |  This NN advantage -0.05 [-0.19, +0.09]  This Sparse AR advantage -4.20 [-4.58, -3.86]
+     3 pkts (n= 3011): This LPC   3.35  This NN   3.26  This Sparse AR   0.44  |  This NN advantage -0.09 [-0.23, +0.06]  This Sparse AR advantage -2.91 [-3.22, -2.61]
+   4-7 pkts (n= 1874): This LPC   2.62  This NN   2.43  This Sparse AR   0.29  |  This NN advantage -0.19 [-0.35, -0.02]  This Sparse AR advantage -2.33 [-2.65, -2.03]
+    8+ pkts (n=  331): This LPC   0.80  This NN   0.45  This Sparse AR   0.09  |  This NN advantage -0.35 [-0.62, -0.13]  This Sparse AR advantage -0.71 [-1.08, -0.44]
 
 ===== 4. Real-time feasibility =====
-  This LPC: median 1.36 ms per concealed packet = 0.117x real time (OK for live use)
-  This NN: median 36.33 ms per concealed packet = 3.13x real time (TOO SLOW for live use)
-  This Sparse AR: median 1.55 ms per concealed packet = 0.133x real time (OK for live use)
+  This LPC: median 1.02 ms per concealed packet = 0.0881x real time (OK for live use)
+  This NN: median 25.88 ms per concealed packet = 2.23x real time (TOO SLOW for live use)
+  This Sparse AR: median 1.28 ms per concealed packet = 0.11x real time (OK for live use)
 
 ===== 5. Hyperparameter sweep summary (best value per metric; gain > 0 = better than default) =====
-  ar_order                 This LPC SNR (dB): 768 (+1.42), MR-STFT dist.: 2048 (+0.0699), PLCMOS: 1536 (+0.13), ViSQOL MOS-LQO: 1024 (+0.0281)
-  ar_order                 This NN SNR (dB): 512 (+0.435), MR-STFT dist.: 768 (+0.00683), PLCMOS: 768 (+0.0695), ViSQOL MOS-LQO: 512 (+0.0143)
-  burg_order_pb            This Sparse AR SNR (dB): 128 (+3.04), MR-STFT dist.: 128 (+0.15), PLCMOS: 128 (+0.364), ViSQOL MOS-LQO: 128 (+0.0386)
-  context_length_packets   This LPC SNR (dB): 8 (+0), MR-STFT dist.: 16 (+0.00169), PLCMOS: 16 (+0.00651), ViSQOL MOS-LQO: 32 (+0.00124)
+  ar_order                 This LPC SNR (dB): 1024 (+1.15), MR-STFT dist.: 2048 (+0.0744), PLCMOS: 1024 (+0.106), ViSQOL MOS-LQO: 1024 (+0.0202)
+  ar_order                 This NN SNR (dB): 768 (+0.17), MR-STFT dist.: 512 (+0.00105), PLCMOS: 768 (+0.0585), ViSQOL MOS-LQO: 384 (+0.00821)
+  burg_order_pb            This Sparse AR SNR (dB): 128 (+3.11), MR-STFT dist.: 128 (+0.152), PLCMOS: 128 (+0.304), ViSQOL MOS-LQO: 128 (+0.051)
+  context_length_packets   This LPC SNR (dB): 16 (+0.00683), MR-STFT dist.: 16 (+0.00466), PLCMOS: 16 (+0.0242), ViSQOL MOS-LQO: 32 (+0.0041)
   context_length_packets   This NN SNR (dB): 8 (+0), MR-STFT dist.: 8 (+0), PLCMOS: 8 (+0), ViSQOL MOS-LQO: 8 (+0)
-  diagonal_load            This LPC SNR (dB): 0.0001 (+0.00188), MR-STFT dist.: 1e-06 (+0.0124), PLCMOS: 1e-05 (+0.00848), ViSQOL MOS-LQO: 0.0001 (+0.00116)
-  diagonal_load            This NN SNR (dB): 1e-05 (+0.00386), MR-STFT dist.: 1e-05 (+0.000773), PLCMOS: 0.001 (+0), ViSQOL MOS-LQO: 1e-06 (+0.00108)
-  extra_dim                This LPC SNR (dB): 16 (+0.809), MR-STFT dist.: 32 (+0.0495), PLCMOS: 512 (+0.0363), ViSQOL MOS-LQO: 32 (+0.0479)
-  extra_dim                This NN SNR (dB): 16 (+0.834), MR-STFT dist.: 64 (+0.0209), PLCMOS: 384 (+0.0201), ViSQOL MOS-LQO: 64 (+0.0172)
-  extra_dim                This Sparse AR SNR (dB): 128 (+0.38), MR-STFT dist.: 192 (+0.0142), PLCMOS: 256 (+0), ViSQOL MOS-LQO: 128 (+0.118)
-  lambda_reg               This Sparse AR SNR (dB): 0.0001 (+0.0016), MR-STFT dist.: 0.0001 (+0.000235), PLCMOS: 0.001 (+0.0151), ViSQOL MOS-LQO: 0.0001 (+6.38e-05)
-  max_k_lags               This Sparse AR SNR (dB): 4 (+0.000101), MR-STFT dist.: 4 (+4.73e-06), PLCMOS: 6 (+0.0211), ViSQOL MOS-LQO: 4 (+9.55e-07)
-  max_lag_l                This Sparse AR SNR (dB): 1024 (+0), MR-STFT dist.: 1024 (+0), PLCMOS: 1024 (+0), ViSQOL MOS-LQO: 1024 (+0)
+  context_length_packets   This Sparse AR SNR (dB): 32 (+0.0238), MR-STFT dist.: 256 (+0.128), PLCMOS: 4 (+0.127), ViSQOL MOS-LQO: 32 (+0.00341)
+  diagonal_load            This LPC SNR (dB): 0.0001 (+0.00133), MR-STFT dist.: 1e-06 (+0.014), PLCMOS: 0.0001 (+0.00322), ViSQOL MOS-LQO: 1e-05 (+0.00139)
+  diagonal_load            This NN SNR (dB): 0.0001 (+0.00227), MR-STFT dist.: 1e-05 (+0.000666), PLCMOS: 0.01 (+0.00357), ViSQOL MOS-LQO: 1e-05 (+0.00115)
+  extra_dim                This LPC SNR (dB): 16 (+0.868), MR-STFT dist.: 32 (+0.0509), PLCMOS: 512 (+0.0211), ViSQOL MOS-LQO: 32 (+0.0367)
+  extra_dim                This NN SNR (dB): 16 (+0.83), MR-STFT dist.: 64 (+0.021), PLCMOS: 384 (+0.00513), ViSQOL MOS-LQO: 128 (+0.0107)
+  extra_dim                This Sparse AR SNR (dB): 128 (+0.974), MR-STFT dist.: 128 (+0.0163), PLCMOS: 256 (+0), ViSQOL MOS-LQO: 128 (+0.0933)
+  lambda_reg               This Sparse AR SNR (dB): 0.001 (+0.00611), MR-STFT dist.: 0.0001 (+0.000557), PLCMOS: 0.001 (+0.00432), ViSQOL MOS-LQO: 0.001 (+0.000135)
+  max_k_lags               This Sparse AR SNR (dB): 3 (+0), MR-STFT dist.: 4 (+5.56e-05), PLCMOS: 2 (+0.00312), ViSQOL MOS-LQO: 4 (+2.36e-05)
+  max_lag_l                This Sparse AR SNR (dB): 2048 (+0.000762), MR-STFT dist.: 2048 (+0.000334), PLCMOS: 1024 (+0), ViSQOL MOS-LQO: 2048 (+2.45e-05)
 
 ===== 6. Failure cases: This NN vs This LPC (largest losses on SNR (dB)) =====
 Loading model checkpoint: parcnet-is2_baseline_checkpoint.ckpt
-  case 1: HxFzMp-357-24999-343332-90733-489807-316694-345238  This NN advantage -3.363 -> plotted 1-packet burst at packet 480
-  case 2: Mtnx5i-515-495971-279778-348676-11995-306560-418034  This NN advantage -3.306 -> plotted 1-packet burst at packet 1
-  case 3: QzAg3p-413-374393-31166-163645-409369-10737-129013  This NN advantage -3.247 -> plotted 1-packet burst at packet 517
+  case 1: 859Dyi-517-347380-165684-248646-353502-171454-136860  This NN advantage -3.375 -> plotted 3-packet burst at packet 655
+  case 2: HxFzMp-357-24999-343332-90733-489807-316694-345238  This NN advantage -3.363 -> plotted 1-packet burst at packet 480
+  case 3: Mtnx5i-515-495971-279778-348676-11995-306560-418034  This NN advantage -3.306 -> plotted 1-packet burst at packet 1
 
 ===== 6. Failure cases: This Sparse AR vs This LPC (largest losses on SNR (dB)) =====
   case 1: 1Q0zzp-067-496080-227228-300626-311379-247007-1214  This Sparse AR advantage -16.321 -> plotted 1-packet burst at packet 636
-  case 2: 9OkIKp-409-379354-383479-166684-320846-480197-361413  This Sparse AR advantage -13.348 -> plotted 1-packet burst at packet 673
-  case 3: fZg66p-070-68221-216978-377273-239730-53784-3467  This Sparse AR advantage -12.981 -> plotted 1-packet burst at packet 354
+  case 2: Ro4k1p-145-464643-64116-340579-129107-462467-224170  This Sparse AR advantage -15.400 -> plotted 1-packet burst at packet 743
+  case 3: MYRmYp-316-495997-227228-472051-54180-59109-322947  This Sparse AR advantage -14.399 -> plotted 1-packet burst at packet 227
 
 All outputs saved to /home/omaralielgabry/PLC/research/output/statistical_analysis
 Report saved to /home/omaralielgabry/PLC/research/output/report/PLC_LPC_vs_PARCnet_Report.docx

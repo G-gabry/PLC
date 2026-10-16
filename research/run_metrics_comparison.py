@@ -334,9 +334,9 @@ def main():
     for task_index, (row, file_burst_rows) in results:
         checkpoint.add(key_of[todo[task_index]], {"row": row, "bursts": file_burst_rows})
         n_done += 1
+        snr_bits = " ".join(f"{key}={row[f'snr_{key}']:.2f}" for key, _, _, _ in METHODS)
         print(f"[{n_done}/{len(stems)}] {row['file']} ({row['n_packets']} pkts, {row['loss_rate_pct']:.1f}% lost): "
-              f"SNR lpc={row['snr_lpc']:.2f} nn={row['snr_nn']:.2f} sparse_ar={row['snr_sparse_ar']:.2f} dB",
-              flush=True)
+              f"SNR {snr_bits} dB", flush=True)
 
     rows, all_burst_rows = [], []
     for stem in stems:

@@ -1,62 +1,58 @@
 | hyperparameter | method | metric | n_files | default_value | metric_at_default | best_value | metric_at_best | gain_over_default | median_time_ms_at_default | median_time_ms_at_best |
 |---|---|---|---|---|---|---|---|---|---|---|
-| ar_order | This LPC | SNR (dB) | 3 | 256 | 15.25 | 1024 | 18.42 | 3.17 | 274.2 | 1038 |
-| ar_order | This LPC | MR-STFT dist. | 3 | 256 | 0.4041 | 1024 | 0.326 | 0.07806 | 274.2 | 1038 |
-| ar_order | This LPC | PLCMOS | 3 | 256 | 2.474 | 1536 | 2.685 | 0.2108 | 274.2 | 2027 |
-| ar_order | This LPC | ViSQOL MOS-LQO | 3 | 256 | 4.544 | 768 | 4.591 | 0.04692 | 274.2 | 742.3 |
-| ar_order | This NN | SNR (dB) | 3 | 256 | 14.26 | 1024 | 15.65 | 1.39 | 7859 | 8590 |
-| ar_order | This NN | MR-STFT dist. | 3 | 256 | 0.3217 | 1024 | 0.2971 | 0.02458 | 7859 | 8590 |
-| ar_order | This NN | PLCMOS | 3 | 256 | 2.595 | 768 | 2.684 | 0.08896 | 7859 | 8226 |
-| ar_order | This NN | ViSQOL MOS-LQO | 3 | 256 | 4.576 | 512 | 4.611 | 0.03551 | 7859 | 8115 |
-| boundary_blend | This Endless Sounds | SNR (dB) | 3 | nan | nan | 32 | 7.096 | nan | nan | 160.6 |
-| boundary_blend | This Endless Sounds | MR-STFT dist. | 3 | nan | nan | 512 | 0.6329 | nan | nan | 182 |
-| boundary_blend | This Endless Sounds | PLCMOS | 3 | nan | nan | 512 | 1.975 | nan | nan | 182 |
-| boundary_blend | This Endless Sounds | ViSQOL MOS-LQO | 3 | nan | nan | 512 | 3.936 | nan | nan | 182 |
-| burg_order_pb | This Sparse AR | SNR (dB) | 3 | 8 | 10.69 | 128 | 12.62 | 1.934 | 475.1 | 445.4 |
-| burg_order_pb | This Sparse AR | MR-STFT dist. | 3 | 8 | 0.5365 | 128 | 0.4446 | 0.09192 | 475.1 | 445.4 |
-| burg_order_pb | This Sparse AR | PLCMOS | 3 | 8 | 2.162 | 128 | 2.294 | 0.1322 | 475.1 | 445.4 |
-| burg_order_pb | This Sparse AR | ViSQOL MOS-LQO | 3 | 8 | 4.479 | 128 | 4.518 | 0.03866 | 475.1 | 445.4 |
-| context_length_packets | This LPC | SNR (dB) | 3 | 8 | 15.25 | 8 | 15.25 | 0 | 281.1 | 281.1 |
-| context_length_packets | This LPC | MR-STFT dist. | 3 | 8 | 0.4041 | 96 | 0.3967 | 0.00737 | 281.1 | 703.9 |
-| context_length_packets | This LPC | PLCMOS | 3 | 8 | 2.478 | 8 | 2.478 | 0 | 281.1 | 281.1 |
-| context_length_packets | This LPC | ViSQOL MOS-LQO | 3 | 8 | 4.544 | 128 | 4.559 | 0.01471 | 281.1 | 880 |
-| context_length_packets | This NN | SNR (dB) | 3 | 8 | 14.26 | 8 | 14.26 | 0 | 7839 | 7839 |
-| context_length_packets | This NN | MR-STFT dist. | 3 | 8 | 0.3217 | 8 | 0.3217 | 0 | 7839 | 7839 |
-| context_length_packets | This NN | PLCMOS | 3 | 8 | 2.609 | 8 | 2.609 | 0 | 7839 | 7839 |
-| context_length_packets | This NN | ViSQOL MOS-LQO | 3 | 8 | 4.576 | 8 | 4.576 | 0 | 7839 | 7839 |
-| context_length_packets | This Sparse AR | SNR (dB) | 3 | 8 | 10.69 | 2 | 10.84 | 0.1504 | 229.2 | 197.1 |
-| context_length_packets | This Sparse AR | MR-STFT dist. | 3 | 8 | 0.5365 | 2 | 0.5294 | 0.007156 | 229.2 | 197.1 |
-| context_length_packets | This Sparse AR | PLCMOS | 3 | 8 | 2.176 | 256 | 2.182 | 0.006394 | 229.2 | 4925 |
-| context_length_packets | This Sparse AR | ViSQOL MOS-LQO | 3 | 8 | 4.479 | 4 | 4.484 | 0.004269 | 229.2 | 292.3 |
-| diagonal_load | This LPC | SNR (dB) | 3 | 0.001 | 15.25 | 1e-05 | 15.26 | 0.007743 | 281 | 285.4 |
-| diagonal_load | This LPC | MR-STFT dist. | 3 | 0.001 | 0.4041 | 1e-05 | 0.393 | 0.01106 | 281 | 285.4 |
-| diagonal_load | This LPC | PLCMOS | 3 | 0.001 | 2.485 | 1e-06 | 2.511 | 0.02545 | 281 | 286.2 |
-| diagonal_load | This LPC | ViSQOL MOS-LQO | 3 | 0.001 | 4.544 | 1e-05 | 4.545 | 0.0007899 | 281 | 285.4 |
-| diagonal_load | This NN | SNR (dB) | 3 | 0.001 | 14.26 | 1e-06 | 14.26 | 0.002488 | 7784 | 8696 |
-| diagonal_load | This NN | MR-STFT dist. | 3 | 0.001 | 0.3217 | 1e-06 | 0.32 | 0.001738 | 7784 | 8696 |
-| diagonal_load | This NN | PLCMOS | 3 | 0.001 | 2.624 | 0.001 | 2.624 | 0 | 7784 | 7784 |
-| diagonal_load | This NN | ViSQOL MOS-LQO | 3 | 0.001 | 4.576 | 1e-06 | 4.576 | 0.0005566 | 7784 | 8696 |
-| extra_dim | This LPC | SNR (dB) | 3 | 256 | 15.25 | 16 | 15.92 | 0.6648 | 352.8 | 242.1 |
-| extra_dim | This LPC | MR-STFT dist. | 3 | 256 | 0.4041 | 32 | 0.3526 | 0.05147 | 352.8 | 232.7 |
-| extra_dim | This LPC | PLCMOS | 3 | 256 | 2.464 | 128 | 2.508 | 0.04418 | 352.8 | 241.2 |
-| extra_dim | This LPC | ViSQOL MOS-LQO | 3 | 256 | 4.544 | 64 | 4.571 | 0.02686 | 352.8 | 237.7 |
-| extra_dim | This NN | SNR (dB) | 3 | 256 | 14.26 | 16 | 14.77 | 0.5116 | 7914 | 7528 |
-| extra_dim | This NN | MR-STFT dist. | 3 | 256 | 0.3217 | 64 | 0.3031 | 0.01866 | 7914 | 7537 |
-| extra_dim | This NN | PLCMOS | 3 | 256 | 2.599 | 192 | 2.639 | 0.03969 | 7914 | 7762 |
-| extra_dim | This NN | ViSQOL MOS-LQO | 3 | 256 | 4.576 | 128 | 4.589 | 0.01278 | 7914 | 7585 |
-| extra_dim | This Sparse AR | SNR (dB) | 3 | 256 | 10.69 | 32 | 11.2 | 0.5101 | 257 | 235.3 |
-| extra_dim | This Sparse AR | MR-STFT dist. | 3 | 256 | 0.5365 | 64 | 0.4932 | 0.04331 | 257 | 227.2 |
-| extra_dim | This Sparse AR | PLCMOS | 3 | 256 | 2.167 | 256 | 2.167 | 0 | 257 | 257 |
-| extra_dim | This Sparse AR | ViSQOL MOS-LQO | 3 | 256 | 4.479 | 64 | 4.515 | 0.03544 | 257 | 227.2 |
-| lambda_reg | This Sparse AR | SNR (dB) | 3 | 0.01 | 10.69 | 0 | 10.69 | 0.003807 | 311.3 | 4950 |
-| lambda_reg | This Sparse AR | MR-STFT dist. | 3 | 0.01 | 0.5365 | 0 | 0.5363 | 0.0001974 | 311.3 | 4950 |
-| lambda_reg | This Sparse AR | PLCMOS | 3 | 0.01 | 2.143 | 0.001 | 2.175 | 0.03232 | 311.3 | 273.4 |
-| lambda_reg | This Sparse AR | ViSQOL MOS-LQO | 3 | 0.01 | 4.479 | 0 | 4.479 | 7.601e-05 | 311.3 | 4950 |
-| max_k_lags | This Sparse AR | SNR (dB) | 3 | 3 | 10.69 | 2 | 10.69 | 0 | 230.9 | 243.2 |
-| max_k_lags | This Sparse AR | MR-STFT dist. | 3 | 3 | 0.5365 | 2 | 0.5365 | 0 | 230.9 | 243.2 |
-| max_k_lags | This Sparse AR | PLCMOS | 3 | 3 | 2.184 | 2 | 2.186 | 0.001846 | 230.9 | 243.2 |
-| max_k_lags | This Sparse AR | ViSQOL MOS-LQO | 3 | 3 | 4.479 | 2 | 4.479 | 0 | 230.9 | 243.2 |
-| max_lag_l | This Sparse AR | SNR (dB) | 3 | 1024 | 10.69 | 1024 | 10.69 | 0 | 252 | 252 |
-| max_lag_l | This Sparse AR | MR-STFT dist. | 3 | 1024 | 0.5365 | 1024 | 0.5365 | 0 | 252 | 252 |
-| max_lag_l | This Sparse AR | PLCMOS | 3 | 1024 | 2.156 | 2048 | 2.171 | 0.01543 | 252 | 393.8 |
-| max_lag_l | This Sparse AR | ViSQOL MOS-LQO | 3 | 1024 | 4.479 | 1024 | 4.479 | 0 | 252 | 252 |
+| ar_order | This LPC | SNR (dB) | 30 | 256 | 15.25 | 768 | 16.66 | 1.416 | 149.8 | 393.4 |
+| ar_order | This LPC | MR-STFT dist. | 30 | 256 | 0.4295 | 2048 | 0.3596 | 0.06991 | 149.8 | 1769 |
+| ar_order | This LPC | PLCMOS | 30 | 256 | 2.508 | 1536 | 2.638 | 0.1301 | 149.8 | 983.6 |
+| ar_order | This LPC | ViSQOL MOS-LQO | 30 | 256 | 4.476 | 1024 | 4.504 | 0.02809 | 149.8 | 712.1 |
+| ar_order | This NN | SNR (dB) | 30 | 256 | 15.07 | 512 | 15.5 | 0.4346 | 4074 | 3939 |
+| ar_order | This NN | MR-STFT dist. | 30 | 256 | 0.335 | 768 | 0.3282 | 0.006831 | 4074 | 4442 |
+| ar_order | This NN | PLCMOS | 30 | 256 | 2.548 | 768 | 2.618 | 0.06953 | 4074 | 4442 |
+| ar_order | This NN | ViSQOL MOS-LQO | 30 | 256 | 4.485 | 512 | 4.5 | 0.01429 | 4074 | 3939 |
+| boundary_blend | This Endless Sounds | SNR (dB) | 30 | nan | nan | 32 | 7.861 | nan | nan | 50.43 |
+| boundary_blend | This Endless Sounds | MR-STFT dist. | 30 | nan | nan | 512 | 0.5653 | nan | nan | 62.56 |
+| boundary_blend | This Endless Sounds | PLCMOS | 30 | nan | nan | 512 | 2.051 | nan | nan | 62.56 |
+| boundary_blend | This Endless Sounds | ViSQOL MOS-LQO | 30 | nan | nan | 512 | 4.082 | nan | nan | 62.56 |
+| burg_order_pb | This Sparse AR | SNR (dB) | 30 | 8 | 11.38 | 128 | 14.42 | 3.041 | 175.5 | 271.3 |
+| burg_order_pb | This Sparse AR | MR-STFT dist. | 30 | 8 | 0.5822 | 128 | 0.4326 | 0.1496 | 175.5 | 271.3 |
+| burg_order_pb | This Sparse AR | PLCMOS | 30 | 8 | 2.088 | 128 | 2.452 | 0.364 | 175.5 | 271.3 |
+| burg_order_pb | This Sparse AR | ViSQOL MOS-LQO | 30 | 8 | 4.436 | 128 | 4.474 | 0.03861 | 175.5 | 271.3 |
+| context_length_packets | This LPC | SNR (dB) | 30 | 8 | 15.25 | 8 | 15.25 | 0 | 173.7 | 173.7 |
+| context_length_packets | This LPC | MR-STFT dist. | 30 | 8 | 0.4295 | 16 | 0.4278 | 0.00169 | 173.7 | 192.3 |
+| context_length_packets | This LPC | PLCMOS | 30 | 8 | 2.505 | 16 | 2.511 | 0.00651 | 173.7 | 192.3 |
+| context_length_packets | This LPC | ViSQOL MOS-LQO | 30 | 8 | 4.476 | 32 | 4.477 | 0.001236 | 173.7 | 189.6 |
+| context_length_packets | This NN | SNR (dB) | 30 | 8 | 15.07 | 8 | 15.07 | 0 | 3732 | 3732 |
+| context_length_packets | This NN | MR-STFT dist. | 30 | 8 | 0.335 | 8 | 0.335 | 0 | 3732 | 3732 |
+| context_length_packets | This NN | PLCMOS | 30 | 8 | 2.546 | 8 | 2.546 | 0 | 3732 | 3732 |
+| context_length_packets | This NN | ViSQOL MOS-LQO | 30 | 8 | 4.485 | 8 | 4.485 | 0 | 3732 | 3732 |
+| diagonal_load | This LPC | SNR (dB) | 30 | 0.001 | 15.25 | 0.0001 | 15.25 | 0.001882 | 148.4 | 140.8 |
+| diagonal_load | This LPC | MR-STFT dist. | 30 | 0.001 | 0.4295 | 1e-06 | 0.4172 | 0.01236 | 148.4 | 151.3 |
+| diagonal_load | This LPC | PLCMOS | 30 | 0.001 | 2.497 | 1e-05 | 2.505 | 0.008476 | 148.4 | 153.6 |
+| diagonal_load | This LPC | ViSQOL MOS-LQO | 30 | 0.001 | 4.476 | 0.0001 | 4.477 | 0.001164 | 148.4 | 140.8 |
+| diagonal_load | This NN | SNR (dB) | 30 | 0.001 | 15.07 | 1e-05 | 15.07 | 0.003858 | 3715 | 3318 |
+| diagonal_load | This NN | MR-STFT dist. | 30 | 0.001 | 0.335 | 1e-05 | 0.3342 | 0.000773 | 3715 | 3318 |
+| diagonal_load | This NN | PLCMOS | 30 | 0.001 | 2.547 | 0.001 | 2.547 | 0 | 3715 | 3715 |
+| diagonal_load | This NN | ViSQOL MOS-LQO | 30 | 0.001 | 4.485 | 1e-06 | 4.487 | 0.00108 | 3715 | 3121 |
+| extra_dim | This LPC | SNR (dB) | 30 | 256 | 15.25 | 16 | 16.06 | 0.8088 | 160 | 144.1 |
+| extra_dim | This LPC | MR-STFT dist. | 30 | 256 | 0.4295 | 32 | 0.3801 | 0.04946 | 160 | 102.1 |
+| extra_dim | This LPC | PLCMOS | 30 | 256 | 2.497 | 512 | 2.533 | 0.03634 | 160 | 171.7 |
+| extra_dim | This LPC | ViSQOL MOS-LQO | 30 | 256 | 4.476 | 32 | 4.524 | 0.04789 | 160 | 102.1 |
+| extra_dim | This NN | SNR (dB) | 30 | 256 | 15.07 | 16 | 15.9 | 0.8339 | 3830 | 3137 |
+| extra_dim | This NN | MR-STFT dist. | 30 | 256 | 0.335 | 64 | 0.3141 | 0.02092 | 3830 | 3274 |
+| extra_dim | This NN | PLCMOS | 30 | 256 | 2.543 | 384 | 2.563 | 0.02009 | 3830 | 3505 |
+| extra_dim | This NN | ViSQOL MOS-LQO | 30 | 256 | 4.485 | 64 | 4.503 | 0.01717 | 3830 | 3274 |
+| extra_dim | This Sparse AR | SNR (dB) | 30 | 256 | 11.38 | 128 | 11.76 | 0.3804 | 157.3 | 2157 |
+| extra_dim | This Sparse AR | MR-STFT dist. | 30 | 256 | 0.5822 | 192 | 0.568 | 0.01417 | 157.3 | 204.9 |
+| extra_dim | This Sparse AR | PLCMOS | 30 | 256 | 2.111 | 256 | 2.111 | 0 | 157.3 | 157.3 |
+| extra_dim | This Sparse AR | ViSQOL MOS-LQO | 30 | 256 | 4.436 | 128 | 4.554 | 0.118 | 157.3 | 2157 |
+| lambda_reg | This Sparse AR | SNR (dB) | 30 | 0.01 | 11.38 | 0 | 11.38 | 0.001675 | 166 | 263.4 |
+| lambda_reg | This Sparse AR | MR-STFT dist. | 30 | 0.01 | 0.5822 | 0 | 0.5819 | 0.00024 | 166 | 263.4 |
+| lambda_reg | This Sparse AR | PLCMOS | 30 | 0.01 | 2.089 | 0.001 | 2.104 | 0.01507 | 166 | 192.9 |
+| lambda_reg | This Sparse AR | ViSQOL MOS-LQO | 30 | 0.01 | 4.436 | 0 | 4.436 | 6.522e-05 | 166 | 263.4 |
+| max_k_lags | This Sparse AR | SNR (dB) | 30 | 3 | 11.38 | 4 | 11.38 | 0.0001009 | 179.3 | 172 |
+| max_k_lags | This Sparse AR | MR-STFT dist. | 30 | 3 | 0.5822 | 4 | 0.5821 | 4.732e-06 | 179.3 | 172 |
+| max_k_lags | This Sparse AR | PLCMOS | 30 | 3 | 2.089 | 6 | 2.11 | 0.02109 | 179.3 | 177.6 |
+| max_k_lags | This Sparse AR | ViSQOL MOS-LQO | 30 | 3 | 4.436 | 4 | 4.436 | 9.548e-07 | 179.3 | 172 |
+| max_lag_l | This Sparse AR | SNR (dB) | 30 | 1024 | 11.38 | 1024 | 11.38 | 0 | 150.1 | 150.1 |
+| max_lag_l | This Sparse AR | MR-STFT dist. | 30 | 1024 | 0.5822 | 1024 | 0.5822 | 0 | 150.1 | 150.1 |
+| max_lag_l | This Sparse AR | PLCMOS | 30 | 1024 | 2.105 | 1024 | 2.105 | 0 | 150.1 | 150.1 |
+| max_lag_l | This Sparse AR | ViSQOL MOS-LQO | 30 | 1024 | 4.436 | 1024 | 4.436 | 0 | 150.1 | 150.1 |

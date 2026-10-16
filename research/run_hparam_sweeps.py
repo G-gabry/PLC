@@ -1,19 +1,20 @@
 """
-Hyperparameter tradeoff sweeps for all three concealment methods (AR-only
-"LPC", AR+NN "Hybrid", and Sparse AR -- see research/concealment.py): how
-does quality and compute time change as you vary a single design-choice
-knob, holding everything else fixed?
+Hyperparameter tradeoff sweeps for all four concealment methods (AR-only
+"LPC", AR+NN "Hybrid", Sparse AR, and Endless Sounds -- see
+research/concealment.py): how does quality and compute time change as you
+vary a single design-choice knob, holding everything else fixed?
 
 Each sweep only evaluates the method(s) its own hyperparameter actually
-affects -- never all three for every sweep, since most of these parameters
+affects -- never all four for every sweep, since most of these parameters
 are specific to one or two methods:
 
   Shared by LPC and Hybrid only (their common AR fit):
     - AR order              (parcnet-is2/config.yaml default: 256)
     - AR diagonal loading    (regularization term; default: 0.001)
 
-  Shared by all three (structural parameters every method's per-packet loop
-  uses, even though Sparse AR's own model inside that loop is unrelated):
+  Shared by all four (structural parameters every method's per-packet loop
+  uses, even though Sparse AR's and Endless Sounds' own models inside that
+  loop are unrelated):
     - Context length         (packets of past audio fed to the predictor; default: 8)
     - Extra/crossfade dim    (samples of predicted overlap beyond the lost packet
                               used for the fade-in/fade-out splice; default: 256)
@@ -25,6 +26,11 @@ are specific to one or two methods:
                               but see that sweep's own docstring for why this
                               one is swept well past the paper's own cap)
     - lambda_reg              (Tikhonov regularization, as a fraction of r0; paper default: 0.01)
+
+  Endless Sounds only (its own model, see parcnet-is2/endless_sounds_model.py):
+    - boundary_blend         (samples of real-to-synthetic equal-power crossfade at
+                              the start of each prediction; no paper-given default,
+                              see that sweep's docstring)
 
 Evaluating a method against a hyperparameter that doesn't affect it would
 waste compute on an identical, flat result every time (e.g. Sparse AR has no
@@ -84,7 +90,8 @@ from research.run_metrics_comparison import METHODS
 OUT_DIR = Path(__file__).resolve().parent / "output" / "hparam_sweeps"
 
 DEFAULT_HPARAMS = dict(ar_order=256, diagonal_load=0.001, context_dim_packets=8, extra_dim=256,
-                       max_k_lags=3, max_lag_l=1024, burg_order_pb=8, lambda_reg=0.01)
+                       max_k_lags=3, max_lag_l=1024, burg_order_pb=8, lambda_reg=0.01,
+                       boundary_blend=64, es_seed=0)
 
 CONCEAL_FN = {key: fn for key, _, fn, _ in METHODS}
 METHOD_LABEL = {key: label for key, label, _, _ in METHODS}
@@ -270,11 +277,28 @@ def sweep_burg_order_pb(stems, values=(2, 4, 8, 16, 32, 64, 128), workers=1, che
                          lambda v: {**DEFAULT_HPARAMS, "burg_order_pb": v}, ["sparse_ar"], workers, checkpoint)
 
 
-def sweep_lambda_reg(stems, values=(1e-4, 1e-3, 1e-2, 1e-1, 1.0), workers=1, checkpoint=None):
+def sweep_lambda_reg(stems, values=(0.0, 1e-4, 1e-3, 1e-2, 1e-1, 1.0), workers=1, checkpoint=None):
     """Paper default is 0.01 (as a fraction of r0, the zero-lag
-    autocorrelation/residual energy)."""
+    autocorrelation/residual energy). 0.0 (no Tikhonov regularization at
+    all) is included to see whether the regularized re-optimization
+    (equation 3) actually matters, or whether the skip radius around chosen
+    lags already keeps the Gram matrix well-conditioned on its own."""
     return sweep_hparam(stems, "lambda_reg", list(values),
                          lambda v: {**DEFAULT_HPARAMS, "lambda_reg": v}, ["sparse_ar"], workers, checkpoint)
+
+
+def sweep_boundary_blend(stems, values=(0, 16, 32, 64, 128, 256, 512), workers=1, checkpoint=None):
+    """Endless Sounds' only quality-affecting hyperparameter: how many samples
+    the real-to-synthetic equal-power crossfade spans at the start of each
+    prediction (see parcnet-is2/endless_sounds_model.py). The paper
+    establishes that this blend exists (its Section III-C) but never gives it
+    a number, so the default used here (64) is this project's own choice --
+    which is exactly why it is worth sweeping rather than asserting. 0 is
+    included as the degenerate "no blend at all" case, to show what the
+    crossfade is actually buying."""
+    return sweep_hparam(stems, "boundary_blend", list(values),
+                         lambda v: {**DEFAULT_HPARAMS, "boundary_blend": v},
+                         ["endless_sounds"], workers, checkpoint)
 
 
 def plot_sweep(df: pd.DataFrame, title: str, xlabel: str, out_path: Path, x_log: bool = False) -> Path:
@@ -348,6 +372,11 @@ def main():
     parser.add_argument("--skip-sparse-ar-sweeps", action="store_true",
                         help="Skip the four Sparse-AR-only sweeps (max_k_lags, max_lag_l, burg_order_pb, "
                              "lambda_reg), running only the original LPC/Hybrid sweeps.")
+    parser.add_argument("--skip-endless-sounds-sweeps", action="store_true",
+                        help="Skip the Endless-Sounds-only sweep (boundary_blend).")
+    parser.add_argument("--only", type=str, default=None,
+                        help="Comma-separated sweep parameter name(s) to run instead of all of them, e.g. "
+                             "'lambda_reg' or 'ar_order,context_length_packets'.")
     args = parser.parse_args()
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
@@ -368,8 +397,20 @@ def main():
             ("Sparse AR: max lags (k)", "max_k_lags", sweep_max_k_lags, False),
             ("Sparse AR: max lag (L)", "max_lag_l", sweep_max_lag_l, False),
             ("Sparse AR: Burg order", "burg_order_pb", sweep_burg_order_pb, False),
-            ("Sparse AR: regularization", "lambda_reg", sweep_lambda_reg, True),
+            # x_log=False: the sweep now includes 0.0, which can't be placed on a log axis.
+            ("Sparse AR: regularization", "lambda_reg", sweep_lambda_reg, False),
         ]
+    if not args.skip_endless_sounds_sweeps:
+        sweep_fns += [
+            ("Endless Sounds: boundary blend", "boundary_blend", sweep_boundary_blend, False),
+        ]
+    if args.only:
+        all_names = [s[1] for s in sweep_fns]
+        wanted = {p.strip().lower() for p in args.only.split(",")}
+        unknown = wanted - {n.lower() for n in all_names}
+        if unknown:
+            raise SystemExit(f"--only: unknown sweep name(s) {sorted(unknown)}. Valid names: {all_names}")
+        sweep_fns = [s for s in sweep_fns if s[1].lower() in wanted]
 
     for title, param_name, sweep_fn, x_log in sweep_fns:
         df = sweep_fn(stems, workers=args.workers, checkpoint=checkpoint)

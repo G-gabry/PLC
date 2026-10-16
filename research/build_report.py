@@ -43,8 +43,8 @@ OUTPUT_DIR = Path(__file__).resolve().parent / "output"
 DEFAULT_OUT = OUTPUT_DIR / "report" / "PLC_LPC_vs_PARCnet_Report.docx"
 
 AUTHOR = "Omar Ali Elgabry"
-TITLE = ("Autoregressive, Hybrid Neural and Sparse-AR Packet Loss Concealment "
-         "for Networked Music: An Evaluation on Real Loss Traces")
+TITLE = ("Autoregressive, Hybrid Neural, Sparse-AR and Spectral-Inpainting Packet Loss "
+         "Concealment for Networked Music: An Evaluation on Real Loss Traces")
 
 MIN_FILES_FOR_CONCLUSIONS = 30
 MIN_SWEEP_FILES = 10
@@ -70,11 +70,13 @@ SWEEP_LABELS = {
     "max_lag_l": ("Sparse AR: max. lag L", "max_lag_l"),
     "burg_order_pb": ("Sparse AR: Burg (short-term) order p_b", "burg_order_pb"),
     "lambda_reg": ("Sparse AR: regularization λ", "lambda_reg"),
+    "boundary_blend": ("Endless Sounds: boundary blend (samples)", "boundary_blend"),
 }
-SWEEP_ONLY_METHODS = {  # hyperparameter -> methods it was swept for, when not all three
+SWEEP_ONLY_METHODS = {  # hyperparameter -> methods it was swept for, when not all four
     "ar_order": ["lpc", "nn"], "diagonal_load": ["lpc", "nn"],
     "max_k_lags": ["sparse_ar"], "max_lag_l": ["sparse_ar"],
     "burg_order_pb": ["sparse_ar"], "lambda_reg": ["sparse_ar"],
+    "boundary_blend": ["endless_sounds"],
 }
 
 REFERENCES = [
@@ -117,6 +119,10 @@ REFERENCES = [
     ("pati1993", 'Y. Pati, R. Rezaiifar, and P. Krishnaprasad, "Orthogonal matching pursuit: recursive function '
                  'approximation with applications to wavelet decomposition," in Proc. 27th Asilomar Conference '
                  'on Signals, Systems and Computers, 1993, pp. 40-44.'),
+    ("svento2026", 'M. Svento, "Audio Inpainting with Endless Sounds," in Proc. EEICT, 2026, pp. 157-161, '
+                   'doi: 10.13164/eeict.2026.157.'),
+    ("valimaki2018", 'V. Valimaki, J. Ramo, and F. Esqueda, "Creating endless sounds," in Proc. 21st International '
+                     'Conference on Digital Audio Effects (DAFx), 2018, pp. 32-39.'),
 ]
 REF_NUM = {key: i + 1 for i, (key, _) in enumerate(REFERENCES)}
 
@@ -625,11 +631,13 @@ def section_front(r: Report, ctx: Context):
     abstract = (
         f"Packet loss concealment (PLC) is necessary in networked music performance, where retransmission "
         f"is impossible within the latency budget and a lost {concealment.PACKET_SIZE}-sample packet must be "
-        f"replaced causally from past audio only. This report compares three causal concealers: the first is "
+        f"replaced causally from past audio only. This report compares four causal concealers: the first is "
         f"AR prediction alone, the second is PARCnet, a hybrid model that adds a convolutional neural network's "
-        f"estimate of the AR residual, and the third is Sparse AR, a from-scratch implementation of Severi "
+        f"estimate of the AR residual, the third is Sparse AR, a from-scratch implementation of Severi "
         f"(2025)'s orthogonal-matching-pursuit concealer, which replaces the dense AR fit with a short Burg "
-        f"model plus a handful of non-contiguous, periodicity-seeking lags. All three were evaluated on "
+        f"model plus a handful of non-contiguous, periodicity-seeking lags, and the fourth is a causal "
+        f"adaptation of Svento (2026)'s Endless Sounds, which abandons waveform prediction entirely and "
+        f"synthesizes a spectrally-matched, phase-randomised continuation instead. All four were evaluated on "
         f"{ctx.n_files} music recordings from the IEEE-IS² 2024 Music PLC Challenge test set with their real "
         f"packet-loss traces ({ctx.net['plr']:.1f}% of packets lost overall) using two physical metrics (SNR and "
         f"multi-resolution STFT distance) and two perceptual metrics (PLCMOS and ViSQOL), paired non-parametric "
@@ -641,7 +649,8 @@ def section_front(r: Report, ctx: Context):
     r.body(abstract)
     r.para(("Keywords: ", "b"), ("packet loss concealment; networked music performance; linear prediction; "
                                  "hybrid neural networks; sparse autoregressive modeling; orthogonal matching "
-                                 "pursuit; PARCnet; objective audio quality", "i"), size=10)
+                                 "pursuit; spectral phase randomisation; PARCnet; objective audio quality",
+                                 "i"), size=10)
     r.page_break()
     r.para(("Contents", "b"), size=13)
     r.toc()
@@ -669,22 +678,31 @@ def section_introduction(r: Report, ctx: Context):
            f"continuity plus a handful of non-contiguous lags, chosen by orthogonal matching pursuit "
            f"{cite('pati1993')}, that specifically target musical periodicity rather than fitting every sample "
            f"of the context equally.")
-    r.body("This gives three methods with a common baseline (AR alone) and two different strategies for "
-           "improving on it -- adding a learned correction, or replacing the model with a sparser, "
-           "periodicity-aware one. This report answers four research questions:")
-    r.numbered(("RQ1 (quality). ", "b"), "Does either alternative improve concealment quality over AR "
+    r.body(f"A fourth method takes a different route again. Endless Sounds {cite('svento2026')} does not predict "
+           f"the missing waveform at all: it keeps the magnitude spectrum of the recent context, replaces its "
+           f"phase with random values {cite('valimaki2018')}, and transforms back, producing audio that matches "
+           f"the context's timbre without matching its waveform. The published method is an offline, two-sided "
+           f"inpainting pipeline that uses the audio on both sides of the gap, so only its forward half can be "
+           f"used here; Section 2.5 documents that causal adaptation.")
+    r.body("This gives four methods with a common baseline (AR alone) and three different strategies for "
+           "improving on it -- adding a learned correction, replacing the model with a sparser, "
+           "periodicity-aware one, or giving up waveform prediction in favour of spectral plausibility. This "
+           "report answers four research questions:")
+    r.numbered(("RQ1 (quality). ", "b"), "Do any of the alternatives improve concealment quality over AR "
                "prediction alone, as measured by physical and by perceptual metrics, on real loss traces?")
     r.numbered(("RQ2 (conditions). ", "b"), "How does any advantage depend on the length of the loss burst "
                "and on the complexity of the music signal?")
     r.numbered(("RQ3 (sensitivity). ", "b"), "How sensitive is each method to its own main hyperparameters?")
     r.numbered(("RQ4 (cost). ", "b"), "Can each method run in real time on a general-purpose CPU?")
-    r.body("The main contributions are: (i) three independently implemented concealers; (ii) a from-scratch "
-           "implementation of the Sparse AR method, since no reference code was available, documented in "
-           "Section 2.4 with the measured evidence for where its published description had to be departed "
-           "from; (iii) an evaluation on whole files with their real packet traces; (iv) paired statistical "
+    r.body("The main contributions are: (i) four independently implemented concealers; (ii) from-scratch "
+           "implementations of the Sparse AR and Endless Sounds methods, since no reference code was available "
+           "for either, documented in Sections 2.4 and 2.5 with the measured evidence for where their "
+           "published descriptions had to be departed from -- in the Endless Sounds case, because the "
+           "published pipeline is not causal at all; (iii) an evaluation on whole files with their real "
+           "packet traces; (iv) paired statistical "
            "testing with multiple-comparison correction and effect sizes; (v) a per-burst analysis over every "
            "real loss event in the evaluated files; and (vi) hyperparameter sensitivity and real-time cost "
-           "analyses for all three methods.")
+           "analyses for all four methods.")
 
 
 def section_methods(r: Report, ctx: Context):
@@ -698,7 +716,7 @@ def section_methods(r: Report, ctx: Context):
            f"packets of P = {P} samples ({ctx.packet_ms:.1f} ms). A binary packet trace l", ("k", "sub"),
            " ∈ {0, 1} marks packet k as received (0) or lost (1); lost packets arrive as zeros. A concealer "
            "must output an estimate of each lost packet using only samples before it (received or previously "
-           "concealed). Because concealed samples become context for the next prediction, all three methods are "
+           "concealed). Because concealed samples become context for the next prediction, all four methods are "
            "causal and recursive: a burst of N lost packets is concealed by N successive predictions, each "
            "conditioned on the previous ones.")
 
@@ -741,7 +759,7 @@ def section_methods(r: Report, ctx: Context):
     r.body(f"where L_SC and L_mag are the spectral-convergence and log-magnitude terms of a multi-resolution STFT "
            f"loss {cite('yamamoto2020')}. Because the target of the network is s − ŝ_AR, it learns the residual "
            f"of an AR predictor with the default configuration. The pretrained challenge checkpoint is used "
-           f"unchanged; it was not retrained for any of the swept configurations (Section 2.9). The NN output is "
+           f"unchanged; it was not retrained for any of the swept configurations (Section 2.10). The NN output is "
            f"faded in over its first {concealment.NN_FADE_DIM} samples, and the same crossfade as in Section 2.2 "
            f"is applied to the combined prediction.")
 
@@ -797,20 +815,74 @@ def section_methods(r: Report, ctx: Context):
         ["Regularization", "λ_reg", fg(hp["lambda_reg"]), "Tikhonov term, as a fraction of residual r0"],
     ], "Sparse AR's own default hyperparameters (paper defaults).", col_widths_cm=[3.3, 1.5, 2.2, 7.5])
 
-    r.heading("2.5  Implementation and verification", 2)
-    r.body("The three concealers are separate code paths. The AR concealer is a standalone implementation with "
+    r.heading("2.5  Endless Sounds concealment (causal adaptation)", 2)
+    r.body(f"The fourth method starts from a different premise than the other three. Rather than predicting the "
+           f"missing samples from a model of how the signal evolves, Endless Sounds {cite('svento2026')} "
+           f"synthesizes new audio that merely shares the context's spectral character, using the "
+           f"phase-randomisation technique of {cite('valimaki2018')}: take the magnitude spectrum of the "
+           f"context, discard its phase, substitute uniformly random phase, and transform back. The magnitude "
+           f"spectrum fixes the timbre; the random phase means the result is not a continuation of the waveform "
+           f"in any sample-by-sample sense, only in a statistical one.")
+    r.equation("X̂[k] = |X[k]|·e^{jφ[k]},   φ[k] ~ U(−π, π)")
+    r.body(f"The published method is an offline audio-inpainting pipeline, and is not causal: it grows one "
+           f"extension forward from the audio before the gap and a second one backward from the audio after it, "
+           f"then crossfades the two together inside the gap. The second extension cannot exist in this setting "
+           f"-- at the moment of concealment the audio after the gap has not arrived, which is the entire "
+           f"problem. Only the forward, one-sided half of the published pipeline is therefore implemented here, "
+           f"and the following two adaptations were forced by causality rather than chosen:")
+    r.bullet(("No right-side extension or inpainting crossfade. ", "b"), "The published two-sided blend inside "
+             "the gap is dropped entirely. The outbound boundary -- where the concealed packet meets the next "
+             "real one -- is handled instead by the same external crossfade every method in this study shares "
+             "(Section 2.2), so all four methods are spliced into the signal identically and remain directly "
+             "comparable.")
+    r.bullet(("Where the context-blend happens. ", "b"), f"The published left-side blend crossfades the tail of "
+             f"the real context itself into the synthetic extension, i.e. it rewrites samples that already "
+             f"exist. In a live stream those samples have already been received and, in a real deployment, "
+             f"already played; they cannot be revised. The equal-power crossfade shape is kept, but applied "
+             f"entirely inside the predicted packet: the first B samples (default {hp.get('boundary_blend', 64)}) "
+             f"fade from a reversed copy of the context's own last B real samples into the synthetic "
+             f"continuation, so the prediction begins exactly at the last received sample rather than at an "
+             f"arbitrary earlier one.")
+    r.body("One further detail of the published pipeline is kept because omitting it was measurably wrong: the "
+           "energy-normalisation stage. A slice of a phase-randomised inverse transform preserves the whole "
+           "window's energy but not that of any sub-interval, so without normalisation the predicted packet "
+           "arrives noticeably quieter than the audio around it; the synthetic tail is therefore rescaled to the "
+           "context's own RMS before the crossfade.")
+    es_tab = r.next_tab()
+    r.body(f"This method is deterministic given its seed but stochastic by nature -- it is the only method here "
+           f"whose output depends on a random draw. One model instance, seeded once, is used per file, so "
+           f"consecutive packets in a burst receive different random phase (repeating one draw would impose an "
+           f"audible periodic artifact) while a re-run of the same file reproduces exactly. Because the method "
+           f"deliberately abandons waveform-level phase alignment, it should be expected to score poorly on "
+           f"waveform-error metrics such as SNR regardless of how it sounds; this is a property of the method, "
+           f"not a defect, and is worth keeping in mind when reading Section 3.2. Its hyperparameters are given "
+           f"in Table {es_tab}.")
+    r.table(["Hyperparameter", "Symbol", "Default", "Meaning"], [
+        ["Boundary blend", "B", hp.get("boundary_blend", 64),
+         "samples of real-to-synthetic equal-power crossfade"],
+        ["Random seed", "—", hp.get("es_seed", 0), "fixes the phase draws so runs are reproducible"],
+    ], "Endless Sounds' own default hyperparameters. Neither is given a numeric value by the source paper; "
+       "both are this implementation's choices, and the blend length is swept in Section 3.5.",
+       col_widths_cm=[3.3, 1.5, 2.2, 7.5])
+
+    r.heading("2.6  Implementation and verification", 2)
+    r.body("The four concealers are separate code paths. The AR concealer is a standalone implementation with "
            "no dependency on the neural network or its framework; the hybrid concealer is the unmodified "
            "challenge implementation with the network always enabled. With identical hyperparameters, the "
            "standalone AR concealer was verified to produce output identical to the hybrid model's internal AR "
            "branch (mean squared error 0.0), so every difference between those two can be attributed to the "
-           "neural residual alone, not to implementation details. Sparse AR is a separate algorithm with no "
-           "published reference implementation available, so it does not participate in that bit-identity "
-           "check; it was instead verified component-by-component against synthetic signals with known answers "
-           "(the Burg fit recovers a pure sinusoid's continuation to under 0.001 RMS error) and checked for "
-           "numerical stability (no NaNs or unbounded output) across real files before being used for any "
-           "reported result.")
+           "neural residual alone, not to implementation details. Sparse AR and Endless Sounds are separate "
+           "algorithms with no published reference implementation available, so they do not participate in "
+           "that bit-identity check; each was instead verified component-by-component against synthetic "
+           "signals with known answers (the Burg fit recovers a pure sinusoid's continuation to under 0.001 "
+           "RMS error; the Endless Sounds resynthesis reproduces the context's RMS to within 2% and starts "
+           "exactly at the last received sample, with zero discontinuity at the boundary) and checked for "
+           "numerical stability (no NaNs or unbounded output, silence in giving silence out) across real "
+           "files before being used for any reported result. Adding the fourth method was also verified not "
+           "to disturb the first three: re-running AR, hybrid and Sparse AR after its introduction reproduced "
+           "their SNR, MR-STFT and ViSQOL scores exactly.")
 
-    r.heading("2.6  Dataset and loss traces", 2)
+    r.heading("2.7  Dataset and loss traces", 2)
     n = ctx.net
     r.body(f"Experiments use the example blind test set released with the IEEE-IS² 2025 Music PLC Challenge "
            f"{cite('challenge2024')}, which is {n['n_files']} single-channel recordings of solo instrumental "
@@ -836,7 +908,7 @@ def section_methods(r: Report, ctx: Context):
     r.body(f"The main comparison uses {ctx.n_files} of these files. Every file is concealed whole against its "
            f"own real trace.")
 
-    r.heading("2.7  Objective quality metrics", 2)
+    r.heading("2.8  Objective quality metrics", 2)
     r.body("Two families of metrics are used, because a concealment can be close to the original waveform "
            "without sounding natural, and vice versa:")
     r.bullet(("SNR (dB, higher is better). ", "b"), "Time-domain signal-to-noise ratio between the clean and the "
@@ -855,7 +927,7 @@ def section_methods(r: Report, ctx: Context):
            f"of near-silence is meaningless. Signal complexity is quantified by the mean spectral flatness of "
            f"the clean file (0 = tonal, 1 = noise) {cite('gray1974')}.")
 
-    r.heading("2.8  Statistical analysis", 2)
+    r.heading("2.9  Statistical analysis", 2)
     r.body(f"The design is paired: every method conceals the same files. For each metric and each pair of "
            f"methods, the per-file difference is oriented so that a positive value always means the first-named "
            f"method is better. Differences are tested with the two-sided Wilcoxon signed-rank test "
@@ -871,7 +943,7 @@ def section_methods(r: Report, ctx: Context):
            f"bursts from the same file are not independent, so confidence intervals there use a cluster "
            f"bootstrap that resamples whole files.")
 
-    r.heading("2.9  Hyperparameter sweeps", 2)
+    r.heading("2.10  Hyperparameter sweeps", 2)
     rows = []
     for param, (df, _) in ctx.sweeps.items():
         label, key = SWEEP_LABELS.get(param, (param, param))
@@ -883,7 +955,7 @@ def section_methods(r: Report, ctx: Context):
     r.body(f"Each hyperparameter was varied on its own while the others were held at their defaults "
            f"(one-at-a-time design), and only for the method(s) it actually affects: AR order and diagonal "
            f"loading are specific to the dense AR fit shared by AR and Hybrid; context length and crossfade "
-           f"length are structural parameters shared by all three; the four Sparse AR parameters "
+           f"length are structural parameters shared by all four; the four Sparse AR parameters "
            f"(Table {sparse_tab}) are specific to it. At every value, the relevant files were concealed whole "
            f"with their real traces and "
            f"scored with all four metrics; compute time was recorded per file "
@@ -894,7 +966,7 @@ def section_methods(r: Report, ctx: Context):
         ctx.sweep_design_table = r.table(["Hyperparameter", "Method(s)", "Default", "Values tested", "Files"], rows,
                                          "Hyperparameter sweep design.", col_widths_cm=[4.0, 2.5, 1.8, 6.2, 1.5])
 
-    r.heading("2.10  Computational cost", 2)
+    r.heading("2.11  Computational cost", 2)
     info = ctx.run_info
     machine = (f"{info.get('processor') or info.get('platform', 'unknown CPU')}, {info.get('cpu_count', '?')} "
                f"logical cores, PyTorch using {info.get('torch_threads', '?')} threads") if info else "the evaluation machine"
@@ -946,7 +1018,7 @@ def section_results(r: Report, ctx: Context):
                          f"{t['rank_biserial_r']:+.2f} ({t['effect_size']})", t["verdict"]])
         r.table(["Metric", "Pair (A vs. B)", "A advantage [95% CI]", "A wins",
                  "p (Holm)", "Effect size r", "Verdict"], rows,
-                f"Paired comparison of all three methods over {ctx.n_files} files, every metric x method-pair "
+                f"Paired comparison of all four methods over {ctx.n_files} files, every metric x method-pair "
                 f"combination (12 tests).",
                 col_widths_cm=[2.2, 3.4, 3.3, 1.3, 1.4, 2.2, 2.2], font_size=8,
                 notes="Advantage = A minus B, sign-flipped for MR-STFT so that positive always favours A (the "
@@ -972,9 +1044,9 @@ def section_results(r: Report, ctx: Context):
         r.insight(f"Bars above the dashed line mean that method beat AR more often than not. {'; '.join(win_bits)}. "
                  f"But winning more often does not tell us by how much -- the next two figures show that part.")
         r.figure(ctx.out / "statistical_analysis" / "metric_distributions.png",
-                 "Per-file metric values of all three methods (boxes: median and interquartile range; whiskers: "
+                 "Per-file metric values of all four methods (boxes: median and interquartile range; whiskers: "
                  "1.5 IQR). Gray lines connect the three results of the same file.")
-        r.insight("If the boxes overlap a lot, the three methods are not that different compared to how much "
+        r.insight("If the boxes overlap a lot, the methods are not that different compared to how much "
                  "results vary from file to file. What actually matters is whether the median line inside each "
                  "box is shifted up or down, not just whether the boxes touch.")
         r.figure(ctx.out / "statistical_analysis" / "paired_differences.png",
@@ -1105,8 +1177,9 @@ def section_results(r: Report, ctx: Context):
             snr_spread = {m: by[f"snr_{m}"].max() - by[f"snr_{m}"].min() for m in methods_here}
             steepest = max(snr_spread, key=snr_spread.get)
             if snr_spread[steepest] < 0.5:
-                r.insight(f"SNR barely changes across this whole range (under 0.5 dB for every method), so "
-                         f"{label.lower()} does not seem to matter much here.")
+                scope = "for every method" if len(methods_here) > 1 else f"for {METHOD_LABEL[methods_here[0]]}"
+                r.insight(f"SNR barely changes across this whole range (under 0.5 dB {scope}), so this setting "
+                         f"does not seem to matter much here.")
             else:
                 r.insight(f"{METHOD_LABEL[steepest]} is the most affected by this setting, swinging by "
                          f"{snr_spread[steepest]:.2f} dB of SNR across the range tested. Worth checking the "
@@ -1159,7 +1232,7 @@ def section_results(r: Report, ctx: Context):
                f"The challenge rules do not disqualify slower-than-real-time systems but encourage real-time "
                f"operation {cite('challenge2024')}. Sparse AR's figures reflect this project's unoptimized "
                f"Python implementation and are not comparable to the original paper's optimized C++ timings "
-               f"(Section 2.10).")
+               f"(Section 2.11).")
         r.table(["Method", "Median ms / packet", "IQR (ms)", "Median RTF", "Real time?"], rows,
                 f"Per-packet concealment cost (packet duration {ctx.packet_ms:.1f} ms).",
                 col_widths_cm=[4, 3, 3, 3, 3])
@@ -1169,7 +1242,7 @@ def section_results(r: Report, ctx: Context):
         over_budget = [METHOD_LABEL[m] for m in ctx.methods_present if np.median(ctx.rtf(m)) > 1]
         r.insight(("Anything above the red line is too slow to use live on this machine, which rules out "
                    f"{join_words(over_budget)} here." if over_budget else
-                   "Every method stays below the red line, so in principle all three could run live on this "
+                   "Every method stays below the red line, so in principle all of them could run live on this "
                    "machine.") +
                  " The taller a box is, the less consistent that method's timing is -- some files take much "
                  "longer to process than others.")
@@ -1181,7 +1254,7 @@ def section_results(r: Report, ctx: Context):
         r.para(("Burst examples not available -- run plot_burst_comparison.py.", "i"))
     else:
         r.body("To show what the metrics above summarize, one real burst of each length was selected and "
-               "plotted in three ways: the waveform and spectrogram around the gap (shaded) for all three "
+               "plotted in three ways: the waveform and spectrogram around the gap (shaded) for all four "
                "methods; the sample-wise difference for every pair of methods; and a zoom on the hand-back point "
                "where concealment crossfades into the next received packet, together with the clean reference. "
                f"Table {r.next_tab()} lists the mean squared difference between every pair of methods inside "
@@ -1197,11 +1270,11 @@ def section_results(r: Report, ctx: Context):
         for i, (length, tag, paths) in enumerate(sets, start=1):
             r.heading(f"3.7.{i}  {length}-packet burst ({length * ctx.packet_ms:.1f} ms)", 3)
             r.figure(paths["compare"], f"{length}-packet burst in file {tag}: waveform (top) and spectrogram "
-                                       f"(bottom) of all three methods. Shaded: lost samples.")
+                                       f"(bottom) of all four methods. Shaded: lost samples.")
             r.insight("Just eyeball how close the three waveforms and spectrograms stay to each other across "
                      "the shaded gap. Whichever one looks most different from the other two is the one that "
                      "changed the audio the most there.")
-            r.figure(paths["diff"], f"{length}-packet burst: pairwise differences between all three methods; "
+            r.figure(paths["diff"], f"{length}-packet burst: pairwise differences between all four methods; "
                                     f"the gap-MSE in each title quantifies that pair's divergence.", width_cm=15)
             match = None
             if ctx.gap_mse is not None:
@@ -1262,15 +1335,15 @@ def section_results(r: Report, ctx: Context):
                 adv_text = fs(case_row.iloc[0][f"{method}_advantage"]) if len(case_row) else "n/a"
                 r.heading(f"3.8.{sub_i}.{case}  {METHOD_LABEL[method]} failure case {case}", 3)
                 r.figure(paths["compare"], f"Failure case {case}: waveform and spectrogram around the plotted "
-                                           f"{length}-packet burst, all three methods.")
+                                           f"{length}-packet burst, all four methods.")
                 r.insight(f"This is the actual burst behind this file's {label} advantage of {adv_text} -- "
                          f"worth looking at what {METHOD_LABEL[method]} is doing differently from AR here, "
                          f"since a single whole-file average cannot show that on its own.")
-                r.figure(paths["diff"], f"Failure case {case}: pairwise differences between all three methods.",
+                r.figure(paths["diff"], f"Failure case {case}: pairwise differences between all four methods.",
                          width_cm=15)
                 r.insight(f"The {METHOD_LABEL[method].lower()}-vs-AR panel is the one that matters here. If it "
                          f"shows a lot more activity than the other two, this disagreement is specific to "
-                         f"{METHOD_LABEL[method]}, not something all three methods share.")
+                         f"{METHOD_LABEL[method]}, not something all four methods share.")
                 r.figure(paths["crossfade"], f"Failure case {case}: hand-back crossfade with the clean reference.")
                 r.insight("Even though this file counts as a loss, a clean splice here (no click or jump at "
                          "the dashed line) would mean the problem is the quality inside the gap, not the "
@@ -1347,7 +1420,7 @@ def section_discussion(r: Report, ctx: Context):
                 ", both within it") +
                f". Any quality benefit (Sections 4.1-4.2) must be weighed against this cost; for the hybrid "
                f"model, options such as multi-threaded or GPU inference, model quantization or a smaller "
-               f"network would need to be considered for live deployment. For Sparse AR, see Section 2.10's "
+               f"network would need to be considered for live deployment. For Sparse AR, see Section 2.11's "
                f"caveat on what these particular timings do and do not represent.")
     r.heading("4.5  Coupling between the AR configuration and the network", 2)
     r.body("The hybrid network was trained on residuals of the default AR configuration. Changing the AR order, "

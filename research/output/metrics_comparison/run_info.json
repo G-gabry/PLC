@@ -1,15 +1,21 @@
 {
-  "platform": "Linux-6.12.111+deb13-cloud-amd64-x86_64-with-glibc2.41",
-  "processor": "",
-  "cpu_count": 32,
-  "workers": 16,
+  "platform": "Windows-10-10.0.26200-SP0",
+  "processor": "AMD64 Family 23 Model 24 Stepping 1, AuthenticAMD",
+  "cpu_count": 8,
+  "workers": 4,
   "torch_threads": 1,
   "hparams": {
     "ar_order": 256,
     "diagonal_load": 0.001,
     "context_dim_packets": 8,
-    "extra_dim": 256
+    "extra_dim": 256,
+    "max_k_lags": 3,
+    "max_lag_l": 1024,
+    "burg_order_pb": 8,
+    "lambda_reg": 0.01,
+    "boundary_blend": 64,
+    "es_seed": 0
   },
-  "n_files": 674,
+  "n_files": 30,
   "seed": 0
 }

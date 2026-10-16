@@ -1,13 +1,17 @@
 # PLC Research Suite
 
 Generates the figures and per-file data behind a research-level comparison of
-three causal concealment methods -- AR-only (LPC), AR+NN (PARCnet), and Sparse
-AR (Severi 2025, a from-scratch reimplementation -- see `research/
-concealment.py` and `parcnet-is2/sparse_ar_model.py`'s module docstrings for
-the algorithm and, importantly, two points where this implementation had to
-depart from the published paper's literal description to behave sensibly on
-real audio, with the measured evidence for each). This is tooling that
-produces figures/CSVs for a report, not the report itself.
+four causal concealment methods -- AR-only (LPC), AR+NN (PARCnet), Sparse
+AR (Severi 2025) and Endless Sounds (Svento 2026). The latter two are
+from-scratch reimplementations -- see `research/concealment.py` and
+`parcnet-is2/sparse_ar_model.py` / `parcnet-is2/endless_sounds_model.py`'s
+module docstrings for the algorithms and, importantly, the points where each
+had to depart from its published description to work here, with the measured
+evidence for each. For Endless Sounds that departure is fundamental: the
+published method is an offline, two-sided inpainting pipeline that reads
+audio from *both* sides of the gap, so only its forward half is usable in a
+causal PLC system. This is tooling that produces figures/CSVs for a report,
+not the report itself.
 
 ## Dataset
 
@@ -43,19 +47,30 @@ Python implementation and the reference tools are MATLAB-only.
 
 ## Concealment (`research/concealment.py`)
 
-Three independent functions: `conceal_lpc` (pure AR recursive prediction, no
+Four independent functions: `conceal_lpc` (pure AR recursive prediction, no
 torch/NN dependency at all), `conceal_nn` (the real production `PARCnet`
-class from `parcnet-is2/parcnet.py`, NN always on), and `conceal_sparse_ar`
+class from `parcnet-is2/parcnet.py`, NN always on), `conceal_sparse_ar`
 (a from-scratch implementation of Severi 2025's OMP-based sparse AR
-concealer, `parcnet-is2/sparse_ar_model.py`). At the AR level, `conceal_lpc`
-and `conceal_nn` were verified bit-identical (MSE = 0.0); `conceal_sparse_ar`
-is a separate algorithm and doesn't participate in that check, but reuses the
-same per-packet recursive loop and external crossfade so its output is
-directly comparable. Every hyperparameter is a plain function argument,
-never hardcoded: AR order, diagonal loading, context length and extra/
-crossfade dimension for the first two; max. long-term lags, max. lag
-searched, Burg order and regularization for Sparse AR (context length and
-crossfade dimension are shared by all three).
+concealer, `parcnet-is2/sparse_ar_model.py`), and `conceal_endless_sounds`
+(a causal adaptation of Svento 2026's spectral phase-randomisation
+inpainting, `parcnet-is2/endless_sounds_model.py`). At the AR level,
+`conceal_lpc` and `conceal_nn` were verified bit-identical (MSE = 0.0); the
+other two are separate algorithms and don't participate in that check, but
+each reuses the same per-packet recursive loop and external crossfade so its
+output is directly comparable. Every hyperparameter is a plain function
+argument, never hardcoded: AR order, diagonal loading, context length and
+extra/crossfade dimension for the first two; max. long-term lags, max. lag
+searched, Burg order and regularization for Sparse AR; boundary blend and
+RNG seed for Endless Sounds (context length and crossfade dimension are
+shared by all four).
+
+Endless Sounds is the only non-deterministic method here -- it draws random
+phase. One seeded model instance is used per file, so packets within a burst
+get different draws (repeating one would be audible as a periodic artifact)
+while a re-run of the same file reproduces exactly. Because it deliberately
+abandons waveform-level phase alignment, expect it to score poorly on SNR
+and MR-STFT regardless of how it sounds; that is a property of the method,
+not a bug.
 
 ## Run order
 
@@ -80,7 +95,7 @@ Samples N files (default 300) **stratified by signal complexity** (spectral
 flatness quantile buckets, via `dataset_utils.sample_diverse_test_files`) --
 a plain random sample clumps wherever this dataset happens to be dense
 (mostly tonal/simple content), so stratifying is what actually makes the
-"vs. complexity" analysis meaningful. Runs all three methods at default
+"vs. complexity" analysis meaningful. Runs all four methods at default
 hyperparameters, computes every metric above, and produces:
 - `output/metrics_comparison/per_file_results.csv` -- every metric, plus
   concealment time per method and per concealed packet
@@ -95,14 +110,16 @@ hyperparameters, computes every metric above, and produces:
   fit in log-x space) so the relationship is readable without eyeballing a dot cloud
 
 ### `run_hparam_sweeps.py`
-Eight sweeps total, each varying one hyperparameter while holding the others
+Nine sweeps total, each varying one hyperparameter while holding the others
 at their defaults, and each evaluating only the method(s) that hyperparameter
 actually affects (see the module's own docstring for the full breakdown):
 AR order and diagonal loading (LPC + Hybrid only); context length and
-extra/crossfade dim (all three, since Sparse AR shares that structural
-plumbing); and max. long-term lags, max. lag searched, Burg order, and
+extra/crossfade dim (all four, since Sparse AR and Endless Sounds share that
+structural plumbing); max. long-term lags, max. lag searched, Burg order, and
 regularization (Sparse AR only -- `--skip-sparse-ar-sweeps` to omit these
-four). Every sampled file is concealed whole, against its own real trace --
+four); and boundary blend (Endless Sounds only --
+`--skip-endless-sounds-sweeps`). `--only <param>[,<param>]` runs just the
+named sweep(s) instead of all of them. Every sampled file is concealed whole, against its own real trace --
 no synthetic bursts. Measures SNR, MR-STFT, PLCMOS, ViSQOL and compute time;
 one five-panel figure plus the raw CSV per sweep, in `output/hparam_sweeps/`.
 Burst length is deliberately not swept: in a causal, recursive concealer it
@@ -115,20 +132,20 @@ finding still needs confirming with the whole-file sweeps.
 
 ### `plot_burst_comparison.py`
 Network-loss statistics for the whole dataset, plus waveform/spectrogram
-(3-column, one per method), pairwise-difference (one panel per method pair)
+(4-column, one per method), pairwise-difference (one panel per method pair)
 and crossfade-boundary plots of real bursts at chosen lengths.
 
 ### `run_statistical_analysis.py`
 Reads the CSVs above (no new concealment, except the failure-case plots)
 and writes `output/statistical_analysis/`:
 1. `significance_tests.csv/.md` -- paired Wilcoxon signed-rank test for
-   every (metric, method-pair) combination -- 4 metrics x 3 pairs = 12 tests,
+   every (metric, method-pair) combination -- 4 metrics x 6 pairs = 24 tests,
    Holm-corrected together as one family, with rank-biserial effect size and
    a bootstrap 95% CI of the mean difference for each
 2. `metric_distributions.png`, `paired_differences.png` -- per-file values
-   for all three methods, not just win rates
+   for all four methods, not just win rates
 3. `burst_length_quality.png/.csv` -- gap SNR vs. real burst length, all
-   three methods, plus each non-baseline method's advantage over LPC; CIs
+   four methods, plus each non-baseline method's advantage over LPC; CIs
    are cluster-bootstrapped over files, because bursts from the same file
    are not independent
 4. `realtime_feasibility.png` -- time to conceal one packet divided by the
@@ -145,7 +162,7 @@ Plain functions over classes, every magic number is a keyword argument with
 a documented default, nothing is hardcoded to one file/value -- the scripts
 are meant to be re-run with different arguments, not edited.
 `research/plotting.py` fixes one color per method (orange=LPC, green=NN,
-purple=Sparse AR) reused across every figure in this suite -- LPC/NN match
+purple=Sparse AR, gold=Endless Sounds) reused across every figure in this suite -- LPC/NN match
 the colors already used elsewhere in the project (`test_irmas.py`,
 `plc_challenge_test.py`); `plot_burst_comparison.py` keeps its own
 longer-standing blue/green LPC/NN palette instead (a pre-existing

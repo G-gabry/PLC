@@ -62,6 +62,8 @@ METHODS = [
     ("this_lpc", "This LPC (recursive)", concealment.conceal_lpc, "#2a78d6"),
     ("lpc_with_nn", "LPC with NN (PARCnet)", concealment.conceal_nn, "#1baf7a"),
     ("sparse_ar", "This Sparse AR", concealment.conceal_sparse_ar, plotting.SPARSE_AR_COLOR),
+    ("endless_sounds", "This Endless Sounds", concealment.conceal_endless_sounds,
+     plotting.ENDLESS_SOUNDS_COLOR),
 ]
 
 
@@ -272,6 +274,10 @@ def main():
     parser.add_argument("--max-lag-l", type=int, default=1024, help="Sparse AR only.")
     parser.add_argument("--burg-order-pb", type=int, default=8, help="Sparse AR only.")
     parser.add_argument("--lambda-reg", type=float, default=0.01, help="Sparse AR only.")
+    parser.add_argument("--boundary-blend", type=int, default=64, help="Endless Sounds only.")
+    parser.add_argument("--es-seed", type=int, default=0,
+                        help="Endless Sounds only: its phase-randomisation RNG seed "
+                             "(separate from --seed, which samples files).")
     parser.add_argument("--out-dir", type=Path, default=OUT_DIR)
     parser.add_argument("--skip-network-analysis", action="store_true",
                          help="Skip the dataset-wide network-loss analysis (it's cheap -- just reads "
@@ -282,7 +288,8 @@ def main():
     hparams = dict(ar_order=args.ar_order, diagonal_load=args.diagonal_load,
                    context_dim_packets=args.context_dim_packets, extra_dim=args.extra_dim,
                    max_k_lags=args.max_k_lags, max_lag_l=args.max_lag_l,
-                   burg_order_pb=args.burg_order_pb, lambda_reg=args.lambda_reg)
+                   burg_order_pb=args.burg_order_pb, lambda_reg=args.lambda_reg,
+                   boundary_blend=args.boundary_blend, es_seed=args.es_seed)
 
     if not args.skip_network_analysis:
         plot_network_analysis(args.out_dir)

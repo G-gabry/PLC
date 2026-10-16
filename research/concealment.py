@@ -1,5 +1,5 @@
 """
-Three genuinely independent, fully-parameterized concealment implementations
+Four genuinely independent, fully-parameterized concealment implementations
 -- not one class with a toggle:
 
   conceal_lpc       -- pure AR(order) recursive linear prediction. Zero
@@ -27,15 +27,28 @@ Three genuinely independent, fully-parameterized concealment implementations
                         the paper's literal text to behave sensibly on real
                         audio, with the empirical evidence for each.
 
+  conceal_endless_sounds -- a causal adaptation of Svento (2026)'s "Audio
+                        Inpainting with Endless Sounds" (parcnet-is2/
+                        endless_sounds_model.py's EndlessSoundsModel): a
+                        spectral phase-randomisation technique, re-derived
+                        here for one-sided (past-only) causal prediction
+                        instead of the paper's own two-sided offline
+                        inpainting. Own hyperparameters (boundary_blend,
+                        seed) are independent of the other three methods' --
+                        see endless_sounds_model.py's module docstring for
+                        the algorithm and exactly which parts of the paper's
+                        own pipeline had to be dropped or re-derived because
+                        future audio isn't available at concealment time.
+
 conceal_lpc and conceal_nn were cross-validated against each other at the AR
 level: given the same hyperparameters, conceal_lpc's output is bit-identical
 (float32 noise floor) to PARCnet's own AR branch, because both implement the
 identical autocorrelation + Levinson-Durbin fit (ar_model.py's ARModel) and
-the identical crossfade logic. conceal_sparse_ar is a separate algorithm
-entirely and does not participate in that check; it reuses the same external
-crossfade loop (fade_in/fade_out over extra_dim) as conceal_lpc purely so its
-output is mechanically comparable to the other two, not because it shares
-any model-fitting logic with them.
+the identical crossfade logic. conceal_sparse_ar and conceal_endless_sounds
+are separate algorithms entirely and do not participate in that check; each
+reuses the same external crossfade loop (fade_in/fade_out over extra_dim) as
+conceal_lpc purely so its output is mechanically comparable to the other
+methods, not because it shares any model-fitting logic with them.
 
 Every hyperparameter that matters for the sweeps (AR order, diagonal loading,
 context length, extra/crossfade dimension; or, for Sparse AR, its own four)
@@ -69,11 +82,11 @@ def conceal_lpc(clean_or_lossy: np.ndarray, trace: np.ndarray, ar_order: int = 2
     """Pure AR(ar_order) recursive packet-loss concealment: PARCnet's own
     per-packet loop and crossfade logic, with the neural network never
     imported or invoked (not just zeroed out -- this function has no torch
-    dependency at all). `**_other_methods_only_kwargs` absorbs the other two
-    methods' own keywords (nn_fade_dim/lite/device for conceal_nn;
-    max_k_lags/max_lag_l/burg_order_pb/lambda_reg for conceal_sparse_ar) so
-    all three can share one call signature in code that loops over them
-    generically.
+    dependency at all). `**_other_methods_only_kwargs` absorbs the other
+    three methods' own keywords (nn_fade_dim/lite/device for conceal_nn;
+    max_k_lags/max_lag_l/burg_order_pb/lambda_reg for conceal_sparse_ar;
+    boundary_blend/es_seed for conceal_endless_sounds) so all four can share one
+    call signature in code that loops over them generically.
     """
     context_dim = context_dim_packets * packet_dim
     pred_dim = packet_dim + extra_dim
@@ -117,7 +130,7 @@ _parcnet_cache: dict = {}  # keyed on (packet_dim, extra_dim, lite, device)
 def get_nn_concealer(ar_order: int = 256, diagonal_load: float = 0.001,
                       context_dim_packets: int = 8, extra_dim: int = 256,
                       nn_fade_dim: int = NN_FADE_DIM, packet_dim: int = PACKET_SIZE,
-                      lite: bool = True, device: str = "cpu", **_sparse_ar_only_kwargs):
+                      lite: bool = True, device: str = "cpu", **_other_methods_only_kwargs):
     """Returns a real PARCnet instance (NN always enabled) configured with
     the given hyperparameters. Loading the NN checkpoint is the expensive
     part (~1-2s) and doesn't depend on ar_order/diagonal_load/
@@ -127,8 +140,9 @@ def get_nn_concealer(ar_order: int = 256, diagonal_load: float = 0.001,
     thousand times over fast instead of reloading the checkpoint each time.
     Imports PARCnet lazily so that conceal_lpc (and anything that only uses
     it) never triggers a torch import at all. `**_sparse_ar_only_kwargs`
-    absorbs conceal_sparse_ar's own keywords (max_k_lags, max_lag_l,
-    burg_order_pb, lambda_reg), same reason as conceal_lpc's catch-all.
+    absorbs conceal_sparse_ar's and conceal_endless_sounds's own keywords
+    (max_k_lags, max_lag_l, burg_order_pb, lambda_reg, boundary_blend, es_seed),
+    same reason as conceal_lpc's catch-all.
     """
     from parcnet import PARCnet
     key = (packet_dim, extra_dim, lite, device)
@@ -181,12 +195,76 @@ def conceal_sparse_ar(clean_or_lossy: np.ndarray, trace: np.ndarray, max_k_lags:
     (not swept for this method, see run_hparam_sweeps.py), while
     max_k_lags/max_lag_l/burg_order_pb/lambda_reg are this method's own.
     `**_other_methods_only_kwargs` absorbs the other methods' hyperparameters
-    (ar_order, diagonal_load, nn_fade_dim, lite, device) so all three methods
-    can share one call signature in code that loops over them generically.
+    (ar_order, diagonal_load, nn_fade_dim, lite, device, boundary_blend,
+    es_seed) so all four methods can share one call signature in code that
+    loops over them generically.
     """
     context_dim = context_dim_packets * packet_dim
     pred_dim = packet_dim + extra_dim
     model = SparseARModel(max_k_lags, max_lag_l, burg_order_pb, lambda_reg)
+    output = np.pad(clean_or_lossy.copy(), (0, extra_dim))
+    is_burst = False
+
+    if extra_dim > 0:
+        linear = np.linspace(0., 1., extra_dim)
+        fade_in = np.sqrt(linear) if equal_power else linear
+        fade_out = np.sqrt(1. - linear) if equal_power else 1. - linear
+
+    for i, lost in enumerate(trace):
+        if not lost:
+            is_burst = False
+            continue
+
+        idx = i * packet_dim
+        valid = output[max(0, idx - context_dim):idx]
+        valid = np.pad(valid, (context_dim - len(valid), 0))
+        prediction = model.predict(valid, pred_dim)
+
+        if extra_dim > 0:
+            prediction[-extra_dim:] *= fade_out
+            if is_burst:
+                prediction[:extra_dim] *= fade_in
+            output[idx + packet_dim:idx + pred_dim] *= fade_in
+
+        output[idx:idx + pred_dim] += prediction
+        is_burst = True
+
+    return output[:len(clean_or_lossy)]
+
+
+# --------------------------------------------------------------------------
+# Endless Sounds (Svento 2026) -- a separate algorithm, own hyperparameters
+# --------------------------------------------------------------------------
+from endless_sounds_model import EndlessSoundsModel  # noqa: E402  (path must be set up first)
+
+
+def conceal_endless_sounds(clean_or_lossy: np.ndarray, trace: np.ndarray, boundary_blend: int = 64,
+                           es_seed: int = 0, context_dim_packets: int = 8, extra_dim: int = 256,
+                           equal_power: bool = False, packet_dim: int = PACKET_SIZE,
+                           **_other_methods_only_kwargs) -> np.ndarray:
+    """Causal spectral phase-randomisation concealment, adapted from Svento
+    (2026)'s "Audio Inpainting with Endless Sounds" (see
+    endless_sounds_model.py's module docstring for the algorithm and exactly
+    which parts of the paper's own two-sided pipeline had to be dropped or
+    re-derived for one-sided causal prediction). Same per-packet recursive
+    loop and external crossfade logic as conceal_lpc, so its output is
+    directly comparable to the other three methods' -- `context_dim_packets`/
+    `extra_dim` are shared, structural parameters (not swept for this
+    method, see run_hparam_sweeps.py), while boundary_blend/es_seed are this
+    method's own. `**_other_methods_only_kwargs` absorbs the other methods'
+    hyperparameters (ar_order, diagonal_load, nn_fade_dim, lite, device,
+    max_k_lags, max_lag_l, burg_order_pb, lambda_reg) so all four methods can
+    share one call signature in code that loops over them generically.
+
+    One model instance (and therefore one seeded RNG, see
+    EndlessSoundsModel's docstring) is used for the whole file, so repeated
+    packets in the same burst get different -- not repeated -- random phase
+    draws, while re-running this function on the same file is still
+    reproducible end to end.
+    """
+    context_dim = context_dim_packets * packet_dim
+    pred_dim = packet_dim + extra_dim
+    model = EndlessSoundsModel(boundary_blend, es_seed)
     output = np.pad(clean_or_lossy.copy(), (0, extra_dim))
     is_burst = False
 

@@ -1,5 +1,5 @@
 """
-Research-level comparison of three causal concealment methods, using the real
+Research-level comparison of four causal concealment methods, using the real
 parcnet-is2/example_test_set dataset -- every (clean, lossy, trace) triplet
 there is the genuine ground truth, not a synthetic/arbitrary pairing, so this
 is the most rigorous dataset available in this project:
@@ -11,12 +11,17 @@ is the most rigorous dataset available in this project:
                        sparse_ar_model.py's module docstrings for the
                        algorithm and, importantly, where this implementation
                        had to depart from the paper's literal text
+  Endless Sounds   -- Svento (2026)'s spectral phase-randomisation
+                       inpainting, causally re-derived -- see research/
+                       concealment.py and parcnet-is2/endless_sounds_model.py's
+                       module docstrings for the algorithm and which parts of
+                       the paper's own two-sided pipeline had to be dropped
+                       or re-derived for one-sided (past-only) prediction
 
-LPC is treated as the baseline the other two are compared against (both are,
-in different ways, "AR plus something"), so every win-rate figure here reads
-as "how often does method X beat plain LPC", not every pairwise combination
--- the full pairwise statistics (all three pairs) are run_statistical_
-analysis.py's job, not this script's.
+LPC is treated as the baseline the other three are compared against, so
+every win-rate figure here reads as "how often does method X beat plain
+LPC", not every pairwise combination -- the full pairwise statistics (every
+method pair) are run_statistical_analysis.py's job, not this script's.
 
 Two families of metrics are computed for every file, matching what a PLC
 paper would report:
@@ -82,6 +87,7 @@ METHODS = [
     ("lpc", "This LPC", concealment.conceal_lpc, plotting.LPC_COLOR),
     ("nn", "This NN", concealment.conceal_nn, plotting.NN_COLOR),
     ("sparse_ar", "This Sparse AR", concealment.conceal_sparse_ar, plotting.SPARSE_AR_COLOR),
+    ("endless_sounds", "This Endless Sounds", concealment.conceal_endless_sounds, plotting.ENDLESS_SOUNDS_COLOR),
 ]
 BASELINE_KEY = "lpc"
 NON_BASELINE = [m for m in METHODS if m[0] != BASELINE_KEY]
@@ -288,6 +294,10 @@ def main():
     parser.add_argument("--max-lag-l", type=int, default=1024, help="Sparse AR only.")
     parser.add_argument("--burg-order-pb", type=int, default=8, help="Sparse AR only.")
     parser.add_argument("--lambda-reg", type=float, default=0.01, help="Sparse AR only.")
+    parser.add_argument("--boundary-blend", type=int, default=64, help="Endless Sounds only.")
+    parser.add_argument("--es-seed", type=int, default=0,
+                        help="Endless Sounds only: its phase-randomisation RNG seed "
+                             "(separate from --seed, which samples files).")
     parser.add_argument("--out-dir", type=Path, default=OUT_DIR)
     parser.add_argument("--workers", type=int, default=1,
                         help="Parallel processes (one file each). Use about the number of physical cores. "
@@ -300,7 +310,8 @@ def main():
     hparams = dict(ar_order=args.ar_order, diagonal_load=args.diagonal_load,
                    context_dim_packets=args.context_dim_packets, extra_dim=args.extra_dim,
                    max_k_lags=args.max_k_lags, max_lag_l=args.max_lag_l,
-                   burg_order_pb=args.burg_order_pb, lambda_reg=args.lambda_reg)
+                   burg_order_pb=args.burg_order_pb, lambda_reg=args.lambda_reg,
+                   boundary_blend=args.boundary_blend, es_seed=args.es_seed)
 
     stems = dataset_utils.select_diverse_stems(args.n_files, seed=args.seed, workers=args.workers)
     print(f"Sampled {len(stems)} files from example_test_set (seed={args.seed}), "
